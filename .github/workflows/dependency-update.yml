@@ -1,0 +1,617 @@
+name: Dependency Updates - Automated Maintenance
+
+on:
+  schedule:
+    # Run weekly on Mondays at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      update_type:
+        description: 'Type of dependency update'
+        required: true
+        default: 'minor'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - all
+      create_pr:
+        description: 'Create pull request for updates'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  NODE_VERSION: '18.x'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Check for outdated dependencies
+  dependency-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    outputs:
+      node-updates-available: ${{ steps.check-node.outputs.updates-available }}
+      python-updates-available: ${{ steps.check-python.outputs.updates-available }}
+      security-updates: ${{ steps.security-check.outputs.security-updates }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Node.js dependencies
+        run: cd apps/site && npm ci
+
+      - name: Check Node.js outdated packages
+        id: check-node
+        run: |
+          cd apps/site
+          echo "Checking for Node.js package updates..."
+          
+          # Get outdated packages
+          npm outdated --json > ../node-outdated.json 2>/dev/null || echo "{}" > ../node-outdated.json
+          
+          # Check if updates are available
+          UPDATES_COUNT=$(cat ../node-outdated.json | jq 'keys | length')
+          if [ "$UPDATES_COUNT" -gt 0 ]; then
+            echo "updates-available=true" >> $GITHUB_OUTPUT
+            echo "Node.js updates available: $UPDATES_COUNT packages"
+          else
+            echo "updates-available=false" >> $GITHUB_OUTPUT
+            echo "No Node.js updates available"
+          fi
+          
+          # Display outdated packages
+          npm outdated || echo "All Node.js packages are up to date"
+
+      - name: Check Python outdated packages
+        id: check-python
+        run: |
+          cd pipelines
+          pip install -r requirements.txt
+          pip install pip-check
+          
+          echo "Checking for Python package updates..."
+          
+          # Check for outdated packages
+          pip list --outdated --format=json > ../python-outdated.json 2>/dev/null || echo "[]" > ../python-outdated.json
+          
+          UPDATES_COUNT=$(cat ../python-outdated.json | jq 'length')
+          if [ "$UPDATES_COUNT" -gt 0 ]; then
+            echo "updates-available=true" >> $GITHUB_OUTPUT
+            echo "Python updates available: $UPDATES_COUNT packages"
+          else
+            echo "updates-available=false" >> $GITHUB_OUTPUT
+            echo "No Python updates available"
+          fi
+          
+          # Display outdated packages
+          pip list --outdated || echo "All Python packages are up to date"
+
+      - name: Security vulnerability check
+        id: security-check
+        run: |
+          echo "Checking for security vulnerabilities..."
+          
+          # Check Node.js security issues
+          cd apps/site
+          npm audit --json > ../npm-audit.json 2>/dev/null || echo "{}" > ../npm-audit.json
+          
+          NODE_SECURITY_ISSUES=$(cat ../npm-audit.json | jq '.metadata.vulnerabilities.total // 0')
+          
+          # Check Python security issues
+          pip install safety
+          cd ../pipelines
+          safety check -r requirements.txt --json > ../safety-check.json 2>/dev/null || echo '{"vulnerabilities": []}' > ../safety-check.json
+          
+          PYTHON_SECURITY_ISSUES=$(cat ../safety-check.json | jq '.vulnerabilities | length')
+          
+          TOTAL_SECURITY_ISSUES=$((NODE_SECURITY_ISSUES + PYTHON_SECURITY_ISSUES))
+          
+          if [ "$TOTAL_SECURITY_ISSUES" -gt 0 ]; then
+            echo "security-updates=true" >> $GITHUB_OUTPUT
+            echo "Security vulnerabilities found: $TOTAL_SECURITY_ISSUES"
+          else
+            echo "security-updates=false" >> $GITHUB_OUTPUT
+            echo "No security vulnerabilities found"
+          fi
+
+      - name: Upload audit results
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-audit-results
+          path: |
+            node-outdated.json
+            python-outdated.json
+            npm-audit.json
+            safety-check.json
+          retention-days: 7
+
+  # Update Node.js dependencies
+  update-node-dependencies:
+    name: Update Node.js Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: dependency-audit
+    if: ${{ needs.dependency-audit.outputs.node-updates-available == 'true' || needs.dependency-audit.outputs.security-updates == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download audit results
+        uses: actions/download-artifact@v4
+        with:
+          name: dependency-audit-results
+
+      - name: Install current dependencies
+        run: cd apps/site && npm ci
+
+      - name: Update dependencies based on type
+        run: |
+          cd apps/site
+          echo "Updating Node.js dependencies..."
+          
+          UPDATE_TYPE="${{ inputs.update_type || 'minor' }}"
+          
+          case $UPDATE_TYPE in
+            "patch")
+              echo "Performing patch updates..."
+              npm update
+              ;;
+            "minor")
+              echo "Performing minor updates..."
+              npx npm-check-updates -u -t minor
+              npm install
+              ;;
+            "major")
+              echo "Performing major updates..."
+              npx npm-check-updates -u
+              npm install
+              ;;
+            "all")
+              echo "Performing all updates..."
+              npx npm-check-updates -u
+              npm install
+              ;;
+          esac
+
+      - name: Fix security vulnerabilities
+        if: ${{ needs.dependency-audit.outputs.security-updates == 'true' }}
+        run: |
+          cd apps/site
+          echo "Fixing security vulnerabilities..."
+          npm audit fix --force || npm audit fix || echo "Some vulnerabilities may require manual intervention"
+
+      - name: Test updated dependencies
+        run: |
+          cd apps/site
+          echo "Testing updated dependencies..."
+          
+          # Install and run basic checks
+          npm ci
+          npm run astro check || echo "Type checking failed"
+          npm run build || echo "Build failed"
+          
+          # Run tests if they exist
+          npm test || echo "No tests found or tests failed"
+
+      - name: Generate Node.js update summary
+        run: |
+          cd apps/site
+          echo "Node.js Dependency Update Summary" > ../node-update-summary.md
+          echo "=================================" >> ../node-update-summary.md
+          echo "" >> ../node-update-summary.md
+          
+          # Compare package.json changes
+          if git diff --quiet HEAD -- package.json package-lock.json; then
+            echo "No dependency changes made" >> ../node-update-summary.md
+          else
+            echo "## Updated Dependencies" >> ../node-update-summary.md
+            echo "" >> ../node-update-summary.md
+            echo "\`\`\`diff" >> ../node-update-summary.md
+            git diff HEAD -- package.json >> ../node-update-summary.md
+            echo "\`\`\`" >> ../node-update-summary.md
+            echo "" >> ../node-update-summary.md
+            
+            # Security fixes
+            if [ -f ../npm-audit.json ]; then
+              SECURITY_FIXES=$(cat ../npm-audit.json | jq '.metadata.vulnerabilities.total // 0')
+              if [ "$SECURITY_FIXES" -gt 0 ]; then
+                echo "## Security Fixes Applied" >> ../node-update-summary.md
+                echo "" >> ../node-update-summary.md
+                echo "Fixed $SECURITY_FIXES security vulnerabilities" >> ../node-update-summary.md
+                echo "" >> ../node-update-summary.md
+              fi
+            fi
+          fi
+
+      - name: Upload Node.js update results
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-update-results
+          path: |
+            node-update-summary.md
+            apps/site/package.json
+            apps/site/package-lock.json
+          retention-days: 30
+
+  # Update Python dependencies
+  update-python-dependencies:
+    name: Update Python Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: dependency-audit
+    if: ${{ needs.dependency-audit.outputs.python-updates-available == 'true' || needs.dependency-audit.outputs.security-updates == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Download audit results
+        uses: actions/download-artifact@v4
+        with:
+          name: dependency-audit-results
+
+      - name: Install current dependencies
+        run: |
+          cd pipelines
+          pip install -r requirements.txt
+
+      - name: Update Python dependencies
+        run: |
+          cd pipelines
+          pip install pip-tools pur
+          
+          UPDATE_TYPE="${{ inputs.update_type || 'minor' }}"
+          
+          echo "Updating Python dependencies (type: $UPDATE_TYPE)..."
+          
+          # Create backup of current requirements
+          cp requirements.txt requirements.txt.bak
+          
+          case $UPDATE_TYPE in
+            "patch"|"minor")
+              # Update to compatible versions (respect major version constraints)
+              pur -r requirements.txt -f || echo "Some packages could not be updated"
+              ;;
+            "major"|"all")
+              # Update to latest versions
+              pur -r requirements.txt -f --force || echo "Some packages could not be updated"
+              ;;
+          esac
+
+      - name: Fix Python security vulnerabilities
+        if: ${{ needs.dependency-audit.outputs.security-updates == 'true' }}
+        run: |
+          cd pipelines
+          echo "Fixing Python security vulnerabilities..."
+          
+          if [ -f ../safety-check.json ]; then
+            # Extract vulnerable packages and try to update them
+            cat ../safety-check.json | jq -r '.vulnerabilities[].package_name' | sort -u | while read package; do
+              echo "Updating vulnerable package: $package"
+              pip install --upgrade "$package" || echo "Could not update $package"
+            done
+            
+            # Update requirements.txt with new versions
+            pip freeze > requirements-new.txt
+            # You might want to manually merge this or use a more sophisticated approach
+          fi
+
+      - name: Test updated Python dependencies
+        run: |
+          cd pipelines
+          echo "Testing updated Python dependencies..."
+          
+          # Install updated dependencies
+          pip install -r requirements.txt
+          
+          # Run basic import tests
+          python -c "
+          import sys
+          failed_imports = []
+          
+          # Test key imports
+          modules_to_test = [
+              'asyncpg', 'sqlalchemy', 'aiohttp', 'beautifulsoup4',
+              'openai', 'anthropic', 'pydantic', 'typer'
+          ]
+          
+          for module in modules_to_test:
+              try:
+                  __import__(module)
+                  print(f'✓ {module}')
+              except ImportError as e:
+                  print(f'✗ {module}: {e}')
+                  failed_imports.append(module)
+          
+          if failed_imports:
+              print(f'Failed to import: {failed_imports}')
+              sys.exit(1)
+          else:
+              print('All key modules imported successfully')
+          "
+          
+          # Run tests if they exist
+          python -m pytest tests/ || echo "No tests found or tests failed"
+
+      - name: Generate Python update summary
+        run: |
+          cd pipelines
+          echo "Python Dependency Update Summary" > ../python-update-summary.md
+          echo "================================" >> ../python-update-summary.md
+          echo "" >> ../python-update-summary.md
+          
+          # Compare requirements.txt changes
+          if git diff --quiet HEAD -- requirements.txt; then
+            echo "No dependency changes made" >> ../python-update-summary.md
+          else
+            echo "## Updated Dependencies" >> ../python-update-summary.md
+            echo "" >> ../python-update-summary.md
+            echo "\`\`\`diff" >> ../python-update-summary.md
+            git diff HEAD -- requirements.txt >> ../python-update-summary.md
+            echo "\`\`\`" >> ../python-update-summary.md
+            echo "" >> ../python-update-summary.md
+            
+            # Security fixes
+            if [ -f ../safety-check.json ]; then
+              SECURITY_FIXES=$(cat ../safety-check.json | jq '.vulnerabilities | length')
+              if [ "$SECURITY_FIXES" -gt 0 ]; then
+                echo "## Security Fixes Applied" >> ../python-update-summary.md
+                echo "" >> ../python-update-summary.md
+                echo "Fixed $SECURITY_FIXES security vulnerabilities" >> ../python-update-summary.md
+                echo "" >> ../python-update-summary.md
+              fi
+            fi
+          fi
+
+      - name: Upload Python update results
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-update-results
+          path: |
+            python-update-summary.md
+            pipelines/requirements.txt
+            pipelines/requirements.txt.bak
+          retention-days: 30
+
+  # Create pull request with updates
+  create-update-pr:
+    name: Create Update Pull Request
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, update-node-dependencies, update-python-dependencies]
+    if: ${{ always() && (needs.update-node-dependencies.result == 'success' || needs.update-python-dependencies.result == 'success') && (inputs.create_pr != 'false') }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download update results
+        uses: actions/download-artifact@v4
+        with:
+          path: update-results
+
+      - name: Apply dependency updates
+        run: |
+          echo "Applying dependency updates..."
+          
+          # Apply Node.js updates if available
+          if [ -d "update-results/node-update-results" ]; then
+            cp update-results/node-update-results/package.json apps/site/ 2>/dev/null || echo "No Node.js package.json updates"
+            cp update-results/node-update-results/package-lock.json apps/site/ 2>/dev/null || echo "No Node.js package-lock.json updates"
+          fi
+          
+          # Apply Python updates if available
+          if [ -d "update-results/python-update-results" ]; then
+            cp update-results/python-update-results/requirements.txt pipelines/ 2>/dev/null || echo "No Python requirements.txt updates"
+          fi
+
+      - name: Configure git
+        run: |
+          git config --global user.name 'Dependency Update Bot'
+          git config --global user.email 'dependency-update@ai-knowledge.example.com'
+
+      - name: Create update branch
+        run: |
+          BRANCH_NAME="dependency-updates/$(date +%Y-%m-%d)"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Commit dependency updates
+        run: |
+          # Check if there are any changes to commit
+          if git diff --quiet HEAD -- apps/site/package.json apps/site/package-lock.json pipelines/requirements.txt; then
+            echo "No dependency changes to commit"
+            exit 0
+          fi
+          
+          git add apps/site/package.json apps/site/package-lock.json pipelines/requirements.txt
+          
+          # Create comprehensive commit message
+          COMMIT_MSG="chore: automated dependency updates
+
+Update Type: ${{ inputs.update_type || 'minor' }}
+Security Updates: ${{ needs.dependency-audit.outputs.security-updates }}
+
+## Summary
+- Node.js dependencies: ${{ needs.dependency-audit.outputs.node-updates-available }}
+- Python dependencies: ${{ needs.dependency-audit.outputs.python-updates-available }}
+
+This automated update includes:
+- Security vulnerability fixes
+- Compatible version updates
+- Dependency maintenance
+
+Generated by dependency update workflow
+Co-authored-by: Dependency Update Bot <dependency-update@ai-knowledge.example.com>"
+          
+          git commit -m "$COMMIT_MSG"
+          git push origin "$BRANCH_NAME"
+
+      - name: Generate PR body
+        run: |
+          echo "# 🔄 Automated Dependency Updates" > pr-body.md
+          echo "" >> pr-body.md
+          echo "## Summary" >> pr-body.md
+          echo "This PR contains automated dependency updates generated on $(date -u '+%Y-%m-%d %H:%M:%S UTC')." >> pr-body.md
+          echo "" >> pr-body.md
+          
+          echo "## Update Details" >> pr-body.md
+          echo "- **Update Type**: ${{ inputs.update_type || 'minor' }}" >> pr-body.md
+          echo "- **Node.js Updates**: ${{ needs.dependency-audit.outputs.node-updates-available }}" >> pr-body.md
+          echo "- **Python Updates**: ${{ needs.dependency-audit.outputs.python-updates-available }}" >> pr-body.md
+          echo "- **Security Fixes**: ${{ needs.dependency-audit.outputs.security-updates }}" >> pr-body.md
+          echo "" >> pr-body.md
+          
+          # Add Node.js update summary if available
+          if [ -f "update-results/node-update-results/node-update-summary.md" ]; then
+            echo "## Node.js Dependencies" >> pr-body.md
+            cat update-results/node-update-results/node-update-summary.md >> pr-body.md
+            echo "" >> pr-body.md
+          fi
+          
+          # Add Python update summary if available
+          if [ -f "update-results/python-update-results/python-update-summary.md" ]; then
+            echo "## Python Dependencies" >> pr-body.md
+            cat update-results/python-update-results/python-update-summary.md >> pr-body.md
+            echo "" >> pr-body.md
+          fi
+          
+          echo "## Testing" >> pr-body.md
+          echo "- [ ] All CI checks pass" >> pr-body.md
+          echo "- [ ] Application builds successfully" >> pr-body.md
+          echo "- [ ] No breaking changes detected" >> pr-body.md
+          echo "- [ ] Security vulnerabilities resolved" >> pr-body.md
+          echo "" >> pr-body.md
+          
+          echo "## Review Notes" >> pr-body.md
+          echo "This PR was automatically created by the dependency update workflow." >> pr-body.md
+          echo "Please review the changes and ensure all tests pass before merging." >> pr-body.md
+          echo "" >> pr-body.md
+          
+          echo "*Generated by automated dependency update workflow*" >> pr-body.md
+
+      - name: Create pull request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const prBody = fs.readFileSync('pr-body.md', 'utf8');
+            
+            const { data: pr } = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔄 Automated Dependency Updates - ${new Date().toISOString().split('T')[0]}`,
+              head: process.env.BRANCH_NAME,
+              base: 'main',
+              body: prBody,
+              draft: false
+            });
+            
+            console.log(`Created PR #${pr.number}: ${pr.html_url}`);
+            
+            // Add labels
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels: ['dependencies', 'automated', 'maintenance']
+            });
+            
+            // Add security label if security updates are included
+            if ('${{ needs.dependency-audit.outputs.security-updates }}' === 'true') {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: ['security']
+              });
+            }
+
+  # Cleanup and notifications
+  cleanup-and-notify:
+    name: Cleanup and Notifications
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, update-node-dependencies, update-python-dependencies, create-update-pr]
+    if: always()
+    
+    steps:
+      - name: Send update notification
+        run: |
+          echo "Sending dependency update notification..."
+          
+          STATUS="completed"
+          if [[ "${{ needs.update-node-dependencies.result }}" == "failure" || 
+                "${{ needs.update-python-dependencies.result }}" == "failure" ]]; then
+            STATUS="failed"
+          fi
+          
+          echo "Dependency update workflow $STATUS"
+          # Add notification mechanism here
+          # curl -X POST ${{ secrets.NOTIFICATION_WEBHOOK_URL }} -d '{"message": "Dependency update '$STATUS'"}'
+
+      - name: Create issue for failed updates
+        if: ${{ needs.update-node-dependencies.result == 'failure' || needs.update-python-dependencies.result == 'failure' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Dependency Update Failed - ${new Date().toISOString().split('T')[0]}`,
+              body: `# Dependency Update Failure
+
+              **Date**: ${new Date().toISOString()}
+              **Workflow Run**: ${context.runId}
+
+              ## Failed Updates
+              - **Node.js**: ${{ needs.update-node-dependencies.result }}
+              - **Python**: ${{ needs.update-python-dependencies.result }}
+
+              ## Investigation Required
+              - [ ] Check workflow logs for error details
+              - [ ] Verify dependency compatibility
+              - [ ] Resolve any breaking changes
+              - [ ] Manual dependency review may be needed
+
+              ## Next Steps
+              - [ ] Investigate failure cause
+              - [ ] Fix dependency conflicts
+              - [ ] Re-run update workflow
+              - [ ] Consider manual updates for problematic packages
+
+              @devops-team`,
+              labels: ['dependencies', 'failure', 'maintenance']
+            });

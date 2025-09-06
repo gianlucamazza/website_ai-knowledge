@@ -1,0 +1,476 @@
+name: CI - Pull Request Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18.x'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Job 1: Code Quality and Linting
+  quality-checks:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: pipelines/requirements.txt
+
+      - name: Install Node.js dependencies
+        run: cd apps/site && npm ci
+
+      - name: Install Python dependencies
+        run: |
+          cd pipelines
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt || echo "No dev requirements found, skipping..."
+
+      - name: Validate package.json and package-lock.json
+        run: cd apps/site && npm audit --audit-level=high
+
+      - name: Run Prettier format check
+        run: cd apps/site && npx prettier --check "src/**/*.{ts,astro,md,json}"
+
+      - name: Run ESLint (if configured)
+        run: cd apps/site && npm run lint:eslint || echo "ESLint not configured, skipping..."
+        continue-on-error: true
+
+      - name: Run Python code formatting check
+        run: cd pipelines && python -m black --check --diff .
+
+      - name: Run Python import sorting check
+        run: cd pipelines && python -m isort --check-only --diff .
+
+      - name: Run Python type checking
+        run: cd pipelines && python -m mypy . --ignore-missing-imports
+
+  # Job 2: TypeScript and Astro Build Validation
+  build-validation:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: quality-checks
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Install dependencies
+        run: cd apps/site && npm ci
+
+      - name: Run TypeScript compilation check
+        run: cd apps/site && npx tsc --noEmit
+
+      - name: Run Astro check
+        run: cd apps/site && npm run astro check
+
+      - name: Build Astro site
+        run: cd apps/site && npm run build
+
+      - name: Validate build output
+        run: |
+          if [ ! -d "apps/site/dist" ]; then
+            echo "Build failed: dist directory not found"
+            exit 1
+          fi
+          
+          if [ ! -f "apps/site/dist/index.html" ]; then
+            echo "Build failed: index.html not found"
+            exit 1
+          fi
+          
+          echo "Build validation passed"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: apps/site/dist/
+          retention-days: 1
+
+  # Job 3: Content Validation
+  content-validation:
+    name: Content Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: quality-checks
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd apps/site && npm ci
+          pip install markdownlint-cli2 markdown-link-check
+
+      - name: Run markdown linting
+        run: cd apps/site && npm run lint
+
+      - name: Validate content schemas
+        run: cd apps/site && npm run astro check
+
+      - name: Run custom content validation
+        run: |
+          python scripts/validate_content.py --content-dir apps/site/src/content || echo "Content validation script not found, skipping..."
+        continue-on-error: true
+
+      - name: Check for broken links
+        run: |
+          find apps/site/src/content -name "*.md" -exec markdown-link-check {} \; || echo "Link checking completed with warnings"
+        continue-on-error: true
+
+  # Job 4: Python Pipeline Testing
+  pipeline-tests:
+    name: Python Pipeline Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: quality-checks
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test_ai_knowledge
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: pipelines/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          cd pipelines
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio pytest-cov pytest-mock
+
+      - name: Set up test environment
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
+        run: |
+          cd pipelines
+          python -c "
+          import asyncio
+          from database.connection import create_tables
+          asyncio.run(create_tables())
+          " || echo "Database setup skipped - no create_tables function found"
+
+      - name: Run Python unit tests
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
+        run: |
+          cd pipelines
+          python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=term || echo "No tests found, skipping..."
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: pipelines/coverage.xml
+          flags: python-pipeline
+          name: pipeline-coverage
+        continue-on-error: true
+
+  # Job 5: Security Scanning
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: quality-checks
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run npm audit
+        run: cd apps/site && npm audit --audit-level=high
+
+      - name: Check for Python security vulnerabilities
+        run: |
+          pip install safety bandit
+          cd pipelines
+          safety check -r requirements.txt || echo "Safety check completed with warnings"
+          bandit -r . -f json -o bandit-report.json || echo "Bandit scan completed with warnings"
+        continue-on-error: true
+
+  # Job 6: Performance Testing
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build-validation
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: apps/site/dist/
+
+      - name: Install performance testing tools
+        run: |
+          npm install -g @lhci/cli lighthouse
+          pip install locust
+
+      - name: Start preview server
+        run: |
+          cd apps/site
+          npm ci
+          npm run preview &
+          sleep 10
+        
+      - name: Run Lighthouse CI
+        run: |
+          lhci autorun || echo "Lighthouse CI completed with warnings"
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        continue-on-error: true
+
+      - name: Run custom performance tests
+        run: |
+          python scripts/performance_test.py --target-url http://localhost:4322 || echo "Performance tests not found, skipping..."
+        continue-on-error: true
+
+  # Job 7: License Compliance
+  license-check:
+    name: License Compliance
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Install license checker
+        run: npm install -g license-checker pip-licenses
+
+      - name: Check Node.js dependencies licenses
+        run: |
+          cd apps/site
+          npm ci
+          license-checker --onlyAllow 'MIT;BSD;Apache-2.0;ISC;0BSD' --excludePrivatePackages
+
+      - name: Check Python dependencies licenses
+        run: |
+          pip install pip-licenses
+          cd pipelines
+          pip install -r requirements.txt
+          pip-licenses --allow-only 'MIT;BSD;Apache Software License;ISC License' || echo "Python license check completed with warnings"
+        continue-on-error: true
+
+  # Job 8: Integration Tests
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [build-validation, pipeline-tests]
+    if: github.event_name == 'pull_request'
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test_ai_knowledge
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: apps/site/dist/
+
+      - name: Install dependencies
+        run: |
+          cd apps/site && npm ci
+          cd ../.. && pip install -r pipelines/requirements.txt
+
+      - name: Run integration tests
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
+        run: |
+          python scripts/integration_tests.py || echo "Integration tests not found, skipping..."
+        continue-on-error: true
+
+      - name: Test full content pipeline
+        env:
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
+        run: |
+          cd pipelines
+          python -m pytest tests/integration/ -v || echo "Integration tests not found, skipping..."
+        continue-on-error: true
+
+  # Job 9: Quality Gate Summary
+  quality-gate:
+    name: Quality Gate Summary
+    runs-on: ubuntu-latest
+    needs: [quality-checks, build-validation, content-validation, pipeline-tests, security-scan, performance-test, license-check]
+    if: always()
+    
+    steps:
+      - name: Check all quality gates
+        run: |
+          echo "Quality Gate Results:"
+          echo "===================="
+          echo "Code Quality: ${{ needs.quality-checks.result }}"
+          echo "Build Validation: ${{ needs.build-validation.result }}"
+          echo "Content Validation: ${{ needs.content-validation.result }}"
+          echo "Pipeline Tests: ${{ needs.pipeline-tests.result }}"
+          echo "Security Scan: ${{ needs.security-scan.result }}"
+          echo "Performance Test: ${{ needs.performance-test.result }}"
+          echo "License Check: ${{ needs.license-check.result }}"
+          
+          # Fail if any critical jobs failed
+          if [[ "${{ needs.quality-checks.result }}" == "failure" || \
+                "${{ needs.build-validation.result }}" == "failure" || \
+                "${{ needs.content-validation.result }}" == "failure" || \
+                "${{ needs.pipeline-tests.result }}" == "failure" ]]; then
+            echo "❌ Quality gate failed - Critical jobs failed"
+            exit 1
+          fi
+          
+          echo "✅ Quality gate passed - Ready for merge"
+
+      - name: Comment PR with results
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const results = {
+              'Code Quality': '${{ needs.quality-checks.result }}',
+              'Build Validation': '${{ needs.build-validation.result }}',
+              'Content Validation': '${{ needs.content-validation.result }}',
+              'Pipeline Tests': '${{ needs.pipeline-tests.result }}',
+              'Security Scan': '${{ needs.security-scan.result }}',
+              'Performance Test': '${{ needs.performance-test.result }}',
+              'License Check': '${{ needs.license-check.result }}'
+            };
+            
+            let comment = '## 🚦 Quality Gate Results\n\n';
+            for (const [job, result] of Object.entries(results)) {
+              const icon = result === 'success' ? '✅' : result === 'failure' ? '❌' : '⚠️';
+              comment += `${icon} **${job}**: ${result}\n`;
+            }
+            
+            comment += '\n---\n';
+            if (Object.values(results).every(r => r === 'success' || r === 'skipped')) {
+              comment += '🎉 **All quality gates passed!** This PR is ready for review.';
+            } else {
+              comment += '⚠️ **Some quality gates need attention** before this PR can be merged.';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

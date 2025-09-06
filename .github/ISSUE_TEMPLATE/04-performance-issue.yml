@@ -1,0 +1,268 @@
+name: ⚡ Performance Issue
+description: Report performance problems with the AI Knowledge Website
+title: "[Performance]: "
+labels: ["performance", "bug"]
+assignees: ["devops-team"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a performance issue! ⚡
+        
+        Performance issues can significantly impact user experience. Please provide details to help us investigate.
+
+  - type: dropdown
+    id: performance-type
+    attributes:
+      label: Performance Issue Type
+      description: What type of performance problem are you experiencing?
+      options:
+        - Slow Page Loading
+        - Long Search Response Time
+        - High Memory Usage
+        - High CPU Usage
+        - Network/Bandwidth Issues
+        - Database Query Performance
+        - Content Pipeline Performance
+        - Build/Deployment Performance
+        - Mobile Performance
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: affected-url
+    attributes:
+      label: Affected URL(s)
+      description: Which page(s) or functionality is affected?
+      placeholder: https://ai-knowledge.example.com/articles/example
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is the performance impact?
+      options:
+        - Critical (Site unusable, >30 second load times)
+        - High (Significantly degraded experience, 10-30 seconds)
+        - Medium (Noticeable delays, 3-10 seconds)
+        - Low (Minor delays, <3 seconds)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Performance Issue Description
+      description: Describe the performance problem in detail
+      placeholder: What specific performance problem are you experiencing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: measurements
+    attributes:
+      label: Performance Measurements
+      description: Any specific measurements or metrics you've observed
+      placeholder: |
+        Include any measurements:
+        - Load times (in seconds)
+        - Core Web Vitals scores
+        - Network timing information
+        - Memory usage
+        - CPU usage
+        - File sizes
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this performance issue?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Wait for '...'
+        4. Observe slow performance
+      value: |
+        1. 
+        2. 
+        3. 
+        4. 
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser are you using?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser Version
+      description: What version of the browser?
+      placeholder: e.g., Chrome 120.0.6099.109
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device Type
+      description: What type of device are you using?
+      options:
+        - Desktop
+        - Laptop
+        - Mobile Phone
+        - Tablet
+    validations:
+      required: true
+
+  - type: input
+    id: device-specs
+    attributes:
+      label: Device Specifications
+      description: Device specs (if known)
+      placeholder: e.g., MacBook Pro M2, iPhone 14, Windows 11 i7-12700K 16GB RAM
+
+  - type: dropdown
+    id: connection
+    attributes:
+      label: Internet Connection
+      description: What type of internet connection are you using?
+      options:
+        - Fast Broadband (>50 Mbps)
+        - Regular Broadband (10-50 Mbps)
+        - Slow Broadband (<10 Mbps)
+        - Mobile Data (4G/5G)
+        - Mobile Data (3G)
+        - Not sure
+    validations:
+      required: false
+
+  - type: dropdown
+    id: location
+    attributes:
+      label: Geographic Location
+      description: Where are you accessing the site from? (general region)
+      options:
+        - North America
+        - Europe
+        - Asia-Pacific
+        - South America
+        - Africa
+        - Other
+        - Prefer not to say
+    validations:
+      required: false
+
+  - type: textarea
+    id: network-timing
+    attributes:
+      label: Browser Network Timing
+      description: Browser DevTools network timing information (if available)
+      placeholder: |
+        If you can access browser DevTools:
+        1. Open DevTools (F12)
+        2. Go to Network tab
+        3. Reload the page
+        4. Look for slow requests and paste details here
+      render: text
+
+  - type: textarea
+    id: performance-tools
+    attributes:
+      label: Performance Tool Results
+      description: Results from performance testing tools (if available)
+      placeholder: |
+        Results from tools like:
+        - Lighthouse
+        - GTmetrix
+        - WebPageTest
+        - Pingdom
+        - Other performance tools
+      render: text
+
+  - type: checkboxes
+    id: when-occurs
+    attributes:
+      label: When Does This Occur?
+      description: When do you notice this performance issue?
+      options:
+        - label: Always (every time I visit)
+          required: false
+        - label: Often (most of the time)
+          required: false
+        - label: Sometimes (intermittently)
+          required: false
+        - label: Rarely (occasional)
+          required: false
+        - label: Only on specific pages
+          required: false
+        - label: Only during certain times of day
+          required: false
+        - label: Only on mobile devices
+          required: false
+        - label: Only on slow connections
+          required: false
+
+  - type: textarea
+    id: comparison
+    attributes:
+      label: Performance Comparison
+      description: How does performance compare to other similar sites?
+      placeholder: |
+        - Is this slower than other documentation sites you use?
+        - Has performance changed recently?
+        - How does it compare to other content sites?
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on Usage
+      description: How does this performance issue affect your use of the site?
+      placeholder: |
+        - Does this prevent you from completing tasks?
+        - Do you abandon the site due to slow performance?
+        - How does this affect your workflow?
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other relevant information
+      placeholder: |
+        Include any additional context:
+        - Screenshots of performance metrics
+        - Console errors or warnings
+        - Similar issues on other pages
+        - Patterns you've noticed
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you've completed these steps.
+      options:
+        - label: I have searched for existing performance issues and this is not a duplicate
+          required: true
+        - label: I have provided specific measurements or observations
+          required: true
+        - label: I have tested this on multiple occasions to confirm consistency
+          required: false
+        - label: I have cleared my browser cache and cookies before testing
+          required: false
+        - label: I have tested on different devices or browsers (if possible)
+          required: false

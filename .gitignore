@@ -1,0 +1,187 @@
+# Dependencies
+node_modules/
+venv/
+env/
+.env/
+*.pyc
+__pycache__/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.*.local
+*.env
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+.eggs/
+apps/site/dist/
+apps/site/.astro/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+coverage/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+test-results/
+*.cover
+.hypothesis/
+playwright-report/
+test-results/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+data/sources/*.html
+data/sources/*.json
+data/curated/*.json
+
+# Cache
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.turbo/
+*.tsbuildinfo
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Security
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Python specific
+*.py[cod]
+*$py.class
+*.so
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Documentation build
+docs/_build/
+site/
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# Monitoring
+prometheus_data/
+grafana_data/
+
+# Local development
+.local/
+local_data/
+
+# Pipelines output (keep structure, ignore content)
+data/sources/*.html
+data/sources/*.json
+data/curated/*
+!data/sources/.gitkeep
+!data/curated/.gitkeep
+
+# Security scanner reports
+security_reports/
+vulnerability_reports/
+
+# Performance test results
+performance_results/
+benchmarks_output/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# macOS
+.AppleDouble
+.LSOverride
+Icon
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk

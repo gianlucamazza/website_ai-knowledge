@@ -1,0 +1,440 @@
+name: Content Pipeline - Scheduled Runs
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+    # Run every 6 hours for high-priority sources
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      pipeline_mode:
+        description: 'Pipeline execution mode'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - incremental
+          - ingest-only
+          - process-only
+      source_filter:
+        description: 'Filter sources (comma-separated)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Dry run mode (no changes)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18.x'
+
+jobs:
+  # Pipeline orchestration
+  pipeline-orchestration:
+    name: Pipeline Orchestration
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    outputs:
+      pipeline-id: ${{ steps.setup.outputs.pipeline-id }}
+      content-updated: ${{ steps.pipeline.outputs.content-updated }}
+      
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.PIPELINE_DB_PASSWORD }}
+          POSTGRES_DB: ai_knowledge_pipeline
+          POSTGRES_USER: pipeline_user
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: pipelines/requirements.txt
+
+      - name: Install pipeline dependencies
+        run: |
+          cd pipelines
+          pip install -r requirements.txt
+
+      - name: Setup pipeline environment
+        id: setup
+        run: |
+          PIPELINE_ID="pipeline-$(date +%Y%m%d-%H%M%S)"
+          echo "pipeline-id=$PIPELINE_ID" >> $GITHUB_OUTPUT
+          
+          echo "Pipeline Configuration:"
+          echo "======================"
+          echo "Pipeline ID: $PIPELINE_ID"
+          echo "Mode: ${{ inputs.pipeline_mode || 'scheduled' }}"
+          echo "Dry Run: ${{ inputs.dry_run || false }}"
+          echo "Source Filter: ${{ inputs.source_filter || 'all' }}"
+
+      - name: Initialize database
+        env:
+          DATABASE_URL: postgresql://pipeline_user:${{ secrets.PIPELINE_DB_PASSWORD }}@localhost:5432/ai_knowledge_pipeline
+        run: |
+          cd pipelines
+          echo "Initializing pipeline database..."
+          python -c "
+          import asyncio
+          from database.connection import create_tables
+          asyncio.run(create_tables())
+          "
+
+      - name: Run content ingestion
+        id: ingestion
+        env:
+          DATABASE_URL: postgresql://pipeline_user:${{ secrets.PIPELINE_DB_PASSWORD }}@localhost:5432/ai_knowledge_pipeline
+          REDIS_URL: redis://localhost:6379
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd pipelines
+          echo "Starting content ingestion..."
+          
+          ARGS=""
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          
+          if [ "${{ inputs.source_filter }}" != "" ]; then
+            ARGS="$ARGS --sources ${{ inputs.source_filter }}"
+          fi
+          
+          python -m orchestrators.langgraph.workflow \
+            --mode ingest \
+            --pipeline-id ${{ steps.setup.outputs.pipeline-id }} \
+            $ARGS
+          
+          echo "Content ingestion completed"
+
+      - name: Run content normalization
+        if: ${{ inputs.pipeline_mode != 'ingest-only' }}
+        env:
+          DATABASE_URL: postgresql://pipeline_user:${{ secrets.PIPELINE_DB_PASSWORD }}@localhost:5432/ai_knowledge_pipeline
+          REDIS_URL: redis://localhost:6379
+        run: |
+          cd pipelines
+          echo "Starting content normalization..."
+          
+          python -m orchestrators.langgraph.workflow \
+            --mode normalize \
+            --pipeline-id ${{ steps.setup.outputs.pipeline-id }}
+          
+          echo "Content normalization completed"
+
+      - name: Run duplicate detection
+        if: ${{ inputs.pipeline_mode != 'ingest-only' }}
+        env:
+          DATABASE_URL: postgresql://pipeline_user:${{ secrets.PIPELINE_DB_PASSWORD }}@localhost:5432/ai_knowledge_pipeline
+          REDIS_URL: redis://localhost:6379
+        run: |
+          cd pipelines
+          echo "Starting duplicate detection..."
+          
+          python -m orchestrators.langgraph.workflow \
+            --mode dedup \
+            --pipeline-id ${{ steps.setup.outputs.pipeline-id }}
+          
+          echo "Duplicate detection completed"
+
+      - name: Run content enrichment
+        if: ${{ inputs.pipeline_mode != 'ingest-only' }}
+        env:
+          DATABASE_URL: postgresql://pipeline_user:${{ secrets.PIPELINE_DB_PASSWORD }}@localhost:5432/ai_knowledge_pipeline
+          REDIS_URL: redis://localhost:6379
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          cd pipelines
+          echo "Starting content enrichment..."
+          
+          python -m orchestrators.langgraph.workflow \
+            --mode enrich \
+            --pipeline-id ${{ steps.setup.outputs.pipeline-id }}
+          
+          echo "Content enrichment completed"
+
+      - name: Run content publishing
+        id: pipeline
+        if: ${{ inputs.pipeline_mode != 'ingest-only' && inputs.dry_run != 'true' }}
+        env:
+          DATABASE_URL: postgresql://pipeline_user:${{ secrets.PIPELINE_DB_PASSWORD }}@localhost:5432/ai_knowledge_pipeline
+        run: |
+          cd pipelines
+          echo "Starting content publishing..."
+          
+          python -m orchestrators.langgraph.workflow \
+            --mode publish \
+            --pipeline-id ${{ steps.setup.outputs.pipeline-id }} \
+            --output-dir ../apps/site/src/content
+          
+          # Check if content was updated
+          cd ..
+          if git diff --quiet HEAD -- apps/site/src/content; then
+            echo "content-updated=false" >> $GITHUB_OUTPUT
+            echo "No content changes detected"
+          else
+            echo "content-updated=true" >> $GITHUB_OUTPUT
+            echo "Content changes detected"
+          fi
+
+      - name: Generate pipeline report
+        if: always()
+        run: |
+          cd pipelines
+          echo "Generating pipeline execution report..."
+          
+          python scripts/generate_pipeline_report.py \
+            --pipeline-id ${{ steps.setup.outputs.pipeline-id }} \
+            --output-file pipeline_report.json || echo "Report generation skipped"
+
+      - name: Upload pipeline artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pipeline-artifacts
+          path: |
+            pipelines/pipeline_report.json
+            pipelines/logs/
+          retention-days: 30
+
+  # Content freshness monitoring
+  content-freshness-check:
+    name: Content Freshness Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Check content freshness
+        run: |
+          python scripts/check_content_freshness.py \
+            --content-dir apps/site/src/content \
+            --max-age-days 7 \
+            --alert-threshold 0.8 || echo "Freshness check completed"
+
+      - name: Generate freshness report
+        run: |
+          echo "Content freshness analysis:"
+          find apps/site/src/content -name "*.md" -type f -mtime +7 | wc -l | xargs -I {} echo "Stale files (>7 days): {}"
+          find apps/site/src/content -name "*.md" -type f -mtime +30 | wc -l | xargs -I {} echo "Very stale files (>30 days): {}"
+
+  # Website update and deployment
+  update-website:
+    name: Update Website Content
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: pipeline-orchestration
+    if: ${{ needs.pipeline-orchestration.outputs.content-updated == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Install dependencies
+        run: cd apps/site && npm ci
+
+      - name: Validate updated content
+        run: |
+          cd apps/site
+          npm run astro check
+          npm run lint || echo "Lint warnings detected"
+
+      - name: Build updated site
+        run: cd apps/site && npm run build
+
+      - name: Configure git
+        run: |
+          git config --global user.name 'Content Pipeline Bot'
+          git config --global user.email 'content-pipeline@ai-knowledge.example.com'
+
+      - name: Commit content updates
+        run: |
+          git add apps/site/src/content/
+          
+          if git diff --staged --quiet; then
+            echo "No staged changes detected"
+          else
+            git commit -m "chore: automated content update from pipeline ${{ needs.pipeline-orchestration.outputs.pipeline-id }}
+            
+            - Updated content from scheduled pipeline run
+            - Pipeline ID: ${{ needs.pipeline-orchestration.outputs.pipeline-id }}
+            - Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+            
+            Co-authored-by: Content Pipeline <content-pipeline@ai-knowledge.example.com>"
+            
+            git push origin main
+            echo "Content updates committed and pushed"
+          fi
+
+      - name: Trigger deployment
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.dry_run != 'true')
+        run: |
+          echo "Triggering website deployment..."
+          # The push to main will trigger the deploy.yml workflow automatically
+          echo "Deployment workflow will be triggered by the commit"
+
+  # Pipeline monitoring and alerting
+  pipeline-monitoring:
+    name: Pipeline Monitoring
+    runs-on: ubuntu-latest
+    needs: [pipeline-orchestration, content-freshness-check]
+    if: always()
+    
+    steps:
+      - name: Analyze pipeline results
+        run: |
+          echo "Pipeline Analysis:"
+          echo "=================="
+          echo "Pipeline Status: ${{ needs.pipeline-orchestration.result }}"
+          echo "Freshness Check: ${{ needs.content-freshness-check.result }}"
+          echo "Content Updated: ${{ needs.pipeline-orchestration.outputs.content-updated }}"
+
+      - name: Send pipeline metrics
+        run: |
+          echo "Sending pipeline metrics to monitoring system..."
+          # Add metrics sending commands
+          # curl -X POST ${{ secrets.METRICS_ENDPOINT }} -d '{"pipeline_id": "${{ needs.pipeline-orchestration.outputs.pipeline-id }}", "status": "${{ needs.pipeline-orchestration.result }}"}'
+          echo "Pipeline metrics sent"
+
+      - name: Check for pipeline failures
+        if: needs.pipeline-orchestration.result == 'failure'
+        run: |
+          echo "Pipeline failure detected!"
+          # Add failure handling
+          # curl -X POST ${{ secrets.ALERT_WEBHOOK_URL }} -d '{"severity": "high", "message": "Content pipeline failed"}'
+
+      - name: Create failure issue
+        if: needs.pipeline-orchestration.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔄 Content Pipeline Failure - ${new Date().toISOString().split('T')[0]}`,
+              body: `# Content Pipeline Failure Report
+              
+              **Pipeline ID**: ${{ needs.pipeline-orchestration.outputs.pipeline-id }}
+              **Timestamp**: ${new Date().toISOString()}
+              **Trigger**: ${context.eventName}
+              **Workflow Run**: ${context.runId}
+              
+              ## Pipeline Status
+              - **Orchestration**: ${{ needs.pipeline-orchestration.result }}
+              - **Freshness Check**: ${{ needs.content-freshness-check.result }}
+              
+              ## Investigation Steps
+              - [ ] Check pipeline logs in workflow run
+              - [ ] Review database connectivity
+              - [ ] Verify API keys and external services
+              - [ ] Check source availability
+              - [ ] Run manual pipeline diagnosis
+              
+              ## Recovery Actions
+              - [ ] Fix identified issues
+              - [ ] Re-run pipeline manually
+              - [ ] Verify content integrity
+              - [ ] Update monitoring if needed
+              
+              @content-team @devops-team`,
+              labels: ['pipeline', 'failure', 'content', 'automated']
+            });
+
+  # Content quality assessment
+  content-quality-check:
+    name: Content Quality Assessment
+    runs-on: ubuntu-latest
+    needs: pipeline-orchestration
+    if: ${{ needs.pipeline-orchestration.outputs.content-updated == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Run content quality checks
+        run: |
+          echo "Running content quality assessment..."
+          
+          # Check for duplicate titles
+          find apps/site/src/content -name "*.md" -exec grep -H "^title:" {} \; | \
+            cut -d: -f2- | sort | uniq -d | \
+            if read line; then echo "Warning: Duplicate titles found"; fi
+          
+          # Check for missing metadata
+          find apps/site/src/content -name "*.md" -exec sh -c '
+            if ! grep -q "^title:" "$1" || ! grep -q "^description:" "$1"; then
+              echo "Missing metadata in: $1"
+            fi
+          ' _ {} \;
+          
+          # Check content length
+          find apps/site/src/content -name "*.md" -exec wc -w {} \; | \
+            awk '$1 < 50 {print "Short content in:", $2}'
+
+      - name: Generate quality report
+        run: |
+          echo "Content Quality Summary:"
+          echo "======================="
+          find apps/site/src/content -name "*.md" | wc -l | xargs -I {} echo "Total content files: {}"
+          find apps/site/src/content -name "*.md" -exec wc -w {} \; | awk '{sum+=$1; count++} END {print "Average words per file:", int(sum/count)}'
+          
+          # Add to pipeline report
+          echo "Quality assessment completed" >> quality_report.txt
+
+      - name: Upload quality report
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-quality-report
+          path: quality_report.txt
+          retention-days: 7

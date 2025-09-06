@@ -1,0 +1,277 @@
+name: 🔒 Security Issue
+description: Report a security vulnerability (PRIVATE - only visible to maintainers)
+title: "[Security]: "
+labels: ["security", "critical"]
+assignees: ["security-team"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        # 🚨 SECURITY ISSUE REPORT
+        
+        **⚠️ IMPORTANT: This is for security vulnerabilities only.**
+        
+        If this is not a security issue, please use a different issue template.
+        
+        **For critical security vulnerabilities, consider using our private disclosure process:**
+        - Email: security@ai-knowledge.example.com
+        - Or create this issue as PRIVATE
+        
+        Please follow responsible disclosure practices.
+
+  - type: dropdown
+    id: vulnerability-type
+    attributes:
+      label: Vulnerability Type
+      description: What type of security issue is this?
+      options:
+        - Cross-Site Scripting (XSS)
+        - SQL Injection
+        - Cross-Site Request Forgery (CSRF)
+        - Authentication Bypass
+        - Authorization Issues
+        - Information Disclosure
+        - Denial of Service (DoS)
+        - Code Injection
+        - Path Traversal
+        - Insecure Direct Object Reference
+        - Security Misconfiguration
+        - Broken Access Control
+        - Cryptographic Issues
+        - Supply Chain Vulnerability
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity Assessment
+      description: How severe is this security issue?
+      options:
+        - Critical (Remote code execution, full system compromise)
+        - High (Data breach potential, privilege escalation)
+        - Medium (Limited data exposure, authenticated attack)
+        - Low (Information disclosure, requires special conditions)
+        - Informational (Security best practices, hardening)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Vulnerability Description
+      description: Describe the security vulnerability
+      placeholder: Provide a clear description of the security issue, but avoid sharing exploit details publicly.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of the system is affected?
+      options:
+        - Website Frontend
+        - Content Pipeline
+        - Database
+        - API Endpoints
+        - Authentication System
+        - File Upload/Handling
+        - Third-party Dependencies
+        - Infrastructure/Deployment
+        - CI/CD Pipeline
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: affected-url
+    attributes:
+      label: Affected URL/Endpoint
+      description: Specific URL or endpoint affected (if applicable)
+      placeholder: https://ai-knowledge.example.com/api/endpoint
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Potential Impact
+      description: What could an attacker achieve with this vulnerability?
+      placeholder: |
+        Describe the potential impact:
+        - Data that could be accessed
+        - Systems that could be compromised
+        - User accounts that could be affected
+        - Business impact
+
+  - type: dropdown
+    id: attack-vector
+    attributes:
+      label: Attack Vector
+      description: How can this vulnerability be exploited?
+      options:
+        - Remote (over network)
+        - Local (requires local access)
+        - Adjacent Network (same network segment)
+        - Physical (requires physical access)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: authentication
+    attributes:
+      label: Authentication Required
+      description: Does exploiting this require authentication?
+      options:
+        - None (unauthenticated attack)
+        - Low (easy to bypass or default credentials)
+        - High (requires valid credentials)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user-interaction
+    attributes:
+      label: User Interaction
+      description: Does this require user interaction to exploit?
+      options:
+        - None (automatic exploitation)
+        - Required (user must take action)
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Proof of Concept
+      description: General steps to reproduce (avoid sharing full exploits)
+      placeholder: |
+        Provide general reproduction steps WITHOUT sharing:
+        - Full exploit code
+        - Actual passwords or tokens
+        - Specific database queries
+        - Exact payloads
+        
+        Example:
+        1. Navigate to [URL]
+        2. Submit form with [type of malicious input]
+        3. Observe [type of unintended behavior]
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      description: Environment where you discovered this
+      placeholder: |
+        - Browser/tool used for testing
+        - Operating system
+        - Any specific configurations
+        - Version information
+
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Responsible Disclosure
+      description: Please confirm your approach to disclosure
+      options:
+        - label: I will not publicly disclose this vulnerability until it is fixed
+          required: true
+        - label: I have not shared this vulnerability with others
+          required: true
+        - label: I will work with the team to verify the fix
+          required: true
+        - label: I understand this may take time to properly address
+          required: true
+
+  - type: dropdown
+    id: discovery
+    attributes:
+      label: How was this discovered?
+      description: How did you find this vulnerability?
+      options:
+        - Security Testing/Penetration Testing
+        - Code Review
+        - Automated Security Scanning
+        - Bug Bounty Research
+        - Incident Response
+        - User Report
+        - Academic Research
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix
+      description: Any suggestions for addressing this vulnerability?
+      placeholder: |
+        If you have suggestions for fixing this issue:
+        - Input validation improvements
+        - Authentication enhancements
+        - Configuration changes
+        - Code modifications (general approach)
+
+  - type: checkboxes
+    id: affected-versions
+    attributes:
+      label: Affected Versions
+      description: Which versions are affected? (if known)
+      options:
+        - label: Current production version
+          required: false
+        - label: Development version
+          required: false
+        - label: All versions
+          required: false
+        - label: Specific version (specify in additional info)
+          required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other relevant security information
+      placeholder: |
+        Additional context:
+        - Related security issues
+        - References to security standards
+        - Similar vulnerabilities in other systems
+        - Timeline considerations
+
+  - type: checkboxes
+    id: contact
+    attributes:
+      label: Contact Preferences
+      description: How would you like to be contacted about this issue?
+      options:
+        - label: Through GitHub (comments on this issue)
+          required: false
+        - label: Private email communication preferred
+          required: false
+        - label: I would like to be credited in security advisories (if appropriate)
+          required: false
+        - label: I prefer to remain anonymous
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        **Thank you for helping keep the AI Knowledge Website secure!**
+        
+        Your responsible disclosure helps protect all users of the system.
+        
+        **What happens next:**
+        1. We'll acknowledge receipt within 1-2 business days
+        2. We'll investigate and work on a fix
+        3. We'll coordinate with you on disclosure timeline
+        4. We'll credit you appropriately (if desired)
+        
+        **For immediate critical issues, please also email: security@ai-knowledge.example.com**

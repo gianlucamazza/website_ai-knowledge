@@ -1,0 +1,184 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement for the AI Knowledge Website
+title: "[Feature]: "
+labels: ["enhancement", "feature-request"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! ✨
+        
+        Please provide as much detail as possible to help us understand your request.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem would this feature solve?
+      placeholder: Describe the problem or pain point this feature would address.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your ideal solution.
+      placeholder: What would you like to happen? How should this feature work?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of the system would this affect?
+      options:
+        - Website (Frontend)
+        - Content Pipeline
+        - Database
+        - User Interface
+        - Search & Navigation
+        - Content Management
+        - Performance
+        - Security
+        - Documentation
+        - CI/CD
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Critical (Blocking current workflow)
+        - High (Would significantly improve experience)
+        - Medium (Nice to have, would be helpful)
+        - Low (Minor improvement)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: User Type
+      description: Who would benefit from this feature?
+      options:
+        - End Users (Website Visitors)
+        - Content Authors
+        - Site Administrators
+        - Developers
+        - All Users
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What alternatives have you considered?
+      placeholder: Describe any alternative solutions or features you've considered.
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: Describe specific use cases for this feature.
+      placeholder: |
+        Example scenarios where this feature would be useful:
+        - Use case 1: ...
+        - Use case 2: ...
+        - Use case 3: ...
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What would make this feature complete?
+      placeholder: |
+        Define what success looks like:
+        - [ ] Criteria 1
+        - [ ] Criteria 2
+        - [ ] Criteria 3
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups/Examples
+      description: Any mockups, wireframes, or examples of similar features.
+      placeholder: Attach images or provide links to examples of how this might look or work.
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Simple (Small UI change, configuration update)
+        - Medium (New component, moderate development)
+        - Complex (Major feature, significant development)
+        - Very Complex (System redesign, extensive changes)
+        - I'm not sure
+    validations:
+      required: false
+
+  - type: textarea
+    id: technical-considerations
+    attributes:
+      label: Technical Considerations
+      description: Any technical aspects to consider?
+      placeholder: |
+        Think about:
+        - Performance implications
+        - Security considerations
+        - Compatibility requirements
+        - Data migration needs
+        - Third-party integrations
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation Willingness
+      description: Are you willing to contribute to this feature?
+      options:
+        - label: I would be willing to implement this feature myself
+          required: false
+        - label: I would be willing to help test this feature
+          required: false
+        - label: I would be willing to help with documentation
+          required: false
+        - label: I would be willing to provide design input
+          required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context or information about the feature request.
+      placeholder: |
+        Add any other context, links to relevant resources, or related features.
+        
+        Related issues or features:
+        - #issue-number
+        - Similar feature in other tools
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you've completed these steps.
+      options:
+        - label: I have searched for existing issues and this is not a duplicate
+          required: true
+        - label: I have clearly described the problem and proposed solution
+          required: true
+        - label: This feature aligns with the project's goals and scope
+          required: true
+        - label: I understand this is a request and not a guarantee of implementation
+          required: true

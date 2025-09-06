@@ -1,0 +1,332 @@
+# Copyright and License Detection Patterns
+# Used by the compliance checker to identify copyright and licensing information
+
+copyright_patterns:
+  # Copyright symbol patterns
+  - '©\s*\d{4}(?:-\d{4})?'
+  - '\(c\)\s*\d{4}(?:-\d{4})?'
+  - '\(C\)\s*\d{4}(?:-\d{4})?'
+  
+  # Written copyright patterns
+  - 'Copyright\s*©?\s*\d{4}(?:-\d{4})?'
+  - 'COPYRIGHT\s*©?\s*\d{4}(?:-\d{4})?'
+  - 'copyright\s*©?\s*\d{4}(?:-\d{4})?'
+  
+  # Rights reserved patterns
+  - 'All rights reserved'
+  - 'ALL RIGHTS RESERVED'
+  - 'all rights reserved'
+  
+  # Proprietary patterns
+  - 'Proprietary and confidential'
+  - 'PROPRIETARY AND CONFIDENTIAL'
+  - 'proprietary and confidential'
+  - 'Confidential and proprietary'
+  - 'CONFIDENTIAL AND PROPRIETARY'
+  - 'confidential and proprietary'
+  
+  # Unauthorized use patterns
+  - 'Unauthorized reproduction'
+  - 'UNAUTHORIZED REPRODUCTION'
+  - 'unauthorized reproduction'
+  - 'Unauthorized use'
+  - 'UNAUTHORIZED USE'
+  - 'unauthorized use'
+  - 'Unauthorized distribution'
+  - 'UNAUTHORIZED DISTRIBUTION'
+  - 'unauthorized distribution'
+  
+  # Company copyright patterns
+  - '©.*(?:Inc\.|Ltd\.|Corp\.|Company|LLC|L\.L\.C\.)'
+  - 'Copyright.*(?:Inc\.|Ltd\.|Corp\.|Company|LLC|L\.L\.C\.)'
+
+license_patterns:
+  # MIT License
+  MIT: |
+    MIT\s+Licen[sc]e|
+    Permission\s+is\s+hereby\s+granted.*free\s+of\s+charge.*to\s+deal\s+in\s+the\s+Software|
+    THE\s+SOFTWARE\s+IS\s+PROVIDED\s+"AS\s+IS".*WITHOUT\s+WARRANTY
+  
+  # Apache License
+  Apache-2.0: |
+    Apache\s+Licen[sc]e[,\s]*Version\s+2\.0|
+    Licensed\s+under\s+the\s+Apache\s+Licen[sc]e[,\s]*Version\s+2\.0|
+    http://www\.apache\.org/licenses/LICENSE-2\.0
+  
+  # BSD Licenses
+  BSD-3-Clause: |
+    BSD\s+3-Clause|
+    New\s+BSD\s+Licen[sc]e|
+    Redistribution\s+and\s+use.*with\s+or\s+without\s+modification.*are\s+permitted
+  
+  BSD-2-Clause: |
+    BSD\s+2-Clause|
+    Simplified\s+BSD\s+Licen[sc]e|
+    FreeBSD\s+Licen[sc]e
+  
+  # GPL Licenses
+  GPL-3.0: |
+    GNU\s+General\s+Public\s+Licen[sc]e[,\s]*version\s+3|
+    GPL\s*v?3|
+    GPLv3|
+    This\s+program\s+is\s+free\s+software.*you\s+can\s+redistribute.*GNU\s+General\s+Public\s+Licen[sc]e
+  
+  GPL-2.0: |
+    GNU\s+General\s+Public\s+Licen[sc]e[,\s]*version\s+2|
+    GPL\s*v?2|
+    GPLv2
+  
+  # LGPL Licenses  
+  LGPL-3.0: |
+    GNU\s+Lesser\s+General\s+Public\s+Licen[sc]e[,\s]*version\s+3|
+    LGPL\s*v?3|
+    LGPLv3
+  
+  LGPL-2.1: |
+    GNU\s+Lesser\s+General\s+Public\s+Licen[sc]e[,\s]*version\s+2\.1|
+    LGPL\s*v?2\.1|
+    LGPLv2\.1
+  
+  # Creative Commons Licenses
+  CC0-1.0: |
+    Creative\s+Commons\s+Zero\s+v1\.0\s+Universal|
+    CC0\s+1\.0\s+Universal|
+    CC0\s+1\.0|
+    Public\s+Domain\s+Dedication
+  
+  CC-BY-4.0: |
+    Creative\s+Commons\s+Attribution\s+4\.0\s+International|
+    CC\s+BY\s+4\.0|
+    Attribution\s+4\.0\s+International|
+    creativecommons\.org/licenses/by/4\.0
+  
+  CC-BY-SA-4.0: |
+    Creative\s+Commons\s+Attribution-ShareAlike\s+4\.0\s+International|
+    CC\s+BY-SA\s+4\.0|
+    Attribution-ShareAlike\s+4\.0\s+International|
+    creativecommons\.org/licenses/by-sa/4\.0
+  
+  CC-BY-NC-4.0: |
+    Creative\s+Commons\s+Attribution-NonCommercial\s+4\.0\s+International|
+    CC\s+BY-NC\s+4\.0|
+    Attribution-NonCommercial\s+4\.0\s+International|
+    creativecommons\.org/licenses/by-nc/4\.0
+  
+  CC-BY-NC-SA-4.0: |
+    Creative\s+Commons\s+Attribution-NonCommercial-ShareAlike\s+4\.0\s+International|
+    CC\s+BY-NC-SA\s+4\.0|
+    Attribution-NonCommercial-ShareAlike\s+4\.0\s+International|
+    creativecommons\.org/licenses/by-nc-sa/4\.0
+  
+  # Other common licenses
+  ISC: |
+    ISC\s+Licen[sc]e|
+    Permission\s+to\s+use.*copy.*modify.*distribute.*software.*any\s+purpose
+  
+  Unlicense: |
+    Unlicen[sc]e|
+    This\s+is\s+free\s+and\s+unencumbered\s+software\s+released\s+into\s+the\s+public\s+domain
+  
+  WTFPL: |
+    WTFPL|
+    DO\s+WHAT\s+THE\s+FUCK\s+YOU\s+WANT\s+TO\s+PUBLIC\s+LICEN[SC]E
+  
+  Mozilla-2.0: |
+    Mozilla\s+Public\s+Licen[sc]e[,\s]*Version\s+2\.0|
+    MPL\s*2\.0|
+    This\s+Source\s+Code\s+Form\s+is\s+subject\s+to\s+the\s+terms\s+of\s+the\s+Mozilla\s+Public\s+Licen[sc]e
+
+# Patterns for detecting license attribution requirements
+attribution_required_patterns:
+  - 'Attribution\s+required'
+  - 'ATTRIBUTION\s+REQUIRED'
+  - 'attribution\s+required'
+  - 'Must\s+attribute'
+  - 'MUST\s+ATTRIBUTE'
+  - 'must\s+attribute'
+  - 'Credit\s+required'
+  - 'CREDIT\s+REQUIRED'
+  - 'credit\s+required'
+  - 'Please\s+credit'
+  - 'PLEASE\s+CREDIT'
+  - 'please\s+credit'
+
+# Patterns for detecting restricted/proprietary content
+restricted_content_patterns:
+  # Commercial restrictions
+  - 'No\s+commercial\s+use'
+  - 'NO\s+COMMERCIAL\s+USE'
+  - 'no\s+commercial\s+use'
+  - 'Non-commercial\s+use\s+only'
+  - 'NON-COMMERCIAL\s+USE\s+ONLY'
+  - 'non-commercial\s+use\s+only'
+  - 'Commercial\s+use\s+prohibited'
+  - 'COMMERCIAL\s+USE\s+PROHIBITED'
+  - 'commercial\s+use\s+prohibited'
+  
+  # Distribution restrictions
+  - 'Do\s+not\s+redistribute'
+  - 'DO\s+NOT\s+REDISTRIBUTE'
+  - 'do\s+not\s+redistribute'
+  - 'No\s+redistribution'
+  - 'NO\s+REDISTRIBUTION'
+  - 'no\s+redistribution'
+  - 'Distribution\s+prohibited'
+  - 'DISTRIBUTION\s+PROHIBITED'
+  - 'distribution\s+prohibited'
+  
+  # Modification restrictions
+  - 'No\s+derivatives'
+  - 'NO\s+DERIVATIVES'
+  - 'no\s+derivatives'
+  - 'No\s+modifications'
+  - 'NO\s+MODIFICATIONS'
+  - 'no\s+modifications'
+  - 'Derivative\s+works\s+prohibited'
+  - 'DERIVATIVE\s+WORKS\s+PROHIBITED'
+  - 'derivative\s+works\s+prohibited'
+  
+  # General restrictions
+  - 'All\s+rights\s+reserved'
+  - 'ALL\s+RIGHTS\s+RESERVED'
+  - 'all\s+rights\s+reserved'
+  - 'Proprietary'
+  - 'PROPRIETARY'
+  - 'proprietary'
+  - 'Confidential'
+  - 'CONFIDENTIAL'
+  - 'confidential'
+
+# Patterns for detecting fair use indicators
+fair_use_patterns:
+  - 'Educational\s+use'
+  - 'EDUCATIONAL\s+USE'
+  - 'educational\s+use'
+  - 'Research\s+purposes'
+  - 'RESEARCH\s+PURPOSES'
+  - 'research\s+purposes'
+  - 'Non-profit\s+use'
+  - 'NON-PROFIT\s+USE'
+  - 'non-profit\s+use'
+  - 'Academic\s+use'
+  - 'ACADEMIC\s+USE'
+  - 'academic\s+use'
+  - 'Commentary'
+  - 'COMMENTARY'
+  - 'commentary'
+  - 'Criticism'
+  - 'CRITICISM'
+  - 'criticism'
+  - 'Review'
+  - 'REVIEW'
+  - 'review'
+  - 'News\s+reporting'
+  - 'NEWS\s+REPORTING'
+  - 'news\s+reporting'
+
+# Common copyright holder patterns
+copyright_holder_patterns:
+  # Technology companies
+  - 'Google\s+Inc\.|Google\s+LLC'
+  - 'Microsoft\s+Corporation'
+  - 'Apple\s+Inc\.'
+  - 'Facebook,?\s+Inc\.|Meta\s+Platforms,?\s+Inc\.'
+  - 'Twitter,?\s+Inc\.|X\s+Corp\.'
+  - 'Amazon\.com,?\s+Inc\.|Amazon\s+Web\s+Services'
+  - 'IBM\s+Corporation'
+  - 'Oracle\s+Corporation'
+  - 'Adobe\s+Inc\.|Adobe\s+Systems'
+  - 'Salesforce\.com,?\s+Inc\.'
+  
+  # Media companies
+  - 'The\s+New\s+York\s+Times\s+Company'
+  - 'The\s+Washington\s+Post'
+  - 'Reuters'
+  - 'Associated\s+Press'
+  - 'Bloomberg\s+L\.P\.'
+  - 'CNN'
+  - 'BBC'
+  
+  # Academic institutions
+  - 'Massachusetts\s+Institute\s+of\s+Technology'
+  - 'Stanford\s+University'
+  - 'Harvard\s+University'
+  - 'University\s+of\s+California'
+  - 'Carnegie\s+Mellon\s+University'
+  
+  # Government entities
+  - 'United\s+States\s+Government'
+  - 'U\.S\.\s+Department\s+of'
+  - 'National\s+Institute\s+of'
+  - 'Government\s+of'
+
+# Patterns for detecting DMCA takedown notices
+dmca_patterns:
+  - 'DMCA\s+takedown'
+  - 'DMCA\s+TAKEDOWN'
+  - 'dmca\s+takedown'
+  - 'Digital\s+Millennium\s+Copyright\s+Act'
+  - 'DIGITAL\s+MILLENNIUM\s+COPYRIGHT\s+ACT'
+  - 'digital\s+millennium\s+copyright\s+act'
+  - 'Notice\s+of\s+copyright\s+infringement'
+  - 'NOTICE\s+OF\s+COPYRIGHT\s+INFRINGEMENT'
+  - 'notice\s+of\s+copyright\s+infringement'
+  - 'Cease\s+and\s+desist'
+  - 'CEASE\s+AND\s+DESIST'
+  - 'cease\s+and\s+desist'
+
+# URL patterns for license detection
+license_url_patterns:
+  MIT: 'https?://opensource\.org/licenses/MIT'
+  Apache-2.0: 'https?://(?:www\.)?apache\.org/licenses/LICENSE-2\.0'
+  GPL-3.0: 'https?://(?:www\.)?gnu\.org/licenses/gpl-3\.0'
+  GPL-2.0: 'https?://(?:www\.)?gnu\.org/licenses/gpl-2\.0'
+  LGPL-3.0: 'https?://(?:www\.)?gnu\.org/licenses/lgpl-3\.0'
+  LGPL-2.1: 'https?://(?:www\.)?gnu\.org/licenses/lgpl-2\.1'
+  BSD-3-Clause: 'https?://opensource\.org/licenses/BSD-3-Clause'
+  BSD-2-Clause: 'https?://opensource\.org/licenses/BSD-2-Clause'
+  CC0-1.0: 'https?://creativecommons\.org/publicdomain/zero/1\.0'
+  CC-BY-4.0: 'https?://creativecommons\.org/licenses/by/4\.0'
+  CC-BY-SA-4.0: 'https?://creativecommons\.org/licenses/by-sa/4\.0'
+  CC-BY-NC-4.0: 'https?://creativecommons\.org/licenses/by-nc/4\.0'
+  CC-BY-NC-SA-4.0: 'https?://creativecommons\.org/licenses/by-nc-sa/4\.0'
+  Mozilla-2.0: 'https?://mozilla\.org/MPL/2\.0'
+  ISC: 'https?://opensource\.org/licenses/ISC'
+
+# Configuration for compliance checking
+compliance_config:
+  # Required attribution elements
+  attribution_elements:
+    - 'author'
+    - 'source_url'
+    - 'license'
+    - 'title'
+  
+  # Maximum excerpt length for fair use (characters)
+  fair_use_excerpt_limit: 500
+  
+  # Minimum attribution link requirements
+  attribution_link_requirements:
+    - 'rel="nofollow"'
+    - 'target="_blank"'
+  
+  # Grace period for copyright (years from publication)
+  copyright_grace_period: 95
+  
+  # Countries with different copyright terms
+  copyright_terms_by_country:
+    US: 95  # years
+    UK: 70  # years
+    EU: 70  # years
+    CA: 70  # years
+    AU: 70  # years
+  
+  # Prohibited content indicators
+  prohibited_indicators:
+    - 'classified'
+    - 'top secret'
+    - 'confidential'
+    - 'proprietary'
+    - 'trade secret'
+    - 'internal use only'
+    - 'not for distribution'

@@ -1,0 +1,197 @@
+name: 📝 Content Issue
+description: Report issues with website content (articles, glossary, documentation)
+title: "[Content]: "
+labels: ["content", "triage"]
+assignees: ["content-team"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our content! 📝
+        
+        Please provide details about the content issue you've found.
+
+  - type: dropdown
+    id: content-type
+    attributes:
+      label: Content Type
+      description: What type of content is affected?
+      options:
+        - Article
+        - Glossary Entry
+        - Documentation
+        - About Page
+        - Navigation/Menu
+        - Homepage
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: content-url
+    attributes:
+      label: Content URL
+      description: Link to the specific page or content
+      placeholder: https://ai-knowledge.example.com/articles/example
+    validations:
+      required: true
+
+  - type: input
+    id: content-title
+    attributes:
+      label: Content Title
+      description: Title of the article, glossary entry, or page
+      placeholder: e.g., "Machine Learning Fundamentals"
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      description: What kind of content issue is this?
+      options:
+        - Factual Error
+        - Grammar/Spelling Error
+        - Broken Link
+        - Missing Information
+        - Outdated Information
+        - Formatting Issue
+        - Accessibility Issue
+        - Duplicate Content
+        - Inappropriate Content
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this content issue?
+      options:
+        - Critical (Completely incorrect, misleading, or harmful)
+        - High (Significantly impacts understanding)
+        - Medium (Noticeable but doesn't prevent understanding)
+        - Low (Minor improvement opportunity)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Detailed description of the content issue
+      placeholder: Clearly describe what's wrong with the content.
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: Current Content
+      description: Quote the problematic content (if applicable)
+      placeholder: Copy and paste the current text that has issues.
+      render: text
+
+  - type: textarea
+    id: suggested-content
+    attributes:
+      label: Suggested Correction
+      description: Your suggested fix or improvement
+      placeholder: What should the content say instead?
+      render: text
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Specific Location
+      description: Where exactly is the issue located?
+      placeholder: |
+        Help us find the issue:
+        - Section heading
+        - Paragraph number
+        - List item
+        - Image caption
+        - etc.
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Supporting Sources
+      description: Any sources or references that support your correction
+      placeholder: |
+        Provide links or references to authoritative sources:
+        - Academic papers
+        - Official documentation
+        - Industry standards
+        - etc.
+
+  - type: checkboxes
+    id: related-issues
+    attributes:
+      label: Related Issues
+      description: Are there related problems?
+      options:
+        - label: This issue affects multiple pages
+          required: false
+        - label: This is part of a larger content update needed
+          required: false
+        - label: This relates to technical accuracy
+          required: false
+        - label: This relates to accessibility compliance
+          required: false
+
+  - type: dropdown
+    id: expertise
+    attributes:
+      label: Your Expertise
+      description: What's your level of expertise in this topic?
+      options:
+        - Expert (Professional experience in this field)
+        - Advanced (Significant knowledge and experience)
+        - Intermediate (Good understanding of the topic)
+        - Beginner (Learning about this topic)
+        - General Reader (Noticed an obvious issue)
+    validations:
+      required: false
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on Users
+      description: How does this issue affect users?
+      placeholder: |
+        Consider:
+        - Does this confuse readers?
+        - Could this mislead someone?
+        - Does this prevent understanding?
+        - Is this blocking user workflows?
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: |
+        Add any other context:
+        - Screenshots of the issue
+        - Links to related content
+        - Background information
+        - Similar issues you've noticed
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      description: Please confirm you've completed these steps.
+      options:
+        - label: I have searched for existing content issues and this is not a duplicate
+          required: true
+        - label: I have provided the specific URL and location of the issue
+          required: true
+        - label: I have clearly described the problem and suggested improvement
+          required: true
+        - label: I have considered the impact on users
+          required: true
+        - label: If suggesting factual corrections, I have provided supporting sources
+          required: false

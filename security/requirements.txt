@@ -1,0 +1,84 @@
+# Security Framework Requirements
+# Python packages required for the security modules
+
+# Core security libraries
+cryptography>=41.0.0            # Encryption and cryptographic operations
+pycryptodome>=3.18.0             # Additional cryptographic functions
+keyring>=24.2.0                  # Secure credential storage
+hvac>=1.1.1                      # HashiCorp Vault client
+azure-keyvault-secrets>=4.7.0    # Azure Key Vault integration
+azure-identity>=1.14.0           # Azure authentication
+
+# Authentication and authorization
+PyJWT>=2.8.0                     # JSON Web Token handling
+werkzeug>=2.3.6                  # Password hashing utilities
+redis>=4.6.0                     # Session storage and caching
+
+# Input validation and sanitization
+bleach>=6.0.0                    # HTML sanitization
+beautifulsoup4>=4.12.2           # HTML parsing and manipulation
+html5lib>=1.1                    # HTML5 parsing
+lxml>=4.9.3                      # XML/HTML processing
+markdown>=3.4.4                  # Markdown processing
+validators>=0.22.0               # URL and data validation
+email-validator>=2.0.0           # Email validation
+
+# Web security
+requests>=2.31.0                 # HTTP client with security features
+urllib3>=2.0.4                   # HTTP library with security patches
+certifi>=2023.7.22              # Certificate bundle
+
+# Content processing and compliance
+pyyaml>=6.0.1                    # YAML configuration parsing
+feedparser>=6.0.10              # RSS/Atom feed parsing (for content sources)
+chardet>=5.2.0                  # Character encoding detection
+python-dateutil>=2.8.2          # Date parsing utilities
+
+# Monitoring and logging
+psutil>=5.9.5                    # System monitoring
+watchdog>=3.0.0                 # File system monitoring
+
+# Database security
+psycopg2-binary>=2.9.7          # PostgreSQL adapter with security patches
+sqlalchemy>=2.0.20              # Database ORM with security features
+
+# Rate limiting and DDoS protection
+flask-limiter>=3.5.0            # Rate limiting (if using Flask)
+slowapi>=0.1.8                  # Rate limiting for FastAPI
+
+# Security scanning and analysis
+safety>=2.3.5                   # Vulnerability scanning for dependencies
+bandit>=1.7.5                   # Security linting for Python code
+semgrep>=1.38.0                 # Static analysis security scanner
+
+# Testing and development
+pytest>=7.4.0                   # Testing framework
+pytest-cov>=4.1.0              # Coverage reporting
+pytest-mock>=3.11.1            # Mocking for tests
+pytest-asyncio>=0.21.1         # Async testing support
+
+# Documentation and type checking
+mypy>=1.5.1                     # Static type checking
+types-requests>=2.31.0          # Type stubs for requests
+types-redis>=4.6.0              # Type stubs for redis
+types-PyYAML>=6.0.12            # Type stubs for PyYAML
+
+# Optional: Enterprise features
+# Uncomment if using enterprise security services
+# okta>=2.8.0                   # Okta SSO integration
+# ldap3>=2.9.1                 # LDAP authentication
+# python-pam>=2.0.2            # PAM authentication (Unix systems)
+# duo-client>=5.0.0            # Duo Security 2FA
+# twilio>=8.5.0                # SMS notifications
+
+# Optional: Advanced threat detection
+# Uncomment for advanced security features  
+# yara-python>=4.3.1           # YARA malware detection
+# ssdeep>=3.4                  # Fuzzy hashing for malware detection
+# volatility3>=2.4.1           # Memory forensics (advanced incidents)
+
+# Optional: Cloud security integrations
+# Uncomment for specific cloud providers
+# boto3>=1.28.25               # AWS SDK for security services
+# google-cloud-security-center>=1.21.0  # Google Cloud Security
+# azure-mgmt-security>=5.0.0   # Azure Security Center

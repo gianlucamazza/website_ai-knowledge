@@ -1,0 +1,71 @@
+# Codecov configuration for AI Knowledge project
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project:
+      default:
+        target: 95%
+        threshold: 1%
+        if_not_found: success
+        if_ci_failed: error
+      
+      python:
+        target: 95%
+        threshold: 1%
+        paths:
+          - "pipelines/"
+        flags:
+          - python-tests
+      
+      frontend:
+        target: 95%
+        threshold: 2%
+        paths:
+          - "apps/site/src/"
+        flags:
+          - frontend-tests
+    
+    patch:
+      default:
+        target: 90%
+        threshold: 5%
+        if_not_found: success
+
+  ignore:
+    - "tests/"
+    - "**/__pycache__/"
+    - "**/migrations/"
+    - "**/*.md"
+    - "scripts/"
+    - "docs/"
+    - ".github/"
+    - "*.yml"
+    - "*.yaml"
+    - "*.json"
+    - "conftest.py"
+    - "setup.py"
+
+flags:
+  python-tests:
+    paths:
+      - pipelines/
+    carryforward: false
+    
+  frontend-tests:
+    paths:
+      - apps/site/src/
+    carryforward: false
+
+comment:
+  layout: "reach,diff,flags,files,footer"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
+  branches:
+    - main
+    - develop

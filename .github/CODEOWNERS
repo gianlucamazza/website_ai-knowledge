@@ -1,0 +1,32 @@
+# Code Owners for AI Knowledge Website
+# These owners will be requested for review when someone opens a pull request
+
+# Global owners
+* @gianlucamazza
+
+# Frontend (Astro site)
+/apps/site/ @gianlucamazza
+
+# Content Pipeline
+/pipelines/ @gianlucamazza
+
+# Security Framework
+/security/ @gianlucamazza
+/.security/ @gianlucamazza
+
+# CI/CD and DevOps
+/.github/ @gianlucamazza
+/scripts/ @gianlucamazza
+
+# Documentation
+/docs/ @gianlucamazza
+*.md @gianlucamazza
+
+# Testing
+/tests/ @gianlucamazza
+
+# Configuration files
+*.json @gianlucamazza
+*.yaml @gianlucamazza
+*.yml @gianlucamazza
+Makefile @gianlucamazza

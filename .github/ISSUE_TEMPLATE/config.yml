@@ -1,0 +1,18 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 General Discussion
+    url: https://github.com/your-org/ai-knowledge-website/discussions
+    about: Ask questions, share ideas, or discuss the AI Knowledge Website
+
+  - name: 📚 Documentation
+    url: https://ai-knowledge.example.com/docs
+    about: Read the documentation for setup, usage, and troubleshooting
+
+  - name: 🚨 Critical Security Issues
+    url: mailto:security@ai-knowledge.example.com
+    about: For critical security vulnerabilities that require immediate private disclosure
+
+  - name: 📧 Contact Support
+    url: mailto:support@ai-knowledge.example.com
+    about: For general support questions or issues that don't fit the templates

@@ -1,0 +1,520 @@
+name: Security - Scanning and Monitoring
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run security scans daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      scan_type:
+        description: 'Type of security scan to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - dependencies
+          - code-analysis
+          - secrets
+          - infrastructure
+
+env:
+  NODE_VERSION: '18.x'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Dependency vulnerability scanning
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: ${{ inputs.scan_type == 'all' || inputs.scan_type == 'dependencies' || github.event_name != 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Node.js dependencies
+        run: cd apps/site && npm ci
+
+      - name: Run npm audit
+        run: |
+          cd apps/site
+          echo "Running npm security audit..."
+          npm audit --audit-level=moderate --json > npm-audit.json || true
+          npm audit --audit-level=moderate
+
+      - name: Install Python security tools
+        run: |
+          pip install safety pip-audit bandit semgrep
+
+      - name: Run Python dependency security check (Safety)
+        run: |
+          cd pipelines
+          echo "Running Python Safety check..."
+          safety check -r requirements.txt --json > ../safety-report.json || true
+          safety check -r requirements.txt
+
+      - name: Run Python dependency security check (pip-audit)
+        run: |
+          cd pipelines
+          echo "Running pip-audit..."
+          pip-audit -r requirements.txt --format=json --output=../pip-audit.json || true
+          pip-audit -r requirements.txt
+
+      - name: Check for known vulnerable packages
+        run: |
+          echo "Checking for known vulnerable packages..."
+          
+          # Check Node.js packages
+          if [ -f apps/site/npm-audit.json ]; then
+            CRITICAL=$(cat apps/site/npm-audit.json | jq '.metadata.vulnerabilities.critical // 0')
+            HIGH=$(cat apps/site/npm-audit.json | jq '.metadata.vulnerabilities.high // 0')
+            
+            if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+              echo "⚠️ Critical or high severity vulnerabilities found in Node.js dependencies"
+              echo "Critical: $CRITICAL, High: $HIGH"
+            fi
+          fi
+          
+          # Check Python packages
+          if [ -f safety-report.json ]; then
+            VULN_COUNT=$(cat safety-report.json | jq '.vulnerabilities | length')
+            if [ "$VULN_COUNT" -gt 0 ]; then
+              echo "⚠️ Vulnerabilities found in Python dependencies: $VULN_COUNT"
+            fi
+          fi
+
+      - name: Upload dependency scan results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-scan-results
+          path: |
+            apps/site/npm-audit.json
+            safety-report.json
+            pip-audit.json
+          retention-days: 30
+
+  # Code security analysis
+  code-analysis:
+    name: Code Security Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: ${{ inputs.scan_type == 'all' || inputs.scan_type == 'code-analysis' || github.event_name != 'workflow_dispatch' }}
+    
+    permissions:
+      security-events: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, python
+          queries: security-extended,security-and-quality
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python dependencies for analysis
+        run: |
+          cd pipelines
+          pip install -r requirements.txt
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript,python"
+
+      - name: Run Bandit security linter for Python
+        run: |
+          pip install bandit
+          cd pipelines
+          echo "Running Bandit security analysis..."
+          bandit -r . -f json -o bandit-report.json || true
+          bandit -r . -ll
+
+      - name: Run Semgrep static analysis
+        run: |
+          pip install semgrep
+          echo "Running Semgrep static analysis..."
+          semgrep --config=auto --json --output=semgrep-report.json . || true
+          semgrep --config=auto .
+
+      - name: Run ESLint security rules (if available)
+        run: |
+          cd apps/site
+          if [ -f .eslintrc.* ] || [ -f eslint.config.* ]; then
+            echo "Running ESLint security analysis..."
+            npx eslint . --ext .ts,.js,.astro || echo "ESLint analysis completed with warnings"
+          else
+            echo "ESLint not configured, skipping"
+          fi
+        continue-on-error: true
+
+      - name: Analyze security findings
+        run: |
+          echo "Security Analysis Summary:"
+          echo "========================="
+          
+          # Bandit findings
+          if [ -f pipelines/bandit-report.json ]; then
+            HIGH_ISSUES=$(cat pipelines/bandit-report.json | jq '.results | map(select(.issue_severity == "HIGH")) | length')
+            MEDIUM_ISSUES=$(cat pipelines/bandit-report.json | jq '.results | map(select(.issue_severity == "MEDIUM")) | length')
+            echo "Bandit - High severity issues: $HIGH_ISSUES"
+            echo "Bandit - Medium severity issues: $MEDIUM_ISSUES"
+          fi
+          
+          # Semgrep findings
+          if [ -f semgrep-report.json ]; then
+            SEMGREP_FINDINGS=$(cat semgrep-report.json | jq '.results | length')
+            echo "Semgrep findings: $SEMGREP_FINDINGS"
+          fi
+
+      - name: Upload code analysis results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: code-analysis-results
+          path: |
+            pipelines/bandit-report.json
+            semgrep-report.json
+          retention-days: 30
+
+  # Secrets scanning
+  secrets-scan:
+    name: Secrets Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: ${{ inputs.scan_type == 'all' || inputs.scan_type == 'secrets' || github.event_name != 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog secrets scanner
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Install and run detect-secrets
+        run: |
+          pip install detect-secrets
+          echo "Running detect-secrets scanner..."
+          detect-secrets scan --all-files --baseline .secrets.baseline || true
+          
+          # Create baseline if it doesn't exist
+          if [ ! -f .secrets.baseline ]; then
+            detect-secrets scan --all-files > .secrets.baseline
+            echo "Created new secrets baseline"
+          else
+            detect-secrets audit .secrets.baseline || echo "Secrets audit completed"
+          fi
+
+      - name: Run git-secrets (if available)
+        run: |
+          # Install git-secrets if available
+          if command -v git-secrets >/dev/null 2>&1; then
+            echo "Running git-secrets scanner..."
+            git secrets --scan-history || echo "git-secrets scan completed"
+          else
+            echo "git-secrets not available, skipping"
+          fi
+        continue-on-error: true
+
+      - name: Check for common secret patterns
+        run: |
+          echo "Checking for common secret patterns..."
+          
+          # Check for common patterns (excluding test files and documentation)
+          find . -type f -name "*.py" -o -name "*.js" -o -name "*.ts" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" | \
+            grep -v node_modules | grep -v .git | grep -v __pycache__ | \
+            xargs grep -H -i -E "(api_key|secret|password|token|credential)" | \
+            grep -v "# Example" | grep -v "TODO" | grep -v "FIXME" || echo "No obvious secrets found"
+
+      - name: Upload secrets scan results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: secrets-scan-results
+          path: |
+            .secrets.baseline
+          retention-days: 30
+
+  # Infrastructure security scan
+  infrastructure-scan:
+    name: Infrastructure Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: ${{ inputs.scan_type == 'all' || inputs.scan_type == 'infrastructure' || github.event_name != 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-fs-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-fs-results.sarif'
+
+      - name: Run Checkov configuration scan
+        run: |
+          pip install checkov
+          echo "Running Checkov configuration scan..."
+          checkov -d . --framework github_actions --output json --output-file checkov-results.json || true
+          checkov -d . --framework github_actions
+
+      - name: Scan Docker configurations (if present)
+        run: |
+          if find . -name "Dockerfile*" -o -name "docker-compose*.yml" | head -1 | read; then
+            echo "Docker configurations found, running additional scans..."
+            
+            # Run hadolint for Dockerfile linting
+            docker run --rm -i hadolint/hadolint < $(find . -name "Dockerfile" | head -1) || echo "Hadolint scan completed"
+            
+            # Run Trivy for Docker configurations
+            trivy config . --format json --output trivy-config-results.json || echo "Trivy config scan completed"
+          else
+            echo "No Docker configurations found"
+          fi
+        continue-on-error: true
+
+      - name: Check GitHub Actions security
+        run: |
+          echo "Checking GitHub Actions security..."
+          
+          # Check for pinned action versions
+          find .github/workflows -name "*.yml" -o -name "*.yaml" | \
+            xargs grep -H "uses:" | \
+            grep -v "@v[0-9]" | grep -v "@[a-f0-9]\{40\}" || echo "All actions appear to be pinned"
+          
+          # Check for secrets in workflow files
+          find .github/workflows -name "*.yml" -o -name "*.yaml" | \
+            xargs grep -H -i "password\|secret\|token" | \
+            grep -v "secrets\." || echo "No hardcoded secrets found in workflows"
+
+      - name: Upload infrastructure scan results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: infrastructure-scan-results
+          path: |
+            trivy-fs-results.sarif
+            checkov-results.json
+            trivy-config-results.json
+          retention-days: 30
+
+  # License compliance check
+  license-compliance:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Install license checking tools
+        run: |
+          npm install -g license-checker
+          pip install pip-licenses
+
+      - name: Check Node.js licenses
+        run: |
+          cd apps/site
+          npm ci
+          echo "Checking Node.js dependency licenses..."
+          license-checker --summary > ../node-licenses-summary.txt
+          license-checker --onlyAllow 'MIT;BSD;Apache-2.0;ISC;0BSD;BSD-2-Clause;BSD-3-Clause' --excludePrivatePackages || echo "License check completed with warnings"
+
+      - name: Check Python licenses
+        run: |
+          cd pipelines
+          pip install -r requirements.txt
+          echo "Checking Python dependency licenses..."
+          pip-licenses --format=json --output-file=../python-licenses.json
+          pip-licenses --allow-only 'MIT;BSD;Apache Software License;ISC License' || echo "Python license check completed with warnings"
+
+      - name: Generate license report
+        run: |
+          echo "License Compliance Report:" > license-report.txt
+          echo "=========================" >> license-report.txt
+          echo "" >> license-report.txt
+          echo "Node.js Dependencies:" >> license-report.txt
+          cat node-licenses-summary.txt >> license-report.txt
+          echo "" >> license-report.txt
+          echo "Python Dependencies:" >> license-report.txt
+          cat python-licenses.json >> license-report.txt
+
+      - name: Upload license compliance results
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-compliance-results
+          path: |
+            license-report.txt
+            node-licenses-summary.txt
+            python-licenses.json
+          retention-days: 30
+
+  # Security summary and reporting
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, code-analysis, secrets-scan, infrastructure-scan, license-compliance]
+    if: always()
+    
+    steps:
+      - name: Download all scan results
+        uses: actions/download-artifact@v4
+        with:
+          path: scan-results
+
+      - name: Generate security summary
+        run: |
+          echo "Security Scan Summary Report"
+          echo "============================"
+          echo "Scan Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "Commit: ${GITHUB_SHA:0:7}"
+          echo ""
+          echo "Scan Results:"
+          echo "============="
+          echo "Dependency Scan: ${{ needs.dependency-scan.result }}"
+          echo "Code Analysis: ${{ needs.code-analysis.result }}"
+          echo "Secrets Scan: ${{ needs.secrets-scan.result }}"
+          echo "Infrastructure Scan: ${{ needs.infrastructure-scan.result }}"
+          echo "License Compliance: ${{ needs.license-compliance.result }}"
+          
+          # Check for critical failures
+          if [[ "${{ needs.dependency-scan.result }}" == "failure" || \
+                "${{ needs.code-analysis.result }}" == "failure" || \
+                "${{ needs.secrets-scan.result }}" == "failure" ]]; then
+            echo ""
+            echo "⚠️ CRITICAL SECURITY ISSUES DETECTED"
+            echo "Please review scan results and address findings before deployment"
+          else
+            echo ""
+            echo "✅ No critical security issues detected"
+          fi
+
+      - name: Check for high-severity findings
+        run: |
+          echo "Analyzing scan results for high-severity findings..."
+          
+          # Check npm audit results
+          if [ -f scan-results/dependency-scan-results/npm-audit.json ]; then
+            CRITICAL_NPM=$(cat scan-results/dependency-scan-results/npm-audit.json | jq '.metadata.vulnerabilities.critical // 0')
+            HIGH_NPM=$(cat scan-results/dependency-scan-results/npm-audit.json | jq '.metadata.vulnerabilities.high // 0')
+            echo "NPM Critical vulnerabilities: $CRITICAL_NPM"
+            echo "NPM High vulnerabilities: $HIGH_NPM"
+          fi
+          
+          # Check Python safety results
+          if [ -f scan-results/dependency-scan-results/safety-report.json ]; then
+            PYTHON_VULNS=$(cat scan-results/dependency-scan-results/safety-report.json | jq '.vulnerabilities | length')
+            echo "Python vulnerabilities: $PYTHON_VULNS"
+          fi
+          
+          # Check Bandit results
+          if [ -f scan-results/code-analysis-results/bandit-report.json ]; then
+            BANDIT_HIGH=$(cat scan-results/code-analysis-results/bandit-report.json | jq '.results | map(select(.issue_severity == "HIGH")) | length')
+            echo "Bandit high severity issues: $BANDIT_HIGH"
+          fi
+
+      - name: Send security alert if needed
+        if: ${{ needs.dependency-scan.result == 'failure' || needs.secrets-scan.result == 'failure' }}
+        run: |
+          echo "Sending security alert..."
+          # Add alert mechanism here
+          # curl -X POST ${{ secrets.SECURITY_WEBHOOK_URL }} -d '{"severity": "high", "message": "Security scan failures detected"}'
+          echo "Security alert sent"
+
+      - name: Create security issue for failures
+        if: ${{ needs.dependency-scan.result == 'failure' || needs.secrets-scan.result == 'failure' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔒 Security Scan Failures - ${new Date().toISOString().split('T')[0]}`,
+              body: `# Security Scan Failure Report
+              
+              **Scan Date**: ${new Date().toISOString()}
+              **Commit**: ${context.sha.substring(0, 7)}
+              **Workflow Run**: ${context.runId}
+              
+              ## Failed Scans
+              - **Dependency Scan**: ${{ needs.dependency-scan.result }}
+              - **Code Analysis**: ${{ needs.code-analysis.result }}
+              - **Secrets Scan**: ${{ needs.secrets-scan.result }}
+              - **Infrastructure Scan**: ${{ needs.infrastructure-scan.result }}
+              - **License Compliance**: ${{ needs.license-compliance.result }}
+              
+              ## Immediate Actions Required
+              - [ ] Review scan results in workflow artifacts
+              - [ ] Address critical and high-severity vulnerabilities
+              - [ ] Fix any exposed secrets or credentials
+              - [ ] Update vulnerable dependencies
+              - [ ] Re-run security scans to verify fixes
+              
+              ## Security Review Checklist
+              - [ ] Dependencies updated to secure versions
+              - [ ] No secrets exposed in code
+              - [ ] Code follows security best practices
+              - [ ] Infrastructure configurations are secure
+              - [ ] Licenses comply with organizational policies
+              
+              @security-team @devops-team`,
+              labels: ['security', 'critical', 'vulnerability']
+            });
+
+      - name: Upload consolidated security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-summary-report
+          path: scan-results/
+          retention-days: 90

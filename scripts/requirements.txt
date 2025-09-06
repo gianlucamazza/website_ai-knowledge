@@ -1,0 +1,30 @@
+# Requirements for CI/CD Quality Gate Scripts
+# Install with: pip install -r scripts/requirements.txt
+
+# Content validation
+pyyaml>=6.0.1
+markdownlint-cli2>=0.10.0
+
+# Link checking
+aiohttp>=3.9.1
+asyncio>=3.4.3
+
+# Performance testing
+locust>=2.17.0
+requests>=2.31.0
+
+# Integration testing
+asyncpg>=0.29.0
+
+# Content freshness monitoring
+python-dateutil>=2.8.2
+
+# General utilities
+typer>=0.9.0
+rich>=13.7.0
+click>=8.1.7
+
+# Optional: If using advanced validation features
+# jsonschema>=4.20.0
+# lxml>=4.9.3
+# beautifulsoup4>=4.12.2

@@ -1,0 +1,131 @@
+# Content Source Configuration
+# Defines sources for AI/ML knowledge content ingestion
+
+sources:
+  # AI Research Papers and Preprints
+  - name: "arxiv_cs_ai"
+    type: "rss"
+    base_url: "http://export.arxiv.org/rss/cs.AI"
+    config:
+      categories: ["research", "ai", "machine-learning"]
+      content_type: "article"
+      crawl_frequency: 3600  # 1 hour
+      max_articles_per_run: 50
+    active: true
+    
+  - name: "arxiv_cs_lg"
+    type: "rss" 
+    base_url: "http://export.arxiv.org/rss/cs.LG"
+    config:
+      categories: ["research", "machine-learning"]
+      content_type: "article"
+      crawl_frequency: 3600
+      max_articles_per_run: 50
+    active: true
+
+  # AI News and Industry Sources  
+  - name: "towards_data_science"
+    type: "rss"
+    base_url: "https://towardsdatascience.com/feed"
+    config:
+      categories: ["data-science", "machine-learning", "ai"]
+      content_type: "article"
+      crawl_frequency: 1800  # 30 minutes
+      max_articles_per_run: 25
+    active: true
+    
+  - name: "ai_news"
+    type: "rss"
+    base_url: "https://www.artificialintelligence-news.com/feed/"
+    config:
+      categories: ["news", "ai", "industry"]
+      content_type: "news"
+      crawl_frequency: 3600
+      max_articles_per_run: 20
+    active: true
+
+  # Documentation and Tutorials
+  - name: "tensorflow_blog"
+    type: "rss"
+    base_url: "https://blog.tensorflow.org/feeds/posts/default"
+    config:
+      categories: ["tutorial", "tensorflow", "deep-learning"]
+      content_type: "tutorial"
+      crawl_frequency: 7200  # 2 hours
+      max_articles_per_run: 15
+    active: true
+    
+  - name: "pytorch_blog"
+    type: "rss"
+    base_url: "https://pytorch.org/blog/feed.xml"
+    config:
+      categories: ["tutorial", "pytorch", "deep-learning"]
+      content_type: "tutorial" 
+      crawl_frequency: 7200
+      max_articles_per_run: 15
+    active: true
+
+  # Academic and Educational Sources
+  - name: "distill_pub"
+    type: "sitemap"
+    base_url: "https://distill.pub"
+    config:
+      sitemap_url: "https://distill.pub/sitemap.xml"
+      categories: ["research", "visualization", "interpretability"]
+      content_type: "article"
+      crawl_frequency: 86400  # 24 hours
+      max_articles_per_run: 10
+    active: true
+    
+  - name: "openai_blog"
+    type: "rss"
+    base_url: "https://openai.com/blog/rss.xml"
+    config:
+      categories: ["research", "openai", "ai-safety"]
+      content_type: "article"
+      crawl_frequency: 7200
+      max_articles_per_run: 10
+    active: true
+
+  # Conferences and Events
+  - name: "neurips_papers"
+    type: "manual"
+    base_url: "https://papers.nips.cc"
+    config:
+      categories: ["research", "conference", "neurips"]
+      content_type: "article"
+      crawl_frequency: 604800  # Weekly
+      max_articles_per_run: 100
+    active: false  # Requires manual triggering
+
+  - name: "icml_papers"
+    type: "manual"
+    base_url: "https://icml.cc"
+    config:
+      categories: ["research", "conference", "icml"]
+      content_type: "article"
+      crawl_frequency: 604800
+      max_articles_per_run: 100
+    active: false
+
+# Global ingestion settings
+global_config:
+  # Rate limiting
+  default_delay: 1.0
+  max_concurrent_requests: 5
+  
+  # Content filters
+  min_content_length: 500
+  max_content_length: 50000
+  
+  # Language detection
+  supported_languages: ["en", "es", "fr", "de"]
+  default_language: "en"
+  
+  # Quality thresholds
+  min_quality_score: 0.7
+  min_readability_score: 0.5
+  
+  # Deduplication settings
+  enable_deduplication: true
+  similarity_threshold: 0.85
