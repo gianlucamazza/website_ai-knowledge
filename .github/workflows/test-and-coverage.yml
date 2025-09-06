@@ -136,7 +136,7 @@ jobs:
         reporter: java-junit
 
     - name: Archive coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: python-coverage-${{ matrix.python-version }}
@@ -202,14 +202,14 @@ jobs:
         fail_ci_if_error: true
 
     - name: Upload Playwright report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report-${{ matrix.node-version }}
         path: apps/site/playwright-report/
 
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: frontend-test-results-${{ matrix.node-version }}
@@ -226,7 +226,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Download all artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
 
     - name: Combine coverage reports
       run: |
@@ -298,7 +298,7 @@ jobs:
         config: auto
 
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-reports
@@ -322,7 +322,7 @@ jobs:
         npm audit --json > npm-audit.json || true
 
     - name: Upload dependency reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: dependency-reports
