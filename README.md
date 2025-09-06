@@ -1,5 +1,10 @@
 # AI Knowledge Website
 
+[![Private Repository](https://img.shields.io/badge/Repository-Private-red)](https://github.com/gianlucamazza/website_ai-knowledge)
+[![GitHub Issues](https://img.shields.io/badge/Issues-Enabled-green)](https://github.com/gianlucamazza/website_ai-knowledge/issues)
+[![GitHub Discussions](https://img.shields.io/badge/Discussions-Enabled-blue)](https://github.com/gianlucamazza/website_ai-knowledge/discussions)
+[![Protected Branch](https://img.shields.io/badge/Main-Protected-yellow)](https://github.com/gianlucamazza/website_ai-knowledge)
+
 A comprehensive, enterprise-grade platform for automated AI knowledge aggregation, curation, and publication. This project combines an Astro-based frontend with a sophisticated Python content pipeline to deliver high-quality, continuously updated AI knowledge resources.
 
 ## Quick Start
@@ -15,8 +20,8 @@ A comprehensive, enterprise-grade platform for automated AI knowledge aggregatio
 ### Development Setup
 
 ```bash
-# Clone the repository
-git clone <repository-url>
+# Clone the repository (private - requires authentication)
+git clone https://github.com/gianlucamazza/website_ai-knowledge.git
 cd website_ai-knowledge
 
 # Install dependencies
