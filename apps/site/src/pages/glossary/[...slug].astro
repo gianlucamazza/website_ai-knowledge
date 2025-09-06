@@ -1,0 +1,22 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import GlossaryLayout from '../../layouts/GlossaryLayout.astro';
+
+export async function getStaticPaths() {
+  const glossaryEntries = await getCollection('glossary');
+  return glossaryEntries
+    .filter(entry => !entry.data.draft)
+    .map((entry) => ({
+      params: { slug: entry.slug },
+      props: { entry },
+    }));
+}
+
+interface Props {
+  entry: CollectionEntry<'glossary'>;
+}
+
+const { entry } = Astro.props;
+---
+
+<GlossaryLayout entry={entry} />

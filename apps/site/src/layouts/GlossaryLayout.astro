@@ -1,0 +1,246 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  entry: CollectionEntry<'glossary'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Format tags for display
+const formatTag = (tag: string) => {
+  return tag.replace(/-/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+---
+
+<BaseLayout 
+  title={`${entry.data.title} - AI Knowledge Glossary`}
+  description={entry.data.summary}
+>
+  <article class="glossary-entry">
+    <header class="entry-header">
+      <h1>{entry.data.title}</h1>
+      
+      {entry.data.aliases && entry.data.aliases.length > 0 && (
+        <div class="aliases">
+          <strong>Also known as:</strong> {entry.data.aliases.join(', ')}
+        </div>
+      )}
+      
+      <div class="meta">
+        <div class="tags">
+          {entry.data.tags.map(tag => (
+            <span class="tag">{formatTag(tag)}</span>
+          ))}
+        </div>
+        
+        {entry.data.category && (
+          <div class="category">
+            Category: <span class="category-label">{formatTag(entry.data.category)}</span>
+          </div>
+        )}
+        
+        {entry.data.difficulty && (
+          <div class="difficulty">
+            Difficulty: <span class="difficulty-label">{entry.data.difficulty}</span>
+          </div>
+        )}
+      </div>
+    </header>
+    
+    <div class="summary">
+      <p><strong>Summary:</strong> {entry.data.summary}</p>
+    </div>
+    
+    <div class="content">
+      <Content />
+    </div>
+    
+    {entry.data.related && entry.data.related.length > 0 && (
+      <aside class="related">
+        <h3>Related Terms</h3>
+        <ul>
+          {entry.data.related.map(slug => (
+            <li><a href={`/glossary/${slug}`}>{slug}</a></li>
+          ))}
+        </ul>
+      </aside>
+    )}
+    
+    {entry.data.sources && entry.data.sources.length > 0 && (
+      <aside class="sources">
+        <h3>Sources</h3>
+        <ul>
+          {entry.data.sources.map(source => (
+            <li>
+              <a href={source.source_url} target="_blank" rel="noopener noreferrer">
+                {source.source_title}
+              </a>
+              <span class="license"> ({source.license})</span>
+              {source.author && <span class="author"> - {source.author}</span>}
+            </li>
+          ))}
+        </ul>
+      </aside>
+    )}
+    
+    <footer class="entry-footer">
+      <div class="updated">
+        Last updated: <time datetime={entry.data.updated}>{new Date(entry.data.updated).toLocaleDateString()}</time>
+      </div>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .glossary-entry {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .entry-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+  }
+  
+  .aliases {
+    margin-bottom: 1rem;
+    color: #6b7280;
+    font-style: italic;
+  }
+  
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+  }
+  
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .tag {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .category-label, .difficulty-label {
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .summary {
+    background-color: #eff6ff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    margin-bottom: 2rem;
+  }
+  
+  .content {
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+  
+  .content h2 {
+    color: #1f2937;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .content h3 {
+    color: #374151;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .content p {
+    margin-bottom: 1rem;
+  }
+  
+  .content code {
+    background-color: #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  
+  .related, .sources {
+    background-color: #f9fafb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  
+  .related h3, .sources h3 {
+    margin-top: 0;
+    color: #1f2937;
+  }
+  
+  .related ul, .sources ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .related li, .sources li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .related a, .sources a {
+    color: #3b82f6;
+    text-decoration: none;
+  }
+  
+  .related a:hover, .sources a:hover {
+    text-decoration: underline;
+  }
+  
+  .license {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .author {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .entry-footer {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  @media (max-width: 768px) {
+    .entry-header h1 {
+      font-size: 2rem;
+    }
+    
+    .meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .tags {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,322 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get featured content
+const glossaryEntries = await getCollection('glossary');
+const featuredEntries = glossaryEntries
+  .filter(entry => !entry.data.draft)
+  .sort((a, b) => new Date(b.data.updated).getTime() - new Date(a.data.updated).getTime())
+  .slice(0, 6);
+---
+
+<BaseLayout 
+  title="AI Knowledge - Your Comprehensive Guide to Artificial Intelligence"
+  description="Explore our curated glossary of AI terms, concepts, and techniques. From machine learning to neural networks, get clear explanations of artificial intelligence."
+>
+  <div class="hero">
+    <h1>Welcome to AI Knowledge</h1>
+    <p class="hero-subtitle">
+      Your comprehensive, curated guide to understanding Artificial Intelligence. 
+      From fundamental concepts to cutting-edge research.
+    </p>
+    
+    <div class="cta-buttons">
+      <a href="/glossary" class="cta-primary">Browse Glossary</a>
+      <a href="/articles" class="cta-secondary">Read Articles</a>
+    </div>
+  </div>
+  
+  <section class="features">
+    <div class="feature-grid">
+      <div class="feature">
+        <h3>🎯 Curated Content</h3>
+        <p>Every entry is carefully researched and validated by AI experts to ensure accuracy and clarity.</p>
+      </div>
+      <div class="feature">
+        <h3>🔗 Interconnected</h3>
+        <p>Discover related concepts through our cross-linked glossary and taxonomy system.</p>
+      </div>
+      <div class="feature">
+        <h3>📚 Always Updated</h3>
+        <p>Our content stays current with the rapidly evolving AI landscape through automated pipelines.</p>
+      </div>
+    </div>
+  </section>
+  
+  {featuredEntries.length > 0 && (
+    <section class="recent-entries">
+      <h2>Recently Updated Terms</h2>
+      <div class="entries-grid">
+        {featuredEntries.map(entry => (
+          <article class="entry-card">
+            <h3>
+              <a href={`/glossary/${entry.slug}`}>{entry.data.title}</a>
+            </h3>
+            <p class="entry-summary">{entry.data.summary}</p>
+            <div class="entry-meta">
+              <div class="tags">
+                {entry.data.tags.slice(0, 3).map(tag => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+              <time class="updated">
+                Updated {new Date(entry.data.updated).toLocaleDateString()}
+              </time>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="view-all">
+        <a href="/glossary" class="view-all-link">View All Terms →</a>
+      </div>
+    </section>
+  )}
+  
+  <section class="about-project">
+    <h2>About This Project</h2>
+    <p>
+      AI Knowledge is an open-source initiative to create the most comprehensive, 
+      accurate, and accessible collection of AI terminology and concepts. Our content 
+      is powered by automated pipelines that ensure quality, prevent duplication, 
+      and maintain up-to-date information.
+    </p>
+    <p>
+      <a href="/about" class="learn-more">Learn more about our methodology →</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    margin-bottom: 4rem;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .cta-primary, .cta-secondary {
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .cta-primary {
+    background-color: white;
+    color: #667eea;
+  }
+  
+  .cta-secondary {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+  }
+  
+  .cta-primary:hover, .cta-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .features {
+    margin-bottom: 4rem;
+  }
+  
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .feature {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .feature h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+  }
+  
+  .recent-entries {
+    margin-bottom: 4rem;
+  }
+  
+  .recent-entries h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1f2937;
+  }
+  
+  .entries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .entry-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .entry-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .entry-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .entry-card h3 a {
+    color: #1f2937;
+    text-decoration: none;
+  }
+  
+  .entry-card h3 a:hover {
+    color: #3b82f6;
+  }
+  
+  .entry-summary {
+    color: #6b7280;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  .entry-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .updated {
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+  
+  .view-all {
+    text-align: center;
+  }
+  
+  .view-all-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .view-all-link:hover {
+    text-decoration: underline;
+  }
+  
+  .about-project {
+    background-color: #f9fafb;
+    padding: 3rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .about-project h2 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .about-project p {
+    color: #6b7280;
+    max-width: 800px;
+    margin: 0 auto 1rem;
+    line-height: 1.6;
+  }
+  
+  .learn-more {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .learn-more:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .cta-primary, .cta-secondary {
+      width: 200px;
+    }
+    
+    .feature-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .entries-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .entry-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

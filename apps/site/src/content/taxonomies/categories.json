@@ -1,0 +1,54 @@
+{
+  "categories": {
+    "fundamentals": {
+      "label": "Fundamentals",
+      "description": "Core AI concepts and principles",
+      "color": "#3B82F6"
+    },
+    "machine-learning": {
+      "label": "Machine Learning",
+      "description": "ML algorithms and techniques",
+      "color": "#10B981"
+    },
+    "deep-learning": {
+      "label": "Deep Learning",
+      "description": "Neural networks and deep learning",
+      "color": "#8B5CF6"
+    },
+    "nlp": {
+      "label": "Natural Language Processing",
+      "description": "Language understanding and generation",
+      "color": "#F59E0B"
+    },
+    "computer-vision": {
+      "label": "Computer Vision",
+      "description": "Visual perception and analysis",
+      "color": "#EF4444"
+    },
+    "robotics": {
+      "label": "Robotics",
+      "description": "AI in physical systems",
+      "color": "#6366F1"
+    },
+    "ethics": {
+      "label": "AI Ethics",
+      "description": "Ethical considerations and governance",
+      "color": "#84CC16"
+    },
+    "applications": {
+      "label": "Applications",
+      "description": "Real-world AI implementations",
+      "color": "#06B6D4"
+    },
+    "tools": {
+      "label": "Tools & Frameworks",
+      "description": "Development tools and platforms",
+      "color": "#EC4899"
+    },
+    "research": {
+      "label": "Research",
+      "description": "Academic and industry research",
+      "color": "#14B8A6"
+    }
+  }
+}

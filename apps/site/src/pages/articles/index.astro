@@ -1,0 +1,374 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all articles
+const allArticles = await getCollection('articles');
+const publishedArticles = allArticles
+  .filter(article => !article.data.draft)
+  .sort((a, b) => {
+    const aDate = a.data.publishDate || a.data.updated;
+    const bDate = b.data.publishDate || b.data.updated;
+    return new Date(bDate).getTime() - new Date(aDate).getTime();
+  });
+
+const featuredArticles = publishedArticles.filter(article => article.data.featured);
+const regularArticles = publishedArticles.filter(article => !article.data.featured);
+
+// Format tag for display
+const formatTag = (tag: string) => {
+  return tag.replace(/-/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+---
+
+<BaseLayout 
+  title="AI Articles - In-Depth Analysis and Insights"
+  description="Read comprehensive articles about artificial intelligence, machine learning, and emerging AI technologies. Expert analysis and practical insights."
+>
+  <div class="articles-header">
+    <h1>AI Articles</h1>
+    <p class="subtitle">
+      In-depth analysis, insights, and commentary on artificial intelligence trends, 
+      technologies, and their impact on our world.
+    </p>
+  </div>
+  
+  {featuredArticles.length > 0 && (
+    <section class="featured-section">
+      <h2>Featured Articles</h2>
+      <div class="featured-grid">
+        {featuredArticles.map(article => (
+          <article class="featured-card">
+            <header class="card-header">
+              <h3>
+                <a href={`/articles/${article.slug}`}>{article.data.title}</a>
+              </h3>
+              {article.data.author && (
+                <div class="author">By {article.data.author}</div>
+              )}
+            </header>
+            
+            <p class="summary">{article.data.summary}</p>
+            
+            <footer class="card-footer">
+              <div class="tags">
+                {article.data.tags.slice(0, 4).map(tag => (
+                  <span class="tag">{formatTag(tag)}</span>
+                ))}
+              </div>
+              
+              <div class="meta">
+                <time class="publish-date">
+                  {new Date(article.data.publishDate || article.data.updated).toLocaleDateString()}
+                </time>
+                {article.data.readingTime && (
+                  <span class="reading-time">{article.data.readingTime} min read</span>
+                )}
+              </div>
+            </footer>
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+  
+  {regularArticles.length > 0 && (
+    <section class="articles-section">
+      <h2>{featuredArticles.length > 0 ? 'Latest Articles' : 'All Articles'}</h2>
+      <div class="articles-grid">
+        {regularArticles.map(article => (
+          <article class="article-card">
+            <header class="card-header">
+              <h3>
+                <a href={`/articles/${article.slug}`}>{article.data.title}</a>
+              </h3>
+              {article.data.author && (
+                <div class="author">By {article.data.author}</div>
+              )}
+            </header>
+            
+            <p class="summary">{article.data.summary}</p>
+            
+            <footer class="card-footer">
+              <div class="tags">
+                {article.data.tags.slice(0, 3).map(tag => (
+                  <span class="tag">{formatTag(tag)}</span>
+                ))}
+                {article.data.tags.length > 3 && (
+                  <span class="tag-more">+{article.data.tags.length - 3}</span>
+                )}
+              </div>
+              
+              <div class="meta">
+                <time class="publish-date">
+                  {new Date(article.data.publishDate || article.data.updated).toLocaleDateString()}
+                </time>
+                {article.data.readingTime && (
+                  <span class="reading-time">{article.data.readingTime} min read</span>
+                )}
+              </div>
+            </footer>
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+  
+  {publishedArticles.length === 0 && (
+    <div class="empty-state">
+      <h2>No articles found</h2>
+      <p>There are no articles available yet. Check back soon for in-depth AI analysis and insights!</p>
+      <p>In the meantime, explore our <a href="/glossary">comprehensive glossary</a> of AI terms.</p>
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .articles-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .articles-header h1 {
+    font-size: 3rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .subtitle {
+    font-size: 1.125rem;
+    color: #6b7280;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .featured-section, .articles-section {
+    margin-bottom: 4rem;
+  }
+  
+  .featured-section h2, .articles-section h2 {
+    font-size: 2rem;
+    color: #1f2937;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  
+  .featured-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .featured-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 1;
+  }
+  
+  .featured-card > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .featured-card .card-header h3 a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  .featured-card .card-header h3 a:hover {
+    text-decoration: underline;
+  }
+  
+  .featured-card .author {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+  
+  .featured-card .summary {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 1rem 0;
+    line-height: 1.6;
+  }
+  
+  .featured-card .tag {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .featured-card .meta {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .article-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+  
+  .article-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  .card-header h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+  
+  .card-header h3 a {
+    color: #1f2937;
+    text-decoration: none;
+  }
+  
+  .card-header h3 a:hover {
+    color: #3b82f6;
+  }
+  
+  .author {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  
+  .summary {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    flex: 1;
+  }
+  
+  .tag {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .tag-more {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+  
+  .meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .publish-date {
+    font-weight: 500;
+  }
+  
+  .reading-time {
+    color: #9ca3af;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b7280;
+  }
+  
+  .empty-state h2 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-state a {
+    color: #3b82f6;
+    text-decoration: none;
+  }
+  
+  .empty-state a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .articles-header h1 {
+      font-size: 2rem;
+    }
+    
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .articles-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .card-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .meta {
+      align-items: flex-start;
+      flex-direction: row;
+      gap: 1rem;
+    }
+    
+    .featured-card {
+      padding: 1.5rem;
+    }
+    
+    .featured-card .card-header h3 a {
+      font-size: 1.25rem;
+    }
+  }
+</style>

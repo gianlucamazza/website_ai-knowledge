@@ -1,0 +1,465 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="About AI Knowledge - Our Mission and Methodology"
+  description="Learn about AI Knowledge's mission to create the most comprehensive, accurate, and accessible collection of AI terminology and concepts through automated content pipelines."
+>
+  <div class="about-header">
+    <h1>About AI Knowledge</h1>
+    <p class="subtitle">
+      Building understanding through curated, validated, and interconnected AI content.
+    </p>
+  </div>
+  
+  <section class="mission">
+    <h2>Our Mission</h2>
+    <p>
+      AI Knowledge is an open-source initiative dedicated to creating the most comprehensive, 
+      accurate, and accessible collection of artificial intelligence terminology, concepts, 
+      and explanations. We believe that understanding AI should not be limited by jargon, 
+      incomplete definitions, or scattered information.
+    </p>
+    
+    <div class="values">
+      <div class="value">
+        <h3>🎯 Accuracy First</h3>
+        <p>Every definition is researched, validated, and sourced from authoritative materials.</p>
+      </div>
+      <div class="value">
+        <h3>🔗 Interconnected Knowledge</h3>
+        <p>Concepts are linked together, showing the relationships that make AI comprehensible.</p>
+      </div>
+      <div class="value">
+        <h3>📚 Always Current</h3>
+        <p>Automated pipelines ensure our content stays up-to-date with the rapidly evolving field.</p>
+      </div>
+      <div class="value">
+        <h3>🌍 Openly Accessible</h3>
+        <p>Knowledge should be free and available to everyone, from students to practitioners.</p>
+      </div>
+    </div>
+  </section>
+  
+  <section class="methodology">
+    <h2>Our Methodology</h2>
+    <p>
+      AI Knowledge is powered by a sophisticated content pipeline that ensures quality, 
+      prevents duplication, and maintains consistency across our growing collection.
+    </p>
+    
+    <div class="pipeline">
+      <div class="pipeline-stage">
+        <h3>1. Intelligent Ingestion</h3>
+        <p>
+          We systematically gather content from authoritative sources including academic papers, 
+          official documentation, and industry standards. Our ingestion process respects 
+          robots.txt and implements ethical scraping practices.
+        </p>
+      </div>
+      
+      <div class="pipeline-stage">
+        <h3>2. Smart Normalization</h3>
+        <p>
+          Content is normalized into a consistent format with standardized metadata. 
+          We extract key information like definitions, examples, and relationships while 
+          preserving attribution to original sources.
+        </p>
+      </div>
+      
+      <div class="pipeline-stage">
+        <h3>3. Duplicate Detection</h3>
+        <p>
+          Advanced algorithms using simhash and MinHash LSH detect near-duplicates and 
+          overlapping content. This ensures we don't duplicate information while identifying 
+          opportunities to merge complementary sources.
+        </p>
+      </div>
+      
+      <div class="pipeline-stage">
+        <h3>4. Content Enrichment</h3>
+        <p>
+          Automated systems identify related concepts, suggest cross-links, and enhance 
+          content with additional context. This creates the interconnected knowledge graph 
+          that makes complex AI topics more approachable.
+        </p>
+      </div>
+      
+      <div class="pipeline-stage">
+        <h3>5. Quality Validation</h3>
+        <p>
+          Every piece of content is validated against our Zod schemas, ensuring consistency 
+          in structure, metadata, and formatting. Automated tests verify links, check 
+          licensing compliance, and maintain our quality standards.
+        </p>
+      </div>
+    </div>
+  </section>
+  
+  <section class="technology">
+    <h2>Technology Stack</h2>
+    <p>
+      AI Knowledge is built with modern, performant technologies that prioritize 
+      content quality and user experience.
+    </p>
+    
+    <div class="tech-grid">
+      <div class="tech-category">
+        <h3>Content Management</h3>
+        <ul>
+          <li><strong>Astro</strong> - Static site generation with dynamic capabilities</li>
+          <li><strong>Content Collections</strong> - Type-safe content with Zod validation</li>
+          <li><strong>Markdown/MDX</strong> - Human-readable content format</li>
+          <li><strong>TypeScript</strong> - Type safety throughout the codebase</li>
+        </ul>
+      </div>
+      
+      <div class="tech-category">
+        <h3>Content Pipeline</h3>
+        <ul>
+          <li><strong>LangGraph</strong> - Workflow orchestration for complex pipelines</li>
+          <li><strong>Python</strong> - Data processing and AI integration</li>
+          <li><strong>Zod Schemas</strong> - Content validation and type safety</li>
+          <li><strong>Automated Testing</strong> - Continuous quality assurance</li>
+        </ul>
+      </div>
+      
+      <div class="tech-category">
+        <h3>Quality Assurance</h3>
+        <ul>
+          <li><strong>Duplicate Detection</strong> - SimHash and MinHash LSH algorithms</li>
+          <li><strong>Link Validation</strong> - Automated checking of all references</li>
+          <li><strong>Markdown Linting</strong> - Consistent formatting standards</li>
+          <li><strong>CI/CD</strong> - Automated testing and deployment</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  
+  <section class="open-source">
+    <h2>Open Source Commitment</h2>
+    <p>
+      AI Knowledge is built in the open, with all code, content, and processes available 
+      for inspection, contribution, and reuse. We believe in transparency and collaborative 
+      knowledge building.
+    </p>
+    
+    <div class="contribution">
+      <h3>How to Contribute</h3>
+      <ul>
+        <li><strong>Content</strong> - Suggest new terms, improve definitions, or fix errors</li>
+        <li><strong>Code</strong> - Enhance the pipeline, improve the website, or add features</li>
+        <li><strong>Documentation</strong> - Help others understand and use our resources</li>
+        <li><strong>Testing</strong> - Help us maintain quality through testing and feedback</li>
+      </ul>
+      
+      <p>
+        <a href="https://github.com/ai-knowledge/website" class="contribute-link">
+          View on GitHub →
+        </a>
+      </p>
+    </div>
+  </section>
+  
+  <section class="future">
+    <h2>Looking Forward</h2>
+    <p>
+      We're constantly working to improve AI Knowledge, with exciting developments on the horizon:
+    </p>
+    
+    <ul>
+      <li><strong>Expanded Coverage</strong> - More domains, more depth, more perspectives</li>
+      <li><strong>Interactive Features</strong> - Visual concept maps, interactive examples</li>
+      <li><strong>Multilingual Support</strong> - Making AI knowledge accessible worldwide</li>
+      <li><strong>API Access</strong> - Programmatic access to our knowledge base</li>
+      <li><strong>Community Features</strong> - Discussion, collaboration, and knowledge sharing</li>
+    </ul>
+  </section>
+  
+  <section class="contact">
+    <div class="contact-content">
+      <h2>Get in Touch</h2>
+      <p>
+        Questions, suggestions, or want to collaborate? We'd love to hear from you.
+      </p>
+      <div class="contact-links">
+        <a href="https://github.com/ai-knowledge/website/issues" class="contact-link">
+          Report Issues
+        </a>
+        <a href="https://github.com/ai-knowledge/website/discussions" class="contact-link">
+          Join Discussions
+        </a>
+        <a href="mailto:hello@ai-knowledge.com" class="contact-link">
+          Email Us
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+  }
+  
+  .about-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  
+  .subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  section {
+    margin-bottom: 4rem;
+  }
+  
+  section h2 {
+    font-size: 2rem;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  section > p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: #6b7280;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    text-align: center;
+  }
+  
+  .values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .value {
+    background-color: #f9fafb;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .value h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+  }
+  
+  .value p {
+    color: #6b7280;
+    line-height: 1.6;
+  }
+  
+  .pipeline {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .pipeline-stage {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  .pipeline-stage::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px 0 0 4px;
+  }
+  
+  .pipeline-stage h3 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+  
+  .pipeline-stage p {
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .tech-category {
+    background-color: #f9fafb;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .tech-category h3 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+  
+  .tech-category ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .tech-category li {
+    padding: 0.5rem 0;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+  
+  .tech-category strong {
+    color: #1f2937;
+    font-weight: 600;
+  }
+  
+  .contribution {
+    background-color: #f0f9ff;
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    max-width: 800px;
+    margin: 2rem auto 0;
+  }
+  
+  .contribution h3 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .contribution ul {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  .contribution li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .contribution strong {
+    color: #1f2937;
+    font-weight: 600;
+  }
+  
+  .contribute-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  
+  .contribute-link:hover {
+    text-decoration: underline;
+  }
+  
+  .future ul {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  .future li {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  
+  .future strong {
+    color: #1f2937;
+    font-weight: 600;
+  }
+  
+  .contact {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 2rem;
+    border-radius: 12px;
+    text-align: center;
+  }
+  
+  .contact h2 {
+    color: white;
+    margin-bottom: 1rem;
+  }
+  
+  .contact p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 2rem;
+  }
+  
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .contact-link {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s;
+  }
+  
+  .contact-link:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 768px) {
+    .about-header h1 {
+      font-size: 2rem;
+    }
+    
+    .values {
+      grid-template-columns: 1fr;
+    }
+    
+    .tech-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .contact-links {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .contact-link {
+      width: 200px;
+    }
+  }
+</style>

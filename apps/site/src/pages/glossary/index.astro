@@ -1,0 +1,465 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all glossary entries
+const allEntries = await getCollection('glossary');
+const publishedEntries = allEntries
+  .filter(entry => !entry.data.draft)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+// Group entries by first letter
+const groupedEntries = publishedEntries.reduce((acc, entry) => {
+  const firstLetter = entry.data.title[0].toUpperCase();
+  if (!acc[firstLetter]) {
+    acc[firstLetter] = [];
+  }
+  acc[firstLetter].push(entry);
+  return acc;
+}, {} as Record<string, typeof publishedEntries>);
+
+// Get all unique tags for filtering
+const allTags = [...new Set(publishedEntries.flatMap(entry => entry.data.tags))].sort();
+const allCategories = [...new Set(publishedEntries.map(entry => entry.data.category).filter(Boolean))].sort();
+
+// Format tag/category for display
+const formatLabel = (str: string) => {
+  return str.replace(/-/g, ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+---
+
+<BaseLayout 
+  title="AI Glossary - Comprehensive Dictionary of AI Terms"
+  description="Browse our comprehensive glossary of AI terms, from basic concepts to advanced techniques. Find clear definitions for machine learning, deep learning, NLP, and more."
+>
+  <div class="glossary-header">
+    <h1>AI Glossary</h1>
+    <p class="subtitle">
+      Comprehensive definitions of artificial intelligence terms, concepts, and techniques.
+      Currently featuring <strong>{publishedEntries.length} terms</strong>.
+    </p>
+  </div>
+  
+  <div class="filters">
+    <div class="filter-section">
+      <h3>Filter by Category</h3>
+      <div class="filter-tags">
+        <button class="filter-tag active" data-category="all">All Categories</button>
+        {allCategories.map(category => (
+          <button class="filter-tag" data-category={category}>
+            {formatLabel(category || '')}
+          </button>
+        ))}
+      </div>
+    </div>
+    
+    <div class="filter-section">
+      <h3>Filter by Tags</h3>
+      <div class="filter-tags">
+        <button class="filter-tag active" data-tag="all">All Tags</button>
+        {allTags.slice(0, 10).map(tag => (
+          <button class="filter-tag" data-tag={tag}>
+            {formatLabel(tag)}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+  
+  <div class="alphabet-nav">
+    {Object.keys(groupedEntries).sort().map(letter => (
+      <a href={`#letter-${letter}`} class="letter-link">{letter}</a>
+    ))}
+  </div>
+  
+  <div class="glossary-content">
+    {Object.entries(groupedEntries).sort(([a], [b]) => a.localeCompare(b)).map(([letter, entries]) => (
+      <section class="letter-section" id={`letter-${letter}`}>
+        <h2 class="letter-heading">{letter}</h2>
+        <div class="entries-grid">
+          {entries.map(entry => (
+            <article 
+              class="glossary-card" 
+              data-category={entry.data.category || 'uncategorized'}
+              data-tags={entry.data.tags.join(',')}
+            >
+              <header class="card-header">
+                <h3>
+                  <a href={`/glossary/${entry.slug}`}>{entry.data.title}</a>
+                </h3>
+                {entry.data.aliases && entry.data.aliases.length > 0 && (
+                  <div class="aliases">
+                    Also: {entry.data.aliases.join(', ')}
+                  </div>
+                )}
+              </header>
+              
+              <p class="summary">{entry.data.summary}</p>
+              
+              <footer class="card-footer">
+                <div class="tags">
+                  {entry.data.tags.slice(0, 3).map(tag => (
+                    <span class="tag">{formatLabel(tag)}</span>
+                  ))}
+                  {entry.data.tags.length > 3 && (
+                    <span class="tag-more">+{entry.data.tags.length - 3}</span>
+                  )}
+                </div>
+                
+                <div class="meta">
+                  {entry.data.category && (
+                    <span class="category">{formatLabel(entry.data.category)}</span>
+                  )}
+                  {entry.data.difficulty && (
+                    <span class="difficulty difficulty-{entry.data.difficulty}">
+                      {entry.data.difficulty}
+                    </span>
+                  )}
+                </div>
+              </footer>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+  
+  {publishedEntries.length === 0 && (
+    <div class="empty-state">
+      <h2>No entries found</h2>
+      <p>There are no glossary entries available yet. Check back soon!</p>
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .glossary-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .glossary-header h1 {
+    font-size: 3rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .subtitle {
+    font-size: 1.125rem;
+    color: #6b7280;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .filters {
+    background-color: #f9fafb;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .filter-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .filter-section:last-child {
+    margin-bottom: 0;
+  }
+  
+  .filter-section h3 {
+    margin: 0 0 1rem 0;
+    color: #1f2937;
+    font-size: 1rem;
+  }
+  
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .filter-tag {
+    background-color: white;
+    border: 1px solid #d1d5db;
+    color: #6b7280;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+  }
+  
+  .filter-tag:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+  
+  .filter-tag.active {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+  }
+  
+  .alphabet-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+  }
+  
+  .letter-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    color: #6b7280;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .letter-link:hover {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+  }
+  
+  .letter-section {
+    margin-bottom: 3rem;
+  }
+  
+  .letter-heading {
+    font-size: 2rem;
+    color: #1f2937;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .entries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .glossary-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+  
+  .glossary-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+  
+  .card-header h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+  }
+  
+  .card-header h3 a {
+    color: #1f2937;
+    text-decoration: none;
+  }
+  
+  .card-header h3 a:hover {
+    color: #3b82f6;
+  }
+  
+  .aliases {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  
+  .summary {
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    flex: 1;
+  }
+  
+  .tag {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .tag-more {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+  
+  .meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+  
+  .category {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .difficulty {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+  
+  .difficulty-beginner {
+    background-color: #f0f9ff;
+    color: #0284c7;
+  }
+  
+  .difficulty-intermediate {
+    background-color: #fef3c7;
+    color: #d97706;
+  }
+  
+  .difficulty-advanced {
+    background-color: #fef2f2;
+    color: #dc2626;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b7280;
+  }
+  
+  .empty-state h2 {
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .glossary-header h1 {
+      font-size: 2rem;
+    }
+    
+    .entries-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .alphabet-nav {
+      gap: 0.25rem;
+    }
+    
+    .letter-link {
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.875rem;
+    }
+    
+    .card-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .meta {
+      align-items: flex-start;
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Filter functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryButtons = document.querySelectorAll('[data-category]');
+    const tagButtons = document.querySelectorAll('[data-tag]');
+    const glossaryCards = document.querySelectorAll('.glossary-card');
+    
+    let activeCategory = 'all';
+    let activeTag = 'all';
+    
+    function filterEntries() {
+      glossaryCards.forEach(card => {
+        const cardElement = card as HTMLElement;
+        const cardCategories = cardElement.getAttribute('data-category') || '';
+        const cardTags = cardElement.getAttribute('data-tags') || '';
+        
+        const categoryMatch = activeCategory === 'all' || cardCategories === activeCategory;
+        const tagMatch = activeTag === 'all' || cardTags.split(',').includes(activeTag);
+        
+        if (categoryMatch && tagMatch) {
+          cardElement.style.display = 'block';
+        } else {
+          cardElement.style.display = 'none';
+        }
+      });
+      
+      // Hide empty letter sections
+      document.querySelectorAll('.letter-section').forEach(section => {
+        const sectionElement = section as HTMLElement;
+        const visibleCards = sectionElement.querySelectorAll('.glossary-card[style="display: block;"], .glossary-card:not([style])');
+        sectionElement.style.display = visibleCards.length > 0 ? 'block' : 'none';
+      });
+    }
+    
+    // Category filter handlers
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', function(this: HTMLElement) {
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        activeCategory = this.getAttribute('data-category') || 'all';
+        filterEntries();
+      });
+    });
+    
+    // Tag filter handlers
+    tagButtons.forEach(button => {
+      button.addEventListener('click', function(this: HTMLElement) {
+        tagButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        activeTag = this.getAttribute('data-tag') || 'all';
+        filterEntries();
+      });
+    });
+  });
+</script>

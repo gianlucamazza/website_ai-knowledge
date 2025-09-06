@@ -1,0 +1,76 @@
+{
+  "tags": {
+    "fundamentals": {
+      "label": "AI Fundamentals",
+      "description": "Core concepts and principles of artificial intelligence"
+    },
+    "machine-learning": {
+      "label": "Machine Learning",
+      "description": "Algorithms that learn from data"
+    },
+    "deep-learning": {
+      "label": "Deep Learning",
+      "description": "Neural networks with multiple layers"
+    },
+    "nlp": {
+      "label": "Natural Language Processing",
+      "description": "AI techniques for understanding and generating human language"
+    },
+    "computer-vision": {
+      "label": "Computer Vision",
+      "description": "AI systems that interpret and analyze visual information"
+    },
+    "agents": {
+      "label": "AI Agents",
+      "description": "Autonomous systems that act in environments"
+    },
+    "orchestration": {
+      "label": "Orchestration",
+      "description": "Coordination and management of AI workflows"
+    },
+    "ai-engineering": {
+      "label": "AI Engineering",
+      "description": "Building and deploying AI systems"
+    },
+    "tools": {
+      "label": "Tools & Frameworks",
+      "description": "Software tools and frameworks for AI development"
+    },
+    "ethics": {
+      "label": "AI Ethics",
+      "description": "Ethical considerations in artificial intelligence"
+    },
+    "research": {
+      "label": "Research",
+      "description": "Academic and industry research in AI"
+    },
+    "applications": {
+      "label": "Applications",
+      "description": "Real-world uses of AI technology"
+    },
+    "robotics": {
+      "label": "Robotics",
+      "description": "AI in physical robot systems"
+    },
+    "reasoning": {
+      "label": "Reasoning",
+      "description": "AI systems that perform logical reasoning"
+    },
+    "training": {
+      "label": "Model Training",
+      "description": "Techniques for training AI models"
+    },
+    "evaluation": {
+      "label": "Evaluation",
+      "description": "Methods for assessing AI system performance"
+    },
+    "data": {
+      "label": "Data",
+      "description": "Data handling and processing for AI"
+    },
+    "algorithms": {
+      "label": "Algorithms",
+      "description": "Core algorithms used in AI systems"
+    }
+  }
+}
