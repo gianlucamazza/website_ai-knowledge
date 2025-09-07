@@ -34,6 +34,10 @@ jobs:
     timeout-minutes: 15
     if: ${{ inputs.scan_type == 'all' || inputs.scan_type == 'dependencies' || github.event_name != 'workflow_dispatch' }}
     
+    permissions:
+      contents: read
+      actions: read
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -68,15 +72,15 @@ jobs:
         run: |
           cd pipelines
           echo "Running Python Safety check..."
-          safety check -r requirements.txt --json > ../safety-report.json || true
-          safety check -r requirements.txt
+          safety check --json --output ../safety-report.json || true
+          safety check
 
       - name: Run Python dependency security check (pip-audit)
         run: |
           cd pipelines
           echo "Running pip-audit..."
-          pip-audit -r requirements.txt --format=json --output=../pip-audit.json || true
-          pip-audit -r requirements.txt
+          pip-audit --format=json --output=../pip-audit.json || true
+          pip-audit
 
       - name: Check for known vulnerable packages
         run: |
@@ -213,6 +217,10 @@ jobs:
     timeout-minutes: 10
     if: ${{ inputs.scan_type == 'all' || inputs.scan_type == 'secrets' || github.event_name != 'workflow_dispatch' }}
     
+    permissions:
+      contents: read
+      actions: read
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -220,7 +228,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run TruffleHog secrets scanner
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.63.2
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
@@ -278,12 +286,17 @@ jobs:
     timeout-minutes: 15
     if: ${{ inputs.scan_type == 'all' || inputs.scan_type == 'infrastructure' || github.event_name != 'workflow_dispatch' }}
     
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.17.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -349,6 +362,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     
+    permissions:
+      contents: read
+      actions: read
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
