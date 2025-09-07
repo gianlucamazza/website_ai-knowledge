@@ -16,8 +16,8 @@ export default defineConfig({
     
     // Test discovery
     include: [
-      'tests/**/*.{test,spec}.{js,ts}',
-      'src/**/*.{test,spec}.{js,ts}'
+      'tests/**/*.{test,spec}.{js,jsx,ts,tsx}',
+      'src/**/*.{test,spec}.{js,jsx,ts,tsx}'
     ],
     exclude: [
       'node_modules/**',
