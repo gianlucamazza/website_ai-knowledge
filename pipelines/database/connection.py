@@ -143,6 +143,11 @@ class DatabaseManager:
         """Create database if it doesn't exist."""
         db_config = config.database
         
+        # Validate database name to prevent injection
+        import re
+        if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', db_config.database):
+            raise ValueError(f"Invalid database name: {db_config.database}. Must contain only alphanumeric characters and underscores, starting with a letter.")
+        
         # Get the actual password value from SecretStr
         password = db_config.password.get_secret_value() if hasattr(db_config.password, 'get_secret_value') else str(db_config.password)
         
@@ -162,7 +167,10 @@ class DatabaseManager:
             )
             
             if not exists:
-                await conn.execute(f'CREATE DATABASE "{db_config.database}"')
+                # Use safe database identifier escaping - PostgreSQL doesn't support parameterized DDL
+                # but we validate the name above to ensure it's safe
+                safe_db_name = db_config.database.replace('"', '""')  # Escape any quotes
+                await conn.execute(f'CREATE DATABASE "{safe_db_name}"')
                 logger.info(f"Created database: {db_config.database}")
             else:
                 logger.info(f"Database already exists: {db_config.database}")

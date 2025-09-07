@@ -86,6 +86,10 @@ jobs:
 
       - name: Setup pipeline environment
         id: setup
+        env:
+          PIPELINE_MODE: ${{ inputs.pipeline_mode || 'scheduled' }}
+          DRY_RUN: ${{ inputs.dry_run || false }}
+          SOURCE_FILTER: ${{ inputs.source_filter || 'all' }}
         run: |
           PIPELINE_ID="pipeline-$(date +%Y%m%d-%H%M%S)"
           echo "pipeline-id=$PIPELINE_ID" >> $GITHUB_OUTPUT
@@ -93,9 +97,9 @@ jobs:
           echo "Pipeline Configuration:"
           echo "======================"
           echo "Pipeline ID: $PIPELINE_ID"
-          echo "Mode: ${{ inputs.pipeline_mode || 'scheduled' }}"
-          echo "Dry Run: ${{ inputs.dry_run || false }}"
-          echo "Source Filter: ${{ inputs.source_filter || 'all' }}"
+          echo "Mode: $PIPELINE_MODE"
+          echo "Dry Run: $DRY_RUN"
+          echo "Source Filter: $SOURCE_FILTER"
 
       - name: Initialize database
         env:
@@ -116,22 +120,25 @@ jobs:
           REDIS_URL: redis://localhost:6379
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_SOURCE_FILTER: ${{ inputs.source_filter }}
+          PIPELINE_ID: ${{ steps.setup.outputs.pipeline-id }}
         run: |
           cd pipelines
           echo "Starting content ingestion..."
           
           ARGS=""
-          if [ "${{ inputs.dry_run }}" == "true" ]; then
+          if [ "$INPUT_DRY_RUN" == "true" ]; then
             ARGS="$ARGS --dry-run"
           fi
           
-          if [ "${{ inputs.source_filter }}" != "" ]; then
-            ARGS="$ARGS --sources ${{ inputs.source_filter }}"
+          if [ "$INPUT_SOURCE_FILTER" != "" ]; then
+            ARGS="$ARGS --sources $INPUT_SOURCE_FILTER"
           fi
           
           python -m orchestrators.langgraph.workflow \
             --mode ingest \
-            --pipeline-id ${{ steps.setup.outputs.pipeline-id }} \
+            --pipeline-id "$PIPELINE_ID" \
             $ARGS
           
           echo "Content ingestion completed"
@@ -294,17 +301,20 @@ jobs:
           git config --global user.email 'content-pipeline@ai-knowledge.example.com'
 
       - name: Commit content updates
+        env:
+          PIPELINE_ID: ${{ needs.pipeline-orchestration.outputs.pipeline-id }}
         run: |
           git add apps/site/src/content/
           
           if git diff --staged --quiet; then
             echo "No staged changes detected"
           else
-            git commit -m "chore: automated content update from pipeline ${{ needs.pipeline-orchestration.outputs.pipeline-id }}
+            TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+            git commit -m "chore: automated content update from pipeline $PIPELINE_ID
             
             - Updated content from scheduled pipeline run
-            - Pipeline ID: ${{ needs.pipeline-orchestration.outputs.pipeline-id }}
-            - Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+            - Pipeline ID: $PIPELINE_ID
+            - Timestamp: $TIMESTAMP
             
             Co-authored-by: Content Pipeline <content-pipeline@ai-knowledge.example.com>"
             
