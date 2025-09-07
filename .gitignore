@@ -112,7 +112,7 @@ dmypy.json
 
 # Documentation build
 docs/_build/
-site/
+docs/site/
 
 # Package files
 *.jar

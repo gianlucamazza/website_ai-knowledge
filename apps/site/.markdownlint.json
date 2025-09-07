@@ -1,0 +1,123 @@
+{
+  "default": true,
+  "MD001": {
+    "enforce_at": 1
+  },
+  "MD003": {
+    "style": "atx"
+  },
+  "MD004": {
+    "style": "dash"
+  },
+  "MD007": {
+    "indent": 2,
+    "start_indented": false
+  },
+  "MD009": {
+    "br_spaces": 2,
+    "list_item_empty_lines": false,
+    "strict": false
+  },
+  "MD012": {
+    "maximum": 1
+  },
+  "MD013": {
+    "line_length": 120,
+    "heading_line_length": 80,
+    "code_block_line_length": 120,
+    "code_blocks": true,
+    "tables": true,
+    "headers": true,
+    "strict": false,
+    "stern": false
+  },
+  "MD022": {
+    "lines_above": 1,
+    "lines_below": 1
+  },
+  "MD024": {
+    "allow_different_nesting": true,
+    "siblings_only": false
+  },
+  "MD025": {
+    "front_matter_title": "^\\s*title\\s*[:=]",
+    "level": 1
+  },
+  "MD026": {
+    "punctuation": ".,;:!。，；：！"
+  },
+  "MD029": {
+    "style": "ordered"
+  },
+  "MD030": {
+    "ul_single": 1,
+    "ol_single": 1,
+    "ul_multi": 1,
+    "ol_multi": 1
+  },
+  "MD031": {
+    "list_items": true,
+    "code_blocks": true
+  },
+  "MD032": {
+    "list_items": true,
+    "code_blocks": true
+  },
+  "MD033": {
+    "allowed_elements": [
+      "br",
+      "span",
+      "div",
+      "table",
+      "thead",
+      "tbody",
+      "tr",
+      "th",
+      "td",
+      "colgroup",
+      "col",
+      "details",
+      "summary",
+      "figure",
+      "figcaption",
+      "img",
+      "video",
+      "audio",
+      "source",
+      "kbd",
+      "mark",
+      "sub",
+      "sup",
+      "abbr",
+      "cite",
+      "time",
+      "small"
+    ]
+  },
+  "MD034": false,
+  "MD036": {
+    "punctuation": ".,;:!?。，；：！？"
+  },
+  "MD040": true,
+  "MD041": {
+    "front_matter_title": "^\\s*title\\s*[:=]",
+    "level": 1
+  },
+  "MD045": false,
+  "MD046": {
+    "style": "fenced"
+  },
+  "MD047": true,
+  "MD048": {
+    "style": "backtick"
+  },
+  "MD049": {
+    "style": "asterisk"
+  },
+  "MD050": {
+    "style": "asterisk"
+  },
+  "MD051": false,
+  "MD052": false,
+  "MD053": false
+}

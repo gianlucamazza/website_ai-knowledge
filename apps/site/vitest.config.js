@@ -8,6 +8,12 @@ import { defineConfig } from 'vitest/config'
 import { resolve } from 'path'
 
 export default defineConfig({
+  // Enable JSX support
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'react'
+  },
+  
   test: {
     // Test environment configuration
     environment: 'jsdom',
