@@ -98,8 +98,8 @@ export default defineConfig({
   },
 
   /* Global setup and teardown */
-  globalSetup: require.resolve('./tests/e2e/global-setup.js'),
-  globalTeardown: require.resolve('./tests/e2e/global-teardown.js'),
+  globalSetup: './tests/e2e/global-setup.js',
+  globalTeardown: './tests/e2e/global-teardown.js',
 
   /* Test timeout */
   timeout: 60000,
