@@ -1,13 +1,16 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
 
 export interface Props {
   entry: CollectionEntry<'glossary'>;
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+
+// In Astro 5 with Content Layer API, use the render function from astro:content
+const { Content } = await render(entry);
 
 // Format tags for display
 const formatTag = (tag: string) => {

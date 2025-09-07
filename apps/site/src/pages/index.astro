@@ -51,7 +51,7 @@ const featuredEntries = glossaryEntries
         {featuredEntries.map(entry => (
           <article class="entry-card">
             <h3>
-              <a href={`/glossary/${entry.slug}`}>{entry.data.title}</a>
+              <a href={`/glossary/${entry.id}`}>{entry.data.title}</a>
             </h3>
             <p class="entry-summary">{entry.data.summary}</p>
             <div class="entry-meta">

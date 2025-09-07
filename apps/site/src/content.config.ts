@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 // Source schema for attribution
 const sourceSchema = z.object({
@@ -49,14 +50,14 @@ const articleSchema = baseContentSchema.extend({
   relatedGlossary: z.array(z.string()).optional(), // Array of glossary slugs
 });
 
-// Define collections
+// Define collections with Astro 5.x Content Layer API
 export const collections = {
   'glossary': defineCollection({
-    type: 'content',
+    loader: glob({ pattern: '**/*.md', base: './src/content/glossary' }),
     schema: glossarySchema,
   }),
   'articles': defineCollection({
-    type: 'content', 
+    loader: glob({ pattern: '**/*.md', base: './src/content/articles' }),
     schema: articleSchema,
   }),
 };

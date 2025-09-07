@@ -44,7 +44,7 @@ const formatTag = (tag: string) => {
           <article class="featured-card">
             <header class="card-header">
               <h3>
-                <a href={`/articles/${article.slug}`}>{article.data.title}</a>
+                <a href={`/articles/${article.id}`}>{article.data.title}</a>
               </h3>
               {article.data.author && (
                 <div class="author">By {article.data.author}</div>
@@ -83,7 +83,7 @@ const formatTag = (tag: string) => {
           <article class="article-card">
             <header class="card-header">
               <h3>
-                <a href={`/articles/${article.slug}`}>{article.data.title}</a>
+                <a href={`/articles/${article.id}`}>{article.data.title}</a>
               </h3>
               {article.data.author && (
                 <div class="author">By {article.data.author}</div>

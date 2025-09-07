@@ -9,7 +9,7 @@ aiohttp==3.9.1
 beautifulsoup4==4.12.2
 lxml==4.9.3
 feedparser==6.0.10
-python-sitemap-parser==0.6.1
+ultimate-sitemap-parser==1.5.0
 robotexclusionrulesparser==1.7.1
 
 # Content processing
