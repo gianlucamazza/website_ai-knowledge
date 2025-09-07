@@ -159,6 +159,75 @@ ci-test: ## Run tests optimized for CI
 	cd apps/site && npm run build && npm run lint
 	@echo "✅ All CI tests passed!"
 
+# Act (GitHub Actions Local Testing)
+act-install: ## Install Act (GitHub Actions local runner)
+	@echo "🚀 Installing Act - GitHub Actions local runner..."
+	./act-installation.sh
+
+act-setup: ## Setup Act environment and secrets
+	@echo "🔧 Setting up Act environment..."
+	@if [ ! -f .secrets ]; then \
+		cp .secrets.example .secrets; \
+		echo "📝 Created .secrets file from template"; \
+		echo "⚠️  Please edit .secrets and add your actual values"; \
+	else \
+		echo "✅ .secrets file already exists"; \
+	fi
+	@echo "🐳 Pulling Docker images..."
+	docker pull catthehacker/ubuntu:act-latest
+	docker pull postgres:15
+	@echo "✅ Act setup completed!"
+
+act-list: ## List available GitHub Actions workflows
+	@echo "📋 Available workflows:"
+	act -l
+
+act-test: ## Run local Act-compatible tests (unit tests only)
+	@echo "🧪 Running local unit tests with Act..."
+	act workflow_dispatch -W .github/workflows/act-compatible-test.yml --input test_type=unit
+
+act-test-all: ## Run all local tests with Act
+	@echo "🧪 Running all local tests with Act..."
+	act workflow_dispatch -W .github/workflows/act-compatible-test.yml --input test_type=all
+
+act-test-security: ## Run security tests locally with Act
+	@echo "🔒 Running security tests with Act..."
+	act workflow_dispatch -W .github/workflows/act-compatible-test.yml --input test_type=security
+
+act-test-quality: ## Run code quality tests locally with Act
+	@echo "📏 Running quality tests with Act..."
+	act workflow_dispatch -W .github/workflows/act-compatible-test.yml --input test_type=quality
+
+act-test-integration: ## Run integration tests locally with Act
+	@echo "🔗 Running integration tests with Act..."
+	act workflow_dispatch -W .github/workflows/act-compatible-test.yml --input test_type=integration
+
+act-pr: ## Simulate PR workflow locally
+	@echo "📥 Running PR workflows locally..."
+	act pull_request --rm
+
+act-push: ## Simulate push workflow locally (main branch)
+	@echo "🚀 Running push workflows locally..."
+	act push --rm
+
+act-dry: ## Dry run Act workflows (show what would execute)
+	@echo "🔍 Dry run of workflows..."
+	act -n
+
+act-clean: ## Clean up Act containers and cache
+	@echo "🧹 Cleaning Act containers..."
+	docker container prune -f
+	docker image prune -f
+	@echo "✅ Act cleanup completed!"
+
+# Pre-commit validation
+pre-commit: act-test lint check ## Run pre-commit validation with local tests
+	@echo "✅ Pre-commit validation completed!"
+
+# CI simulation
+ci-simulate: act-test-all ## Simulate full CI pipeline locally
+	@echo "🔄 Full CI simulation completed!"
+
 # Documentation
 docs: ## Generate documentation (placeholder)
 	@echo "📚 Documentation generation not yet implemented"

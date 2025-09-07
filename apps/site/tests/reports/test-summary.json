@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-09-07T14:28:32.033Z",
+  "environment": {
+    "nodeVersion": "v24.6.0",
+    "platform": "darwin",
+    "ci": false,
+    "baseUrl": "http://localhost:4321"
+  },
+  "testRun": {
+    "startTime": "1757255312031",
+    "endTime": "2025-09-07T14:28:32.034Z",
+    "totalDuration": 3
+  }
+}

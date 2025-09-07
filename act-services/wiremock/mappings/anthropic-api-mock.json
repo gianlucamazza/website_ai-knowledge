@@ -1,0 +1,70 @@
+{
+  "mappings": [
+    {
+      "name": "Anthropic Messages API Mock",
+      "request": {
+        "method": "POST",
+        "urlPath": "/v1/messages",
+        "headers": {
+          "x-api-key": {
+            "matches": ".*"
+          },
+          "anthropic-version": {
+            "matches": ".*"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "id": "msg_mock_123",
+          "type": "message",
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "This is a mock response from Claude for testing the AI knowledge pipeline."
+            }
+          ],
+          "model": "claude-3-sonnet-20240229",
+          "stop_reason": "end_turn",
+          "stop_sequence": null,
+          "usage": {
+            "input_tokens": 15,
+            "output_tokens": 20
+          }
+        }
+      }
+    },
+    {
+      "name": "Anthropic Models List Mock",
+      "request": {
+        "method": "GET",
+        "urlPath": "/v1/models"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": "claude-3-sonnet-20240229",
+              "type": "model",
+              "display_name": "Claude 3 Sonnet"
+            },
+            {
+              "id": "claude-3-haiku-20240307",
+              "type": "model", 
+              "display_name": "Claude 3 Haiku"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,2708 @@
+{
+  "config": {
+    "configFile": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/playwright.config.js",
+    "rootDir": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/global-setup.js",
+    "globalTeardown": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/global-teardown.js",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 5
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "playwright-results.xml"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 5
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 5,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:4321",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "site-functionality.spec.js",
+      "file": "site-functionality.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Homepage Functionality",
+          "file": "site-functionality.spec.js",
+          "line": 37,
+          "column": 6,
+          "specs": [
+            {
+              "title": "loads homepage successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1173,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:57.451Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-fb9df40a854f2a8b1262",
+              "file": "site-functionality.spec.js",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "has correct meta tags for SEO",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1276,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:57.453Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-c926d73f812374b69ca4",
+              "file": "site-functionality.spec.js",
+              "line": 55,
+              "column": 3
+            },
+            {
+              "title": "navigation menu works correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 1188,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32",
+                        "location": {
+                          "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                          "column": 32,
+                          "line": 74
+                        },
+                        "snippet": "  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     "
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                            "column": 32,
+                            "line": 74
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n\n  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     \n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:57.460Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                        "column": 32,
+                        "line": 74
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-2a26aaf0f3d1fb2dda20",
+              "file": "site-functionality.spec.js",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "search functionality is accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1281,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:57.454Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-ba0d320dff2ab69c0f8f",
+              "file": "site-functionality.spec.js",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "responsive design works on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1252,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:57.451Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-25f979bb282283f3e7f0",
+              "file": "site-functionality.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "loads homepage successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 2434,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:02.759Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-fa64fef89c82c13f542d",
+              "file": "site-functionality.spec.js",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "has correct meta tags for SEO",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2689,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:02.875Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-56ed788b68ac36a83d52",
+              "file": "site-functionality.spec.js",
+              "line": 55,
+              "column": 3
+            },
+            {
+              "title": "navigation menu works correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 2669,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32",
+                        "location": {
+                          "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                          "column": 32,
+                          "line": 74
+                        },
+                        "snippet": "  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     "
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                            "column": 32,
+                            "line": 74
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n\n  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     \n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:03.414Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                        "column": 32,
+                        "line": 74
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-1a7bd9af4d41145e3cfb",
+              "file": "site-functionality.spec.js",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "search functionality is accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2579,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:03.558Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-84e4f587263aef4939f4",
+              "file": "site-functionality.spec.js",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "responsive design works on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1519,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:06.588Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-07b4c12f8603b45b23bf",
+              "file": "site-functionality.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "loads homepage successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1887,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:14.015Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-4728bac564899bc31259",
+              "file": "site-functionality.spec.js",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "has correct meta tags for SEO",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1253,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:15.491Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-4ff14938c39cf9def52c",
+              "file": "site-functionality.spec.js",
+              "line": 55,
+              "column": 3
+            },
+            {
+              "title": "navigation menu works correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 1,
+                      "status": "failed",
+                      "duration": 1276,
+                      "error": {
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32",
+                        "location": {
+                          "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                          "column": 32,
+                          "line": 74
+                        },
+                        "snippet": "  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     "
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                            "column": 32,
+                            "line": 74
+                          },
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n\n  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     \n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:15.506Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                        "column": 32,
+                        "line": 74
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-0beca1d5affd51f641c5",
+              "file": "site-functionality.spec.js",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "search functionality is accessible",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1036,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:17.067Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-f055f30a175b3c54a67c",
+              "file": "site-functionality.spec.js",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "responsive design works on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1022,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:16.626Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-3a03c29fe4c9bb99e8af",
+              "file": "site-functionality.spec.js",
+              "line": 106,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Articles Page",
+          "file": "site-functionality.spec.js",
+          "line": 123,
+          "column": 6,
+          "specs": [
+            {
+              "title": "articles page loads and displays content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 934,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:58.880Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-bc34c99a42f5bdcb25ac",
+              "file": "site-functionality.spec.js",
+              "line": 128,
+              "column": 3
+            },
+            {
+              "title": "article filtering and sorting works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1038,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:59.300Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-1628cad0084e27146502",
+              "file": "site-functionality.spec.js",
+              "line": 148,
+              "column": 3
+            },
+            {
+              "title": "pagination works if present",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 934,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:58.952Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-d8e0a9453b7cb44cb784",
+              "file": "site-functionality.spec.js",
+              "line": 176,
+              "column": 3
+            },
+            {
+              "title": "article card interaction",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 939,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:58.962Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-a87261d8a380402fdae2",
+              "file": "site-functionality.spec.js",
+              "line": 197,
+              "column": 3
+            },
+            {
+              "title": "articles page loads and displays content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1268,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:06.876Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-e06d97ea4e8eb06ef246",
+              "file": "site-functionality.spec.js",
+              "line": 128,
+              "column": 3
+            },
+            {
+              "title": "article filtering and sorting works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1302,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:07.696Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-be80ceaea9976bcb8d1e",
+              "file": "site-functionality.spec.js",
+              "line": 148,
+              "column": 3
+            },
+            {
+              "title": "pagination works if present",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2410,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:08.155Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-74ea9748ae3202ccc55f",
+              "file": "site-functionality.spec.js",
+              "line": 176,
+              "column": 3
+            },
+            {
+              "title": "article card interaction",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1234,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:08.115Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-e6971fe076ab4b2d3513",
+              "file": "site-functionality.spec.js",
+              "line": 197,
+              "column": 3
+            },
+            {
+              "title": "articles page loads and displays content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 828,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:17.055Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-6c116304a382f8df7c60",
+              "file": "site-functionality.spec.js",
+              "line": 128,
+              "column": 3
+            },
+            {
+              "title": "article filtering and sorting works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1017,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:17.599Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-51a900a2a7bea59bec10",
+              "file": "site-functionality.spec.js",
+              "line": 148,
+              "column": 3
+            },
+            {
+              "title": "pagination works if present",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 831,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:17.664Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-79d7e46262ba74c1736f",
+              "file": "site-functionality.spec.js",
+              "line": 176,
+              "column": 3
+            },
+            {
+              "title": "article card interaction",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 791,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:17.897Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-98a837cca5f0ceb771c2",
+              "file": "site-functionality.spec.js",
+              "line": 197,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Article Detail Page",
+          "file": "site-functionality.spec.js",
+          "line": 225,
+          "column": 6,
+          "specs": [
+            {
+              "title": "article detail page renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 624,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:58.962Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-060c7c472ea5528e7c46",
+              "file": "site-functionality.spec.js",
+              "line": 226,
+              "column": 3
+            },
+            {
+              "title": "article navigation and related content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 597,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:59.594Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-0e65248124f699c029e5",
+              "file": "site-functionality.spec.js",
+              "line": 257,
+              "column": 3
+            },
+            {
+              "title": "social sharing functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 633,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:59.823Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-361f900ee5cc968454ab",
+              "file": "site-functionality.spec.js",
+              "line": 292,
+              "column": 3
+            },
+            {
+              "title": "article detail page renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 801,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:08.152Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-53b0b65765572cf9f092",
+              "file": "site-functionality.spec.js",
+              "line": 226,
+              "column": 3
+            },
+            {
+              "title": "article navigation and related content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 789,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:08.961Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-c542000a2dc7e55f7389",
+              "file": "site-functionality.spec.js",
+              "line": 257,
+              "column": 3
+            },
+            {
+              "title": "social sharing functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 783,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:09.007Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-0986c1140baa78341572",
+              "file": "site-functionality.spec.js",
+              "line": 292,
+              "column": 3
+            },
+            {
+              "title": "article detail page renders correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 757,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:18.320Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-cf03230ebc31ce185ac3",
+              "file": "site-functionality.spec.js",
+              "line": 226,
+              "column": 3
+            },
+            {
+              "title": "article navigation and related content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 728,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:18.508Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-ae0307fc3d5e6f17a71b",
+              "file": "site-functionality.spec.js",
+              "line": 257,
+              "column": 3
+            },
+            {
+              "title": "social sharing functionality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 713,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:18.697Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-c9e0fdc58dbb5924d1a5",
+              "file": "site-functionality.spec.js",
+              "line": 292,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Glossary Functionality",
+          "file": "site-functionality.spec.js",
+          "line": 310,
+          "column": 6,
+          "specs": [
+            {
+              "title": "glossary page loads and displays terms",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 999,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:59.897Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-3911f736fbf7faf448c1",
+              "file": "site-functionality.spec.js",
+              "line": 315,
+              "column": 3
+            },
+            {
+              "title": "glossary search and filtering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 971,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:27:59.907Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-fd4330df5ebcf9eaa029",
+              "file": "site-functionality.spec.js",
+              "line": 335,
+              "column": 3
+            },
+            {
+              "title": "alphabetical navigation works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1502,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:00.196Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-04411b428bf226898904",
+              "file": "site-functionality.spec.js",
+              "line": 361,
+              "column": 3
+            },
+            {
+              "title": "glossary page loads and displays terms",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1170,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:09.359Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-c7b7b4c10ccda83fda8d",
+              "file": "site-functionality.spec.js",
+              "line": 315,
+              "column": 3
+            },
+            {
+              "title": "glossary search and filtering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1473,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:09.756Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-69fe4f15464b1eb79629",
+              "file": "site-functionality.spec.js",
+              "line": 335,
+              "column": 3
+            },
+            {
+              "title": "alphabetical navigation works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1777,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:09.797Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-0edc5fc56eb601f23e79",
+              "file": "site-functionality.spec.js",
+              "line": 361,
+              "column": 3
+            },
+            {
+              "title": "glossary page loads and displays terms",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 767,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:18.873Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-ad90b1d34ebd186dc129",
+              "file": "site-functionality.spec.js",
+              "line": 315,
+              "column": 3
+            },
+            {
+              "title": "glossary search and filtering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 788,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:19.083Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-c9f775fc71584f4ebc16",
+              "file": "site-functionality.spec.js",
+              "line": 335,
+              "column": 3
+            },
+            {
+              "title": "alphabetical navigation works",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1329,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:19.242Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-4d4eacfb9491596985d3",
+              "file": "site-functionality.spec.js",
+              "line": 361,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Glossary Term Detail",
+          "file": "site-functionality.spec.js",
+          "line": 379,
+          "column": 6,
+          "specs": [
+            {
+              "title": "glossary term page renders correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 11034,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32",
+                        "location": {
+                          "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                          "column": 32,
+                          "line": 397
+                        },
+                        "snippet": "  395 |         page.locator('[data-definition], .definition')\n  396 |       )\n> 397 |       await expect(definition).toBeVisible()\n      |                                ^\n  398 |       \n  399 |       // Check examples if present\n  400 |       const examples = page.getByTestId('examples').or("
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                            "column": 32,
+                            "line": 397
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n\n  395 |         page.locator('[data-definition], .definition')\n  396 |       )\n> 397 |       await expect(definition).toBeVisible()\n      |                                ^\n  398 |       \n  399 |       // Check examples if present\n  400 |       const examples = page.getByTestId('examples').or(\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:00.459Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                        "column": 32,
+                        "line": 397
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-92f6940e752269809cd5",
+              "file": "site-functionality.spec.js",
+              "line": 380,
+              "column": 3
+            },
+            {
+              "title": "glossary term page renders correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 10885,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32",
+                        "location": {
+                          "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                          "column": 32,
+                          "line": 397
+                        },
+                        "snippet": "  395 |         page.locator('[data-definition], .definition')\n  396 |       )\n> 397 |       await expect(definition).toBeVisible()\n      |                                ^\n  398 |       \n  399 |       // Check examples if present\n  400 |       const examples = page.getByTestId('examples').or("
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                            "column": 32,
+                            "line": 397
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n\n  395 |         page.locator('[data-definition], .definition')\n  396 |       )\n> 397 |       await expect(definition).toBeVisible()\n      |                                ^\n  398 |       \n  399 |       // Check examples if present\n  400 |       const examples = page.getByTestId('examples').or(\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:10.535Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                        "column": 32,
+                        "line": 397
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-921f8db24763d613bfc1",
+              "file": "site-functionality.spec.js",
+              "line": 380,
+              "column": 3
+            },
+            {
+              "title": "glossary term page renders correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 10746,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32",
+                        "location": {
+                          "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                          "column": 32,
+                          "line": 397
+                        },
+                        "snippet": "  395 |         page.locator('[data-definition], .definition')\n  396 |       )\n> 397 |       await expect(definition).toBeVisible()\n      |                                ^\n  398 |       \n  399 |       // Check examples if present\n  400 |       const examples = page.getByTestId('examples').or("
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                            "column": 32,
+                            "line": 397
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n\n  395 |         page.locator('[data-definition], .definition')\n  396 |       )\n> 397 |       await expect(definition).toBeVisible()\n      |                                ^\n  398 |       \n  399 |       // Check examples if present\n  400 |       const examples = page.getByTestId('examples').or(\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:19.416Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                        "column": 32,
+                        "line": 397
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-e9ef01e7512045aa849d",
+              "file": "site-functionality.spec.js",
+              "line": 380,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Search Functionality",
+          "file": "site-functionality.spec.js",
+          "line": 431,
+          "column": 6,
+          "specs": [
+            {
+              "title": "global search works across content types",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 999,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:00.465Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-db7a77affb5111fe2810",
+              "file": "site-functionality.spec.js",
+              "line": 432,
+              "column": 3
+            },
+            {
+              "title": "search result interaction",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 997,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:00.885Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-fc321f287c43c5686213",
+              "file": "site-functionality.spec.js",
+              "line": 465,
+              "column": 3
+            },
+            {
+              "title": "global search works across content types",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1369,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:11.175Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-54e2ae93e417352a1a58",
+              "file": "site-functionality.spec.js",
+              "line": 432,
+              "column": 3
+            },
+            {
+              "title": "search result interaction",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1265,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:11.237Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-fdffb872f229a654a2d3",
+              "file": "site-functionality.spec.js",
+              "line": 465,
+              "column": 3
+            },
+            {
+              "title": "global search works across content types",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 881,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:19.646Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-bef4d74aed3b2304de6d",
+              "file": "site-functionality.spec.js",
+              "line": 432,
+              "column": 3
+            },
+            {
+              "title": "search result interaction",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1222,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:19.880Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-ad6b76bcbd8915d5b5aa",
+              "file": "site-functionality.spec.js",
+              "line": 465,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Performance and Accessibility",
+          "file": "site-functionality.spec.js",
+          "line": 487,
+          "column": 6,
+          "specs": [
+            {
+              "title": "page loads within acceptable time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1466,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:00.905Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-7f076e88b1a61b94a502",
+              "file": "site-functionality.spec.js",
+              "line": 488,
+              "column": 3
+            },
+            {
+              "title": "has no accessibility violations on key pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 990,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:01.472Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-cdf0aeb7fa91a8b31e8f",
+              "file": "site-functionality.spec.js",
+              "line": 497,
+              "column": 3
+            },
+            {
+              "title": "works with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1491,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:01.704Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-1cbc2b2bee992d837987",
+              "file": "site-functionality.spec.js",
+              "line": 523,
+              "column": 3
+            },
+            {
+              "title": "responsive design works across viewports",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1156,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:01.887Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-372c58c5b8bec7823e1a",
+              "file": "site-functionality.spec.js",
+              "line": 551,
+              "column": 3
+            },
+            {
+              "title": "page loads within acceptable time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 3154,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:11.905Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-6c10f1737753c83fd5b6",
+              "file": "site-functionality.spec.js",
+              "line": 488,
+              "column": 3
+            },
+            {
+              "title": "has no accessibility violations on key pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1567,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:11.582Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-e1d4492da6abfc356f9c",
+              "file": "site-functionality.spec.js",
+              "line": 497,
+              "column": 3
+            },
+            {
+              "title": "works with keyboard navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2018,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:12.509Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-64c5c18f6c2810c40a4a",
+              "file": "site-functionality.spec.js",
+              "line": 523,
+              "column": 3
+            },
+            {
+              "title": "responsive design works across viewports",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2013,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:12.552Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-f0ad37b7b858f63ecefb",
+              "file": "site-functionality.spec.js",
+              "line": 551,
+              "column": 3
+            },
+            {
+              "title": "page loads within acceptable time",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1322,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:20.534Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-c4207b1df7559d87c1bb",
+              "file": "site-functionality.spec.js",
+              "line": 488,
+              "column": 3
+            },
+            {
+              "title": "has no accessibility violations on key pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 853,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:20.578Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-9d5109d412b52815d9ed",
+              "file": "site-functionality.spec.js",
+              "line": 497,
+              "column": 3
+            },
+            {
+              "title": "works with keyboard navigation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 10875,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator(':focus')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator(':focus')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator(':focus')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator(':focus')\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:531:34",
+                        "location": {
+                          "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                          "column": 34,
+                          "line": 531
+                        },
+                        "snippet": "  529 |     // Should focus on first focusable element\n  530 |     const focusedElement = page.locator(':focus')\n> 531 |     await expect(focusedElement).toBeVisible()\n      |                                  ^\n  532 |     \n  533 |     // Continue tabbing through navigation\n  534 |     for (let i = 0; i < 5; i++) {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                            "column": 34,
+                            "line": 531
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator(':focus')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator(':focus')\u001b[22m\n\n\n  529 |     // Should focus on first focusable element\n  530 |     const focusedElement = page.locator(':focus')\n> 531 |     await expect(focusedElement).toBeVisible()\n      |                                  ^\n  532 |     \n  533 |     // Continue tabbing through navigation\n  534 |     for (let i = 0; i < 5; i++) {\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:531:34"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:21.108Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
+                        "column": 34,
+                        "line": 531
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-2587eac7add8c07dda2c",
+              "file": "site-functionality.spec.js",
+              "line": 523,
+              "column": 3
+            },
+            {
+              "title": "responsive design works across viewports",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1052,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-07T14:28:21.437Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ab3f92d3502a490a9cb8-9857596e5825cd4e6349",
+              "file": "site-functionality.spec.js",
+              "line": 551,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-07T14:27:49.264Z",
+    "duration": 42782.301999999996,
+    "expected": 59,
+    "skipped": 0,
+    "unexpected": 7,
+    "flaky": 0
+  }
+}

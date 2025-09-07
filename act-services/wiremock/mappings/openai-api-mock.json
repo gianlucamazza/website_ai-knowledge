@@ -1,0 +1,79 @@
+{
+  "mappings": [
+    {
+      "name": "OpenAI Chat Completions Mock",
+      "request": {
+        "method": "POST",
+        "urlPath": "/v1/chat/completions",
+        "headers": {
+          "Authorization": {
+            "matches": "Bearer .*"
+          },
+          "Content-Type": {
+            "equalTo": "application/json"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "id": "chatcmpl-mock-123",
+          "object": "chat.completion",
+          "created": 1699889442,
+          "model": "gpt-3.5-turbo",
+          "choices": [
+            {
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "This is a mock response for testing purposes. The AI knowledge pipeline is working correctly."
+              },
+              "finish_reason": "stop"
+            }
+          ],
+          "usage": {
+            "prompt_tokens": 20,
+            "completion_tokens": 25,
+            "total_tokens": 45
+          }
+        }
+      }
+    },
+    {
+      "name": "OpenAI Embeddings Mock",
+      "request": {
+        "method": "POST",
+        "urlPath": "/v1/embeddings",
+        "headers": {
+          "Authorization": {
+            "matches": "Bearer .*"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "object": "list",
+          "data": [
+            {
+              "object": "embedding",
+              "embedding": [0.1, 0.2, 0.3, 0.4, 0.5],
+              "index": 0
+            }
+          ],
+          "model": "text-embedding-ada-002",
+          "usage": {
+            "prompt_tokens": 10,
+            "total_tokens": 10
+          }
+        }
+      }
+    }
+  ]
+}

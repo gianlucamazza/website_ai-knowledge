@@ -1,0 +1,89 @@
+# Docker Compose for Act Local Testing Services
+# Provides mock/local services for GitHub Actions testing
+
+version: '3.8'
+
+services:
+  # PostgreSQL for database testing
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: act-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_knowledge_test
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - act-network
+
+  # Redis for caching (optional)
+  redis-test:
+    image: redis:7-alpine
+    container_name: act-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - act-network
+
+  # Mock external API service
+  wiremock:
+    image: wiremock/wiremock:latest
+    container_name: act-wiremock
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./wiremock/mappings:/home/wiremock/mappings
+      - ./wiremock/__files:/home/wiremock/__files
+    command: 
+      - --global-response-templating
+      - --disable-gzip
+      - --verbose
+    networks:
+      - act-network
+
+  # Local MinIO for S3-compatible storage testing
+  minio:
+    image: minio/minio:latest
+    container_name: act-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - act-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+networks:
+  act-network:
+    driver: bridge

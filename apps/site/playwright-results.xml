@@ -1,0 +1,439 @@
+<testsuites id="" name="" tests="66" failures="7" skipped="0" errors="0" time="42.782301999999994">
+<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T14:27:57.008Z" hostname="chromium" tests="22" failures="2" skipped="0" time="33.474" errors="0">
+<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="1.173">
+</testcase>
+<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="1.276">
+</testcase>
+<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="1.188">
+<failure message="site-functionality.spec.js:71:3 navigation menu works correctly" type="FAILURE">
+<![CDATA[  [chromium] › site-functionality.spec.js:71:3 › Homepage Functionality › navigation menu works correctly 
+
+    Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:
+        1) <a href="/articles" data-astro-cid-37fxchfa="" data-astro-source-loc="128:35" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })
+        2) <a href="/articles" class="cta-secondary" data-astro-cid-j7pv25f6="" data-astro-source-loc="26:49" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('link', { name: /articles/i })
+
+
+      72 |     // Test Articles link
+      73 |     const articlesLink = page.getByRole('link', { name: /articles/i })
+    > 74 |     await expect(articlesLink).toBeVisible()
+         |                                ^
+      75 |     await articlesLink.click()
+      76 |     await expect(page).toHaveURL(/\/articles/i)
+      77 |     
+        at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/video.webm]]
+
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="1.281">
+</testcase>
+<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="1.252">
+</testcase>
+<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="0.934">
+</testcase>
+<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="1.038">
+</testcase>
+<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="0.934">
+</testcase>
+<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="0.939">
+</testcase>
+<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.624">
+</testcase>
+<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.597">
+</testcase>
+<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.633">
+</testcase>
+<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="0.999">
+</testcase>
+<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="0.971">
+</testcase>
+<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.502">
+</testcase>
+<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="11.034">
+<failure message="site-functionality.spec.js:380:3 glossary term page renders correctly" type="FAILURE">
+<![CDATA[  [chromium] › site-functionality.spec.js:380:3 › Glossary Term Detail › glossary term page renders correctly 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByTestId('definition').or(locator('[data-definition], .definition'))
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))
+
+
+      395 |         page.locator('[data-definition], .definition')
+      396 |       )
+    > 397 |       await expect(definition).toBeVisible()
+          |                                ^
+      398 |       
+      399 |       // Check examples if present
+      400 |       const examples = page.getByTestId('examples').or(
+        at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/video.webm]]
+
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="0.999">
+</testcase>
+<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="0.997">
+</testcase>
+<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="1.466">
+</testcase>
+<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="0.99">
+</testcase>
+<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="1.491">
+</testcase>
+<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="1.156">
+</testcase>
+</testsuite>
+<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T14:27:57.008Z" hostname="firefox" tests="22" failures="2" skipped="0" time="47.168" errors="0">
+<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="2.434">
+</testcase>
+<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="2.689">
+</testcase>
+<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="2.669">
+<failure message="site-functionality.spec.js:71:3 navigation menu works correctly" type="FAILURE">
+<![CDATA[  [firefox] › site-functionality.spec.js:71:3 › Homepage Functionality › navigation menu works correctly 
+
+    Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:
+        1) <a href="/articles" data-astro-cid-37fxchfa="" data-astro-source-loc="128:35" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })
+        2) <a href="/articles" class="cta-secondary" data-astro-cid-j7pv25f6="" data-astro-source-loc="26:49" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('link', { name: /articles/i })
+
+
+      72 |     // Test Articles link
+      73 |     const articlesLink = page.getByRole('link', { name: /articles/i })
+    > 74 |     await expect(articlesLink).toBeVisible()
+         |                                ^
+      75 |     await articlesLink.click()
+      76 |     await expect(page).toHaveURL(/\/articles/i)
+      77 |     
+        at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/video.webm]]
+
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="2.579">
+</testcase>
+<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="1.519">
+</testcase>
+<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="1.268">
+</testcase>
+<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="1.302">
+</testcase>
+<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="2.41">
+</testcase>
+<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="1.234">
+</testcase>
+<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.801">
+</testcase>
+<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.789">
+</testcase>
+<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.783">
+</testcase>
+<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="1.17">
+</testcase>
+<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="1.473">
+</testcase>
+<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.777">
+</testcase>
+<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="10.885">
+<failure message="site-functionality.spec.js:380:3 glossary term page renders correctly" type="FAILURE">
+<![CDATA[  [firefox] › site-functionality.spec.js:380:3 › Glossary Term Detail › glossary term page renders correctly 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByTestId('definition').or(locator('[data-definition], .definition'))
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))
+
+
+      395 |         page.locator('[data-definition], .definition')
+      396 |       )
+    > 397 |       await expect(definition).toBeVisible()
+          |                                ^
+      398 |       
+      399 |       // Check examples if present
+      400 |       const examples = page.getByTestId('examples').or(
+        at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/video.webm]]
+
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-firefox/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="1.369">
+</testcase>
+<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="1.265">
+</testcase>
+<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="3.154">
+</testcase>
+<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="1.567">
+</testcase>
+<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="2.018">
+</testcase>
+<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="2.013">
+</testcase>
+</testsuite>
+<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T14:27:57.008Z" hostname="webkit" tests="22" failures="3" skipped="0" time="41.974" errors="0">
+<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="1.887">
+</testcase>
+<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="1.253">
+</testcase>
+<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="1.276">
+<failure message="site-functionality.spec.js:71:3 navigation menu works correctly" type="FAILURE">
+<![CDATA[  [webkit] › site-functionality.spec.js:71:3 › Homepage Functionality › navigation menu works correctly 
+
+    Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:
+        1) <a href="/articles" data-astro-cid-37fxchfa="" data-astro-source-loc="128:35" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })
+        2) <a href="/articles" class="cta-secondary" data-astro-cid-j7pv25f6="" data-astro-source-loc="26:49" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByRole('link', { name: /articles/i })
+
+
+      72 |     // Test Articles link
+      73 |     const articlesLink = page.getByRole('link', { name: /articles/i })
+    > 74 |     await expect(articlesLink).toBeVisible()
+         |                                ^
+      75 |     await articlesLink.click()
+      76 |     await expect(page).toHaveURL(/\/articles/i)
+      77 |     
+        at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/video.webm]]
+
+[[ATTACHMENT|test-results/site-functionality-Homepag-fa66a-gation-menu-works-correctly-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="1.036">
+</testcase>
+<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="1.022">
+</testcase>
+<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="0.828">
+</testcase>
+<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="1.017">
+</testcase>
+<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="0.831">
+</testcase>
+<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="0.791">
+</testcase>
+<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.757">
+</testcase>
+<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.728">
+</testcase>
+<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.713">
+</testcase>
+<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="0.767">
+</testcase>
+<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="0.788">
+</testcase>
+<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.329">
+</testcase>
+<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="10.746">
+<failure message="site-functionality.spec.js:380:3 glossary term page renders correctly" type="FAILURE">
+<![CDATA[  [webkit] › site-functionality.spec.js:380:3 › Glossary Term Detail › glossary term page renders correctly 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByTestId('definition').or(locator('[data-definition], .definition'))
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))
+
+
+      395 |         page.locator('[data-definition], .definition')
+      396 |       )
+    > 397 |       await expect(definition).toBeVisible()
+          |                                ^
+      398 |       
+      399 |       // Check examples if present
+      400 |       const examples = page.getByTestId('examples').or(
+        at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/video.webm]]
+
+[[ATTACHMENT|test-results/site-functionality-Glossar-8a4de-term-page-renders-correctly-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="0.881">
+</testcase>
+<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="1.222">
+</testcase>
+<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="1.322">
+</testcase>
+<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="0.853">
+</testcase>
+<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="10.875">
+<failure message="site-functionality.spec.js:523:3 works with keyboard navigation" type="FAILURE">
+<![CDATA[  [webkit] › site-functionality.spec.js:523:3 › Performance and Accessibility › works with keyboard navigation 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator(':focus')
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 10000ms
+      - waiting for locator(':focus')
+
+
+      529 |     // Should focus on first focusable element
+      530 |     const focusedElement = page.locator(':focus')
+    > 531 |     await expect(focusedElement).toBeVisible()
+          |                                  ^
+      532 |     
+      533 |     // Continue tabbing through navigation
+      534 |     for (let i = 0; i < 5; i++) {
+        at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:531:34
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ../../test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/test-failed-1.png]]
+
+[[ATTACHMENT|test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/video.webm]]
+
+[[ATTACHMENT|test-results/site-functionality-Perform-c9339-ks-with-keyboard-navigation-webkit/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="1.052">
+</testcase>
+</testsuite>
+</testsuites>
