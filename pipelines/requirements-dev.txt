@@ -1,0 +1,63 @@
+# Development Dependencies for Pipeline Testing and Code Quality
+
+# Core testing framework
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-mock==3.12.0
+pytest-cov==4.1.0
+pytest-xdist==3.5.0
+pytest-timeout==2.2.0
+pytest-html==4.1.1
+pytest-benchmark==4.0.0
+
+# Database testing
+pytest-postgresql==6.0.0
+pytest-alembic==0.10.7
+sqlalchemy-utils==0.41.1
+
+# Web testing and mocking
+pytest-httpx==0.26.0
+responses==0.24.1
+httpx==0.25.2
+aioresponses==0.7.4
+
+# Performance testing
+locust==2.17.0
+memory-profiler==0.61.0
+psutil==5.9.6
+
+# Security testing
+bandit==1.7.5
+safety==2.3.5
+
+# Code quality and coverage
+coverage[toml]==7.3.2
+pytest-clarity==1.0.1
+pytest-sugar==0.9.7
+pytest-instafail==0.5.0
+
+# Fixtures and test data
+factory-boy==3.3.0
+faker==20.1.0
+freezegun==1.2.2
+
+# API testing
+requests-mock==1.11.0
+vcr-py==5.1.0
+
+# Monitoring and reporting
+allure-pytest==2.13.2
+pytest-json-report==1.5.0
+
+# Development utilities
+pytest-watch==4.2.0
+pytest-picked==0.5.0
+pytest-testmon==2.0.3
+
+# Code formatting and linting
+black==23.11.0
+isort==5.12.0
+mypy==1.7.1
+flake8==6.1.0
+pylint==3.0.3
+pre-commit==3.6.0

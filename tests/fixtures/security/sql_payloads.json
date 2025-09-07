@@ -1,0 +1,170 @@
+{
+  "description": "SQL injection payload test cases for security validation",
+  "payloads": [
+    {
+      "name": "basic_union_select",
+      "payload": "' UNION SELECT 1,2,3--",
+      "should_block": true,
+      "category": "union_injection",
+      "severity": "high"
+    },
+    {
+      "name": "comment_bypass",
+      "payload": "admin'--",
+      "should_block": true,
+      "category": "authentication_bypass",
+      "severity": "critical"
+    },
+    {
+      "name": "boolean_blind",
+      "payload": "1' AND '1'='1",
+      "should_block": true,
+      "category": "blind_injection",
+      "severity": "medium"
+    },
+    {
+      "name": "time_based_blind",
+      "payload": "1'; WAITFOR DELAY '00:00:05'--",
+      "should_block": true,
+      "category": "time_based_injection",
+      "severity": "medium"
+    },
+    {
+      "name": "error_based",
+      "payload": "1' AND (SELECT COUNT(*) FROM information_schema.tables)>'0",
+      "should_block": true,
+      "category": "error_based_injection",
+      "severity": "high"
+    },
+    {
+      "name": "stacked_queries",
+      "payload": "1'; DROP TABLE users--",
+      "should_block": true,
+      "category": "stacked_query",
+      "severity": "critical"
+    },
+    {
+      "name": "hex_encoding",
+      "payload": "0x61646D696E",
+      "should_block": true,
+      "category": "encoding_bypass",
+      "severity": "medium"
+    },
+    {
+      "name": "case_variation",
+      "payload": "UnIoN SeLeCt 1,2,3",
+      "should_block": true,
+      "category": "case_bypass",
+      "severity": "high"
+    },
+    {
+      "name": "nested_queries",
+      "payload": "1' AND (SELECT SUBSTRING(@@version,1,1))>'4",
+      "should_block": true,
+      "category": "nested_query",
+      "severity": "medium"
+    },
+    {
+      "name": "information_schema",
+      "payload": "' UNION SELECT table_name FROM information_schema.tables--",
+      "should_block": true,
+      "category": "information_disclosure",
+      "severity": "high"
+    },
+    {
+      "name": "mysql_functions",
+      "payload": "1' AND SUBSTRING(@@version,1,1)='5",
+      "should_block": true,
+      "category": "function_abuse",
+      "severity": "medium"
+    },
+    {
+      "name": "postgres_functions",
+      "payload": "1' AND (SELECT version()) LIKE '%PostgreSQL%",
+      "should_block": true,
+      "category": "function_abuse",
+      "severity": "medium"
+    },
+    {
+      "name": "mssql_functions",
+      "payload": "1'; EXEC sp_configure 'show advanced options', 1--",
+      "should_block": true,
+      "category": "stored_procedure",
+      "severity": "critical"
+    },
+    {
+      "name": "oracle_functions",
+      "payload": "1' AND (SELECT banner FROM v$version WHERE ROWNUM=1) LIKE '%Oracle%",
+      "should_block": true,
+      "category": "function_abuse",
+      "severity": "medium"
+    },
+    {
+      "name": "load_file",
+      "payload": "1' UNION SELECT LOAD_FILE('/etc/passwd')--",
+      "should_block": true,
+      "category": "file_access",
+      "severity": "critical"
+    },
+    {
+      "name": "into_outfile",
+      "payload": "1' UNION SELECT 'test' INTO OUTFILE '/tmp/test.txt'--",
+      "should_block": true,
+      "category": "file_write",
+      "severity": "critical"
+    },
+    {
+      "name": "benchmark_dos",
+      "payload": "1' AND BENCHMARK(10000000,MD5(1))--",
+      "should_block": true,
+      "category": "denial_of_service",
+      "severity": "medium"
+    },
+    {
+      "name": "sleep_dos",
+      "payload": "1' AND SLEEP(10)--",
+      "should_block": true,
+      "category": "denial_of_service",
+      "severity": "medium"
+    },
+    {
+      "name": "safe_string",
+      "payload": "machine learning",
+      "should_block": false,
+      "category": "safe_content",
+      "severity": "none"
+    },
+    {
+      "name": "safe_number",
+      "payload": "12345",
+      "should_block": false,
+      "category": "safe_content",
+      "severity": "none"
+    },
+    {
+      "name": "safe_email",
+      "payload": "user@example.com",
+      "should_block": false,
+      "category": "safe_content",
+      "severity": "none"
+    },
+    {
+      "name": "safe_url",
+      "payload": "https://example.com/article",
+      "should_block": false,
+      "category": "safe_content",
+      "severity": "none"
+    }
+  ],
+  "test_settings": {
+    "timeout": 3000,
+    "expected_block_rate": 0.90,
+    "allowed_false_positives": 1,
+    "severity_weights": {
+      "critical": 1.0,
+      "high": 0.8,
+      "medium": 0.5,
+      "none": 0.0
+    }
+  }
+}

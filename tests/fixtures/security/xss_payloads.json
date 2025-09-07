@@ -1,0 +1,142 @@
+{
+  "description": "XSS payload test cases for security validation",
+  "payloads": [
+    {
+      "name": "basic_script_tag",
+      "payload": "<script>alert('XSS')</script>",
+      "should_block": true,
+      "category": "script_injection"
+    },
+    {
+      "name": "img_onerror",
+      "payload": "<img src='x' onerror='alert(1)'>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "svg_onload",
+      "payload": "<svg onload='alert(1)'>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "iframe_javascript",
+      "payload": "<iframe src='javascript:alert(1)'>",
+      "should_block": true,
+      "category": "javascript_uri"
+    },
+    {
+      "name": "javascript_protocol",
+      "payload": "<a href='javascript:alert(1)'>click</a>",
+      "should_block": true,
+      "category": "javascript_uri"
+    },
+    {
+      "name": "form_action_javascript",
+      "payload": "<form action='javascript:alert(1)'><input type='submit'></form>",
+      "should_block": true,
+      "category": "javascript_uri"
+    },
+    {
+      "name": "meta_refresh",
+      "payload": "<meta http-equiv='refresh' content='0;url=javascript:alert(1)'>",
+      "should_block": true,
+      "category": "meta_tag"
+    },
+    {
+      "name": "style_expression",
+      "payload": "<div style='background:url(javascript:alert(1))'>",
+      "should_block": true,
+      "category": "css_injection"
+    },
+    {
+      "name": "object_data",
+      "payload": "<object data='javascript:alert(1)'>",
+      "should_block": true,
+      "category": "object_tag"
+    },
+    {
+      "name": "embed_src",
+      "payload": "<embed src='javascript:alert(1)'>",
+      "should_block": true,
+      "category": "embed_tag"
+    },
+    {
+      "name": "link_href_javascript",
+      "payload": "<link rel='stylesheet' href='javascript:alert(1)'>",
+      "should_block": true,
+      "category": "link_tag"
+    },
+    {
+      "name": "input_onfocus",
+      "payload": "<input onfocus='alert(1)' autofocus>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "textarea_onfocus",
+      "payload": "<textarea onfocus='alert(1)' autofocus></textarea>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "details_ontoggle",
+      "payload": "<details ontoggle='alert(1)' open>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "video_onerror",
+      "payload": "<video onerror='alert(1)'><source></video>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "audio_onerror",
+      "payload": "<audio onerror='alert(1)'><source></audio>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "body_onload",
+      "payload": "<body onload='alert(1)'>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "marquee_onstart",
+      "payload": "<marquee onstart='alert(1)'>XSS</marquee>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "select_onfocus",
+      "payload": "<select onfocus='alert(1)' autofocus><option></select>",
+      "should_block": true,
+      "category": "event_handler"
+    },
+    {
+      "name": "safe_text",
+      "payload": "This is safe text content",
+      "should_block": false,
+      "category": "safe_content"
+    },
+    {
+      "name": "safe_html",
+      "payload": "<p>This is <strong>safe</strong> HTML</p>",
+      "should_block": false,
+      "category": "safe_content"
+    },
+    {
+      "name": "safe_link",
+      "payload": "<a href='https://example.com'>Safe link</a>",
+      "should_block": false,
+      "category": "safe_content"
+    }
+  ],
+  "test_settings": {
+    "timeout": 5000,
+    "expected_block_rate": 0.85,
+    "allowed_false_positives": 2
+  }
+}

@@ -47,9 +47,10 @@ jobs:
 
       - name: Install Python dependencies
         run: |
+          python -m pip install --upgrade pip
           cd pipelines
           pip install -r requirements.txt
-          pip install -r requirements-dev.txt || echo "No dev requirements found, skipping..."
+          pip install -r requirements-dev.txt
 
       - name: Validate package.json and package-lock.json
         run: cd apps/site && npm audit --audit-level=high
@@ -199,9 +200,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           cd pipelines
           pip install -r requirements.txt
-          pip install pytest pytest-asyncio pytest-cov pytest-mock
+          pip install -r requirements-dev.txt
 
       - name: Set up test environment
         env:
@@ -217,14 +219,15 @@ jobs:
       - name: Run Python unit tests
         env:
           DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          cd pipelines
-          python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=term || echo "No tests found, skipping..."
+          cd ${{ github.workspace }}
+          python -m pytest tests/unit/ -v --cov=pipelines --cov-report=xml:coverage/coverage.xml --cov-report=term-missing --tb=short
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          file: pipelines/coverage.xml
+          file: coverage/coverage.xml
           flags: python-pipeline
           name: pipeline-coverage
         continue-on-error: true
@@ -259,10 +262,11 @@ jobs:
 
       - name: Check for Python security vulnerabilities
         run: |
-          pip install safety bandit
+          python -m pip install --upgrade pip
+          pip install safety bandit[toml]
           cd pipelines
-          safety check -r requirements.txt || echo "Safety check completed with warnings"
-          bandit -r . -f json -o bandit-report.json || echo "Bandit scan completed with warnings"
+          safety check --json --output safety-report.json || echo "Safety check completed with warnings"
+          bandit -r . -f json -o bandit-report.json -ll || echo "Bandit scan completed with warnings"
         continue-on-error: true
 
   # Job 6: Performance Testing

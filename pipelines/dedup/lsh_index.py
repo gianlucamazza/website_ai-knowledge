@@ -469,3 +469,95 @@ class LSHIndex:
         except Exception as e:
             logger.error(f"Error calculating precision: {e}")
             return 0.0
+
+
+class LSHDeduplicator:
+    """Wrapper class for LSH-based deduplication to match test interface."""
+    
+    def __init__(self, num_perm: int = 128, threshold: float = 0.8):
+        """
+        Initialize LSH deduplicator.
+        
+        Args:
+            num_perm: Number of permutations for MinHash
+            threshold: Similarity threshold for duplicates
+        """
+        self.index = LSHIndex(threshold=threshold, num_perm=num_perm)
+        self.documents: Dict[str, str] = {}
+    
+    def add_document(self, doc_id: str, text: str) -> bool:
+        """
+        Add document to the LSH index.
+        
+        Args:
+            doc_id: Unique document identifier
+            text: Document text content
+            
+        Returns:
+            True if added successfully
+        """
+        try:
+            self.documents[doc_id] = text
+            self.index.add_content(doc_id, text)
+            return True
+        except Exception as e:
+            logger.error(f"Error adding document {doc_id}: {e}")
+            return False
+    
+    def query_similar(self, doc_id: str, min_similarity: float = 0.8) -> List[Tuple[str, float]]:
+        """
+        Query for similar documents.
+        
+        Args:
+            doc_id: Document ID to find similar documents for
+            min_similarity: Minimum similarity threshold
+            
+        Returns:
+            List of (doc_id, similarity_score) tuples
+        """
+        try:
+            if doc_id not in self.documents:
+                logger.warning(f"Document {doc_id} not found in index")
+                return []
+            
+            content = self.documents[doc_id]
+            duplicates = self.index.find_duplicates(content, exclude_id=doc_id)
+            
+            # Filter by minimum similarity
+            filtered_results = [(dup_id, score) for dup_id, score in duplicates if score >= min_similarity]
+            
+            return filtered_results
+            
+        except Exception as e:
+            logger.error(f"Error querying similar documents: {e}")
+            return []
+    
+    def remove_document(self, doc_id: str) -> bool:
+        """
+        Remove document from the index.
+        
+        Args:
+            doc_id: Document ID to remove
+            
+        Returns:
+            True if removed successfully
+        """
+        try:
+            if doc_id not in self.documents:
+                return False
+            
+            success = self.index.remove_content(doc_id)
+            if success:
+                del self.documents[doc_id]
+            
+            return success
+            
+        except Exception as e:
+            logger.error(f"Error removing document {doc_id}: {e}")
+            return False
+    
+    def get_statistics(self) -> Dict:
+        """Get statistics about the LSH index."""
+        stats = self.index.get_statistics()
+        stats['total_documents'] = len(self.documents)
+        return stats
