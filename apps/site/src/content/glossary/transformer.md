@@ -20,7 +20,10 @@ sources:
 
 ## Overview
 
-The Transformer architecture, introduced in the groundbreaking 2017 paper "Attention Is All You Need," fundamentally changed how we approach sequence-to-sequence tasks in machine learning. Unlike previous architectures that relied on recurrent or convolutional layers, Transformers use only attention mechanisms to capture dependencies between input and output sequences.
+The Transformer architecture, introduced in the groundbreaking 2017 paper "Attention Is All You Need,"
+fundamentally changed how we approach sequence-to-sequence tasks in machine learning. Unlike previous
+architectures that relied on recurrent or convolutional layers, Transformers use only attention mechanisms
+to capture dependencies between input and output sequences.
 
 ## Key Innovation: Attention Mechanism
 
@@ -34,7 +37,7 @@ The core breakthrough of the Transformer is its **self-attention mechanism**, wh
 
 The attention mechanism computes attention weights using three vectors derived from the input:
 
-```
+```text
 Attention(Q, K, V) = softmax(QK^T / √d_k)V
 ```
 
@@ -128,29 +131,29 @@ Transformers have been successfully adapted for:
 
 ## Advantages
 
-**Parallelization**
+### Parallelization
 
 - Unlike RNNs, all positions can be processed simultaneously
 - Enables efficient training on modern hardware
 
-**Long-Range Dependencies**
+### Long-Range Dependencies
 
 - Direct connections between any two positions
 - No degradation over long sequences
 
-**Interpretability**
+### Interpretability
 
 - Attention weights provide insights into model decisions
 - Can visualize what the model focuses on
 
 ## Limitations
 
-**Computational Complexity**
+### Computational Complexity
 
 - Attention scales quadratically with sequence length: O(n²)
 - Memory and compute intensive for very long sequences
 
-**Inductive Biases**
+### Inductive Biases
 
 - Lacks built-in understanding of sequence order (requires position encoding)
 - May need more data to learn patterns that RNNs capture naturally
@@ -200,4 +203,6 @@ class AttentionHead(nn.Module):
         return output, attention_weights
 ```
 
-The Transformer architecture's elegance lies in its simplicity and effectiveness. By showing that "attention is all you need," it opened the door to the modern era of large language models and continues to drive innovations in AI across multiple domains.
+The Transformer architecture's elegance lies in its simplicity and effectiveness. By showing that
+"attention is all you need," it opened the door to the modern era of large language models and continues
+to drive innovations in AI across multiple domains.

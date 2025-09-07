@@ -20,7 +20,9 @@ sources:
 
 ## What is an AI Agent?
 
-An AI agent is a software system designed to operate autonomously in an environment, making decisions and taking actions to achieve specific objectives. Unlike traditional software that follows predetermined paths, agents can adapt their behavior based on observations and feedback from their environment.
+An AI agent is a software system designed to operate autonomously in an environment, making decisions and
+taking actions to achieve specific objectives. Unlike traditional software that follows predetermined paths,
+agents can adapt their behavior based on observations and feedback from their environment.
 
 ## Core Components
 
@@ -55,7 +57,7 @@ The mechanism through which agents interact with their environment:
 
 A popular pattern where agents alternate between reasoning about the situation and taking actions:
 
-```
+```text
 Thought: I need to find information about the weather
 Action: search_weather("New York")
 Observation: Temperature is 72°F, sunny
@@ -91,19 +93,19 @@ Autonomous frameworks that can:
 
 ## Real-World Applications
 
-**Customer Service Agents**
+### Customer Service Agents
 
 - Handle inquiries across multiple channels
 - Access knowledge bases and customer data
 - Escalate to humans when needed
 
-**Research Assistants**
+### Research Assistants
 
 - Gather information from multiple sources
 - Synthesize findings into coherent reports
 - Track research progress over time
 
-**Code Generation Agents**
+### Code Generation Agents
 
 - Understand requirements and write code
 - Test and debug implementations
@@ -138,4 +140,5 @@ The field of AI agents is rapidly evolving, with research focusing on:
 - **Collaborative frameworks** for human-AI partnerships
 - **Specialized domain agents** for fields like healthcare, finance, and education
 
-AI agents represent a shift from passive AI tools to proactive AI partners that can understand context, make decisions, and take actions to help achieve human goals.
+AI agents represent a shift from passive AI tools to proactive AI partners that can understand context,
+make decisions, and take actions to help achieve human goals.

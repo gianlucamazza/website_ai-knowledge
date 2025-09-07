@@ -20,7 +20,10 @@ sources:
 
 ## What is Machine Learning?
 
-Machine Learning (ML) is a field of artificial intelligence that focuses on building systems that can learn from data to make predictions or decisions without being explicitly programmed for each specific task. Instead of following pre-written instructions, ML algorithms identify patterns in data and use these patterns to make informed predictions about new, unseen data.
+Machine Learning (ML) is a field of artificial intelligence that focuses on building systems that can learn
+from data to make predictions or decisions without being explicitly programmed for each specific task.
+Instead of following pre-written instructions, ML algorithms identify patterns in data and use these patterns
+to make informed predictions about new, unseen data.
 
 ## Core Concept: Learning from Data
 
@@ -28,13 +31,13 @@ At its heart, machine learning transforms the traditional programming paradigm:
 
 **Traditional Programming:**
 
-```
+```text
 Data + Program → Output
 ```
 
 **Machine Learning:**
 
-```
+```text
 Data + Desired Output → Program (Model)
 ```
 
@@ -271,4 +274,6 @@ The process of selecting and transforming input variables (features):
 - **Online Courses**: Coursera, edX, Udacity
 - **Books**: "Hands-On Machine Learning" by Aurélien Géron
 
-Machine learning represents a paradigm shift in how we solve complex problems, enabling computers to find solutions that would be impossible to program manually. As data continues to grow and computational power increases, ML will become increasingly central to technological innovation across all industries.
+Machine learning represents a paradigm shift in how we solve complex problems, enabling computers to find
+solutions that would be impossible to program manually. As data continues to grow and computational power
+increases, ML will become increasingly central to technological innovation across all industries.
