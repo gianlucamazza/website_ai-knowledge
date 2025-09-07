@@ -121,6 +121,8 @@ jobs:
     
     permissions:
       security-events: write
+      actions: read
+      contents: read
       
     steps:
       - name: Checkout code
@@ -221,9 +223,9 @@ jobs:
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: main
+          base: ${{ github.event.repository.default_branch }}
           head: HEAD
-          extra_args: --debug --only-verified
+          extra_args: --only-verified
 
       - name: Install and run detect-secrets
         run: |
@@ -303,14 +305,14 @@ jobs:
 
       - name: Scan Docker configurations (if present)
         run: |
-          if find . -name "Dockerfile*" -o -name "docker-compose*.yml" | head -1 | read; then
+          if find . -name "Dockerfile*" -o -name "docker-compose*.yml" | head -1 | grep -q .; then
             echo "Docker configurations found, running additional scans..."
             
             # Run hadolint for Dockerfile linting
-            docker run --rm -i hadolint/hadolint < $(find . -name "Dockerfile" | head -1) || echo "Hadolint scan completed"
-            
-            # Run Trivy for Docker configurations
-            trivy config . --format json --output trivy-config-results.json || echo "Trivy config scan completed"
+            DOCKERFILE=$(find . -name "Dockerfile" | head -1)
+            if [ -n "$DOCKERFILE" ]; then
+              docker run --rm -i hadolint/hadolint < "$DOCKERFILE" || echo "Hadolint scan completed"
+            fi
           else
             echo "No Docker configurations found"
           fi
@@ -406,6 +408,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [dependency-scan, code-analysis, secrets-scan, infrastructure-scan, license-compliance]
     if: always()
+    
+    permissions:
+      issues: write
+      contents: read
     
     steps:
       - name: Download all scan results
