@@ -5,6 +5,8 @@
  * security measures for the AI knowledge website.
  */
 
+import { generateNonce, addNonceToCSP } from './middleware/csp-nonce.js';
+
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 // Content Security Policy configuration
@@ -13,12 +15,12 @@ const cspConfig = {
   directives: {
     'default-src': ["'self'"],
     
-    // Scripts - Astro needs inline scripts for hydration
+    // Scripts - Use nonce-based CSP for Astro hydration
     'script-src': [
       "'self'",
-      "'unsafe-inline'", // Required for Astro hydration
+      // Will be replaced with nonce at runtime
       ...(isDevelopment ? ["'unsafe-eval'", "localhost:*"] : []),
-      // Add any CDNs or external script sources here
+      // Add any CDNs or external script sources here with SRI
       'https://cdn.jsdelivr.net',
       'https://unpkg.com'
     ],
@@ -145,16 +147,24 @@ function buildCSPHeader(config) {
   return csp;
 }
 
-// Get all security headers
-function getSecurityHeaders() {
+// Get all security headers with optional nonce
+function getSecurityHeaders(nonce = null) {
   const headers = {};
+  
+  // Build CSP header
+  let cspHeaderValue = buildCSPHeader(cspConfig);
+  
+  // Add nonce if provided
+  if (nonce) {
+    cspHeaderValue = addNonceToCSP(cspHeaderValue, nonce);
+  }
   
   // Add CSP header
   const cspHeaderName = cspConfig.reportOnly 
     ? 'Content-Security-Policy-Report-Only'
     : 'Content-Security-Policy';
   
-  headers[cspHeaderName] = buildCSPHeader(cspConfig);
+  headers[cspHeaderName] = cspHeaderValue;
   
   // Add other security headers
   Object.entries(securityHeaders).forEach(([name, value]) => {
@@ -200,8 +210,12 @@ function validateCSP() {
 // Security middleware for API routes
 function createSecurityMiddleware() {
   return (request, response, next) => {
-    // Add security headers
-    const headers = getSecurityHeaders();
+    // Generate nonce for this request
+    const nonce = generateNonce();
+    request.cspNonce = nonce;
+    
+    // Add security headers with nonce
+    const headers = getSecurityHeaders(nonce);
     Object.entries(headers).forEach(([name, value]) => {
       response.setHeader(name, value);
     });

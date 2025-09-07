@@ -16,6 +16,7 @@ from sqlalchemy import (
     Enum as SQLEnum,
     Float,
     ForeignKey,
+    Index,
     Integer,
     JSON,
     String,
@@ -151,9 +152,22 @@ class Article(Base):
     source = relationship("Source", back_populates="articles")
     duplicates = relationship("ContentDuplicate", foreign_keys="[ContentDuplicate.article_id]")
     
-    # Constraints
+    # Constraints and Indexes
     __table_args__ = (
         UniqueConstraint("source_id", "url", name="uq_article_source_url"),
+        # Performance indexes
+        Index("idx_article_status_stage", status, current_stage),
+        Index("idx_article_simhash", simhash),
+        Index("idx_article_content_hash", content_hash),
+        Index("idx_article_publish_date", publish_date),
+        Index("idx_article_created_at", created_at),
+        Index("idx_article_quality_score", quality_score),
+        # Composite indexes for common queries
+        Index("idx_article_source_status", source_id, status),
+        Index("idx_article_stage_created", current_stage, created_at),
+        # Partial indexes for active content
+        Index("idx_article_active_content", status, 
+              postgresql_where=(status.in_(['completed', 'processing']))),
     )
 
 

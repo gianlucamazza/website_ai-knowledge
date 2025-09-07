@@ -115,10 +115,26 @@ class EthicalScraper:
         """Async context manager entry."""
         timeout = ClientTimeout(total=self.scraping_config.timeout)
         
+        # Optimized connector with connection pooling
+        connector = aiohttp.TCPConnector(
+            limit=100,  # Total connection pool size
+            limit_per_host=20,  # Per-host connection limit
+            ttl_dns_cache=300,  # DNS cache TTL
+            use_dns_cache=True,
+            keepalive_timeout=60,  # Keep connections alive
+            enable_cleanup_closed=True,
+        )
+        
         self.session = ClientSession(
             timeout=timeout,
-            headers={"User-Agent": self.scraping_config.user_agent},
-            connector=aiohttp.TCPConnector(limit=100),
+            headers={
+                "User-Agent": self.scraping_config.user_agent,
+                "Accept-Encoding": "gzip, deflate",
+                "Connection": "keep-alive"
+            },
+            connector=connector,
+            # Enable compression
+            auto_decompress=True,
         )
         
         return self

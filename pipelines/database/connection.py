@@ -36,8 +36,10 @@ class DatabaseManager:
     def database_url(self) -> str:
         """Construct async PostgreSQL database URL."""
         db_config = config.database
+        # Get the actual password value from SecretStr
+        password = db_config.password.get_secret_value() if hasattr(db_config.password, 'get_secret_value') else str(db_config.password)
         return (
-            f"postgresql+asyncpg://{db_config.username}:{db_config.password}"
+            f"postgresql+asyncpg://{db_config.username}:{password}"
             f"@{db_config.host}:{db_config.port}/{db_config.database}"
         )
     
@@ -45,8 +47,10 @@ class DatabaseManager:
     def sync_database_url(self) -> str:
         """Construct sync PostgreSQL database URL for migrations."""
         db_config = config.database
+        # Get the actual password value from SecretStr
+        password = db_config.password.get_secret_value() if hasattr(db_config.password, 'get_secret_value') else str(db_config.password)
         return (
-            f"postgresql://{db_config.username}:{db_config.password}"
+            f"postgresql://{db_config.username}:{password}"
             f"@{db_config.host}:{db_config.port}/{db_config.database}"
         )
     
@@ -60,6 +64,20 @@ class DatabaseManager:
                 max_overflow=config.database.max_overflow,
                 pool_pre_ping=True,
                 pool_recycle=3600,  # Recycle connections every hour
+                # Performance optimizations
+                pool_timeout=30,  # Connection acquisition timeout
+                connect_args={
+                    "server_settings": {
+                        "jit": "off",  # Disable JIT for consistent performance
+                    },
+                    "command_timeout": 60,  # Query timeout
+                    "prepared_statement_cache_size": 100,
+                },
+                # Enable statement caching
+                execution_options={
+                    "compiled_cache": {},
+                    "isolation_level": "READ_COMMITTED"
+                }
             )
             
             self._session_factory = async_sessionmaker(
@@ -125,9 +143,12 @@ class DatabaseManager:
         """Create database if it doesn't exist."""
         db_config = config.database
         
+        # Get the actual password value from SecretStr
+        password = db_config.password.get_secret_value() if hasattr(db_config.password, 'get_secret_value') else str(db_config.password)
+        
         # Connect to postgres database to create our target database
         admin_url = (
-            f"postgresql://{db_config.username}:{db_config.password}"
+            f"postgresql://{db_config.username}:{password}"
             f"@{db_config.host}:{db_config.port}/postgres"
         )
         

@@ -156,12 +156,25 @@ class SecretsManager:
                 f"No master key found in {self.config.master_key_env_var}. "
                 f"Generated temporary key: {master_key[:8]}..."
             )
+        
+        # Generate or load salt for key derivation
+        salt_path = Path(".secrets/encryption.salt")
+        if salt_path.exists():
+            salt = salt_path.read_bytes()
+        else:
+            # Generate new random salt
+            salt = os.urandom(16)
+            salt_path.parent.mkdir(parents=True, exist_ok=True)
+            salt_path.write_bytes(salt)
+            # Set restrictive permissions
+            salt_path.chmod(0o600)
+            logger.info("Generated new encryption salt")
             
         # Derive encryption key from master key
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
-            salt=b'ai_knowledge_salt',  # In production, use random salt
+            salt=salt,
             iterations=self.config.key_derivation_iterations,
         )
         

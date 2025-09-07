@@ -21,6 +21,7 @@ from ...normalize import ContentExtractor
 from ...dedup import SimHashDeduplicator, LSHIndex
 from ...enrich import ContentSummarizer, CrossLinker
 from ...publish import MarkdownGenerator
+from ...security import default_validator, InputValidationError
 from .workflow import PipelineState
 
 logger = logging.getLogger(__name__)
@@ -164,9 +165,24 @@ class PipelineNodes:
                             if not article or not article.raw_html:
                                 continue
                             
-                            # Extract and normalize content
+                            # Validate and sanitize inputs before processing
+                            try:
+                                sanitized_html = default_validator.validate_html_content(
+                                    article.raw_html, 
+                                    f"article_{article_id}_html"
+                                )
+                                sanitized_url = default_validator.validate_url(
+                                    article.url,
+                                    f"article_{article_id}_url"
+                                )
+                            except InputValidationError as e:
+                                logger.warning(f"Input validation failed for article {article_id}: {e}")
+                                state["failed_articles"].append(article_id)
+                                continue
+                            
+                            # Extract and normalize content with sanitized inputs
                             extraction_result = await self.content_extractor.extract_content(
-                                article.raw_html, article.url
+                                sanitized_html, sanitized_url
                             )
                             
                             # Update article with normalized content

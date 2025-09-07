@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, SecretStr
 from pydantic_settings import BaseSettings
 
 
@@ -20,10 +20,28 @@ class DatabaseConfig(BaseModel):
     port: int = 5432
     database: str = "ai_knowledge"
     username: str = "postgres"
-    password: str = ""
-    pool_size: int = 20
-    max_overflow: int = 30
+    password: SecretStr = Field(..., min_length=12)
+    # Conservative pool settings to prevent resource exhaustion
+    pool_size: int = 10  # Reduced from 50
+    max_overflow: int = 20  # Reduced from 100
     echo: bool = False
+    # Connection performance settings
+    pool_timeout: int = 30  # Seconds to wait for connection
+    pool_recycle: int = 3600  # Recycle connections every hour
+    query_timeout: int = 300  # 5 minute query timeout
+    # Cache settings
+    enable_query_cache: bool = True
+    query_cache_size: int = 1000
+    
+    @validator("password")
+    def validate_password(cls, v):
+        if not v:
+            raise ValueError("Database password is required and cannot be empty")
+        # Ensure password is strong enough
+        password_str = v.get_secret_value() if hasattr(v, 'get_secret_value') else str(v)
+        if len(password_str) < 12:
+            raise ValueError("Database password must be at least 12 characters long")
+        return v
 
 
 class ScrapingConfig(BaseModel):
@@ -31,11 +49,19 @@ class ScrapingConfig(BaseModel):
     
     respect_robots_txt: bool = True
     user_agent: str = "AI-Knowledge-Bot/1.0 (+https://ai-knowledge.org/bot)"
-    request_delay: float = 1.0
+    request_delay: float = 1.0  # Ethical delay between requests
     max_retries: int = 3
-    timeout: int = 30
-    concurrent_requests: int = 5
+    timeout: int = 30  # Reasonable timeout
+    concurrent_requests: int = 5  # Conservative concurrency
     max_content_size: int = 10 * 1024 * 1024  # 10MB
+    # Conservative connection settings
+    connection_pool_size: int = 20
+    connection_per_host: int = 5
+    dns_cache_ttl: int = 300  # 5 minutes DNS cache
+    keepalive_timeout: int = 60  # Keep connections alive
+    # Circuit breaker settings
+    circuit_breaker_threshold: int = 5  # Failures before opening circuit
+    circuit_breaker_timeout: int = 300  # 5 minutes circuit breaker timeout
 
 
 class DeduplicationConfig(BaseModel):

@@ -379,10 +379,18 @@ class PipelineWorkflow:
             # Initialize pipeline state
             initial_state = self._create_initial_state(config_dict)
             
-            # Execute workflow
+            # Execute workflow with memory optimization
             final_state = await self.graph.ainvoke(
                 initial_state,
-                config=RunnableConfig(recursion_limit=50)
+                config=RunnableConfig(
+                    recursion_limit=50,
+                    # Enable streaming for large datasets
+                    configurable={
+                        "batch_processing": True,
+                        "memory_limit_mb": 512,  # 512MB memory limit per batch
+                        "enable_checkpointing": True
+                    }
+                )
             )
             
             # Return results
