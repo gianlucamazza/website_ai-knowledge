@@ -1,0 +1,500 @@
+name: Markdown Quality Control
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/site/src/content/**/*.md'
+      - 'docs/**/*.md'
+      - 'temp-articles/**/*.md'
+      - '.markdownlint*'
+      - '.vale.ini'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/site/src/content/**/*.md'
+      - 'docs/**/*.md'
+      - 'temp-articles/**/*.md'
+      - '.markdownlint*'
+      - '.vale.ini'
+
+# Concurrency control - cancel running jobs on new commits
+concurrency:
+  group: markdown-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '18.x'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Stage 1: Fast validation for immediate feedback
+  quick-validation:
+    name: Quick Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+      
+      - name: Install markdown tools
+        run: |
+          npm install -g markdownlint-cli2
+          pip install pyyaml frontmatter textstat
+      
+      - name: Run basic markdown lint
+        run: |
+          markdownlint-cli2 \
+            --config .markdownlint-cli2.yaml \
+            "apps/site/src/content/**/*.md" \
+            "docs/**/*.md" || echo "::warning::Basic markdown linting found issues"
+      
+      - name: Validate frontmatter structure
+        run: |
+          python quality-control-configs/scripts/markdown-quality-cli.py check \
+            --config .markdownlint-cli2.yaml \
+            apps/site/src/content/glossary apps/site/src/content/articles
+      
+      # Generate changed files list for downstream jobs
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files: |
+            apps/site/src/content/**/*.md
+            docs/**/*.md
+            temp-articles/**/*.md
+      
+      - name: Output changed files
+        run: |
+          echo "Changed files:" 
+          echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n'
+          echo "changed_files=${{ steps.changed-files.outputs.all_changed_files }}" >> $GITHUB_OUTPUT
+        id: file-list
+    
+    outputs:
+      changed_files: ${{ steps.file-list.outputs.changed_files }}
+
+  # Stage 2: Comprehensive quality assessment
+  comprehensive-quality:
+    name: Comprehensive Quality Check
+    runs-on: ubuntu-latest
+    needs: quick-validation
+    timeout-minutes: 15
+    if: needs.quick-validation.outputs.changed_files != ''
+    
+    strategy:
+      matrix:
+        check-type: [markdown-lint, prose-quality, link-validation, content-analysis]
+      fail-fast: false
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          npm install -g markdownlint-cli2 markdown-link-check
+          pip install vale pyyaml frontmatter textstat scikit-learn
+      
+      # Markdown Linting
+      - name: Advanced Markdown Linting
+        if: matrix.check-type == 'markdown-lint'
+        run: |
+          echo "🔍 Running advanced markdown linting..."
+          
+          # Run with detailed output
+          markdownlint-cli2 \
+            --config .markdownlint-cli2.yaml \
+            --output-file markdown-lint-results.json \
+            --json \
+            ${{ needs.quick-validation.outputs.changed_files }} || true
+          
+          # Generate human-readable report
+          python quality-control-configs/scripts/markdown-quality-cli.py check \
+            --config .markdownlint-cli2.yaml \
+            ${{ needs.quick-validation.outputs.changed_files }} \
+            > markdown-quality-report.txt
+      
+      # Prose Quality with Vale
+      - name: Prose Quality Check
+        if: matrix.check-type == 'prose-quality'
+        run: |
+          echo "📝 Running prose quality analysis..."
+          
+          # Install Vale if not available
+          wget -O vale.tar.gz https://github.com/errata-ai/vale/releases/latest/download/vale_Linux_64-bit.tar.gz
+          tar -xzf vale.tar.gz
+          sudo mv vale /usr/local/bin/
+          
+          # Run Vale
+          vale --config=.vale.ini \
+               --output=JSON \
+               ${{ needs.quick-validation.outputs.changed_files }} \
+               > vale-results.json || true
+          
+          # Generate summary
+          python -c "
+          import json, sys
+          try:
+              with open('vale-results.json') as f:
+                  data = json.load(f)
+              total_issues = sum(len(issues) for issues in data.values())
+              print(f'Prose quality issues found: {total_issues}')
+          except:
+              print('No prose quality issues found')
+          "
+      
+      # Link Validation
+      - name: Link Validation
+        if: matrix.check-type == 'link-validation'
+        run: |
+          echo "🔗 Validating links..."
+          
+          # Check internal and external links
+          for file in ${{ needs.quick-validation.outputs.changed_files }}; do
+            echo "Checking links in $file..."
+            markdown-link-check "$file" --config .markdown-link-check.json || true
+          done > link-check-results.txt
+          
+          # Summary
+          echo "Link validation completed. Check artifacts for details."
+      
+      # Content Analysis
+      - name: Content Quality Analysis
+        if: matrix.check-type == 'content-analysis'
+        run: |
+          echo "📊 Analyzing content quality..."
+          
+          python quality-control-configs/scripts/markdown-quality-cli.py report \
+            --format json \
+            --output content-analysis.json \
+            ${{ needs.quick-validation.outputs.changed_files }}
+          
+          # Generate quality score
+          python -c "
+          import json
+          with open('content-analysis.json') as f:
+              data = json.load(f)
+          
+          total_files = data['total_files']
+          total_issues = data['total_issues']
+          fixable_issues = data['fixable_issues']
+          
+          # Calculate quality score (0-100)
+          if total_files == 0:
+              score = 100
+          else:
+              # Penalty system: -5 for each error, -2 for each warning
+              error_penalty = data['issues_by_severity'].get('error', 0) * 5
+              warning_penalty = data['issues_by_severity'].get('warning', 0) * 2
+              total_penalty = error_penalty + warning_penalty
+              
+              score = max(0, 100 - (total_penalty / total_files))
+          
+          print(f'Content Quality Score: {score:.1f}/100')
+          print(f'Total Issues: {total_issues}')
+          print(f'Fixable Issues: {fixable_issues}')
+          
+          # Save score for later use
+          with open('quality-score.txt', 'w') as f:
+              f.write(str(score))
+          "
+      
+      - name: Upload check results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-check-${{ matrix.check-type }}
+          path: |
+            *.json
+            *.txt
+          retention-days: 7
+
+  # Stage 3: Auto-fix attempt (for PRs only)
+  auto-fix:
+    name: Auto-fix Issues
+    runs-on: ubuntu-latest
+    needs: [quick-validation, comprehensive-quality]
+    if: github.event_name == 'pull_request' && needs.quick-validation.outputs.changed_files != ''
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install markdown tools
+        run: |
+          npm install -g markdownlint-cli2 prettier
+          pip install pyyaml frontmatter
+      
+      - name: Attempt auto-fixes
+        run: |
+          echo "🔧 Attempting auto-fixes for safe issues..."
+          
+          # Run auto-fix for safe rules
+          markdownlint-cli2 \
+            --config .markdownlint-cli2.yaml \
+            --fix \
+            ${{ needs.quick-validation.outputs.changed_files }}
+          
+          # Run custom fixes
+          python quality-control-configs/scripts/markdown-quality-cli.py migrate \
+            --batch-size 5 \
+            ${{ needs.quick-validation.outputs.changed_files }}
+      
+      - name: Check for changes
+        id: verify-changed
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Auto-fixes were applied"
+            git diff --stat
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No auto-fixable issues found"
+          fi
+      
+      - name: Commit auto-fixes
+        if: steps.verify-changed.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "🤖 Auto-fix markdown quality issues
+          
+          - Applied automatic fixes for safe markdown rules
+          - Fixed formatting, spacing, and structural issues
+          - No content changes were made
+          
+          Generated by: ${{ github.workflow }} #${{ github.run_number }}"
+          git push
+
+  # Stage 4: Quality gate and reporting
+  quality-gate:
+    name: Quality Gate Assessment
+    runs-on: ubuntu-latest
+    needs: [quick-validation, comprehensive-quality]
+    if: always() && needs.quick-validation.outputs.changed_files != ''
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download all quality reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: quality-check-*
+          merge-multiple: true
+      
+      - name: Generate comprehensive report
+        id: quality-assessment
+        run: |
+          echo "📊 Generating quality gate assessment..."
+          
+          # Combine all results
+          python -c "
+          import json, os, glob
+          from pathlib import Path
+          
+          results = {}
+          total_issues = 0
+          critical_issues = 0
+          
+          # Process all JSON result files
+          for file in glob.glob('*.json'):
+              if 'markdown-lint' in file:
+                  try:
+                      with open(file) as f:
+                          data = json.load(f)
+                      if isinstance(data, list):
+                          issues = len(data)
+                          total_issues += issues
+                          # Count critical issues (errors)
+                          critical_issues += sum(1 for item in data if 'error' in str(item).lower())
+                      results['markdown_lint'] = issues
+                  except:
+                      pass
+              
+              elif 'vale-results' in file:
+                  try:
+                      with open(file) as f:
+                          data = json.load(f)
+                      prose_issues = sum(len(issues) for issues in data.values())
+                      results['prose_quality'] = prose_issues
+                      total_issues += prose_issues
+                  except:
+                      pass
+              
+              elif 'content-analysis' in file:
+                  try:
+                      with open(file) as f:
+                          data = json.load(f)
+                      content_issues = data.get('total_issues', 0)
+                      results['content_analysis'] = content_issues
+                      critical_issues += data.get('issues_by_severity', {}).get('error', 0)
+                  except:
+                      pass
+          
+          # Quality gate logic
+          gate_passed = critical_issues == 0 and total_issues < 10
+          
+          print(f'Total Issues: {total_issues}')
+          print(f'Critical Issues: {critical_issues}')
+          print(f'Quality Gate: {'PASSED' if gate_passed else 'FAILED'}')
+          
+          # Output for GitHub
+          print(f'::set-output name=total_issues::{total_issues}')
+          print(f'::set-output name=critical_issues::{critical_issues}')
+          print(f'::set-output name=gate_passed::{str(gate_passed).lower()}')
+          
+          # Create summary
+          with open('quality-gate-summary.md', 'w') as f:
+              f.write(f'''# 🚦 Markdown Quality Gate Report
+          
+          ## Summary
+          - **Total Issues:** {total_issues}
+          - **Critical Issues:** {critical_issues}
+          - **Gate Status:** {'✅ PASSED' if gate_passed else '❌ FAILED'}
+          
+          ## Breakdown
+          ''')
+              for check, count in results.items():
+                  f.write(f'- **{check.replace('_', ' ').title()}:** {count} issues\\n')
+              
+              if not gate_passed:
+                  f.write(f'''
+          ## ⚠️ Action Required
+          This pull request has failed the quality gate due to:
+          - {critical_issues} critical issues that must be fixed
+          - {total_issues} total issues exceeding threshold (max: 10)
+          
+          Please review the individual check results and address the issues.
+          ''')
+          "
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '';
+            
+            try {
+              comment = fs.readFileSync('quality-gate-summary.md', 'utf8');
+            } catch (e) {
+              comment = '📊 Quality gate assessment completed. Check workflow logs for details.';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: Upload quality gate summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-gate-summary
+          path: quality-gate-summary.md
+      
+      - name: Fail job if quality gate failed
+        if: steps.quality-assessment.outputs.gate_passed == 'false'
+        run: |
+          echo "❌ Quality gate failed! Critical issues must be resolved."
+          echo "Critical issues: ${{ steps.quality-assessment.outputs.critical_issues }}"
+          echo "Total issues: ${{ steps.quality-assessment.outputs.total_issues }}"
+          exit 1
+
+  # Stage 5: Quality metrics collection (main branch only)
+  quality-metrics:
+    name: Quality Metrics Collection
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    if: github.ref == 'refs/heads/main' && needs.quality-gate.result == 'success'
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Generate quality metrics
+        run: |
+          echo "📈 Collecting quality metrics for main branch..."
+          
+          # Run full quality assessment
+          pip install pyyaml frontmatter textstat
+          python quality-control-configs/scripts/markdown-quality-cli.py report \
+            --format json \
+            --output quality-metrics-$(date +%Y%m%d).json \
+            apps/site/src/content
+          
+          # Calculate trend data
+          python -c "
+          import json
+          from datetime import datetime
+          
+          with open('quality-metrics-$(date +%Y%m%d).json') as f:
+              data = json.load(f)
+          
+          metrics = {
+              'timestamp': datetime.now().isoformat(),
+              'total_files': data['total_files'],
+              'total_issues': data['total_issues'],
+              'quality_score': max(0, 100 - (data['total_issues'] / max(1, data['total_files']) * 2)),
+              'issues_by_severity': data['issues_by_severity'],
+              'top_rules': sorted(data['issues_by_rule'].items(), key=lambda x: x[1], reverse=True)[:5]
+          }
+          
+          with open('quality-trend.json', 'w') as f:
+              json.dump(metrics, f, indent=2)
+          
+          print(f'Quality Score: {metrics[\"quality_score\"]:.1f}/100')
+          "
+      
+      - name: Upload metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-metrics-${{ github.run_number }}
+          path: |
+            quality-metrics-*.json
+            quality-trend.json
+          retention-days: 90

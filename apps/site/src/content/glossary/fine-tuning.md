@@ -1,26 +1,48 @@
 ---
-title: Fine-tuning
-aliases: ["fine-tuning", "model fine-tuning", "transfer learning", "supervised fine-tuning"]
-summary: Fine-tuning is the process of adapting a pre-trained machine learning model to specific tasks or domains by continuing training on task-specific data. This transfer learning approach leverages the general knowledge learned during pre-training while specializing the model for particular applications, achieving better performance with less data and computational resources than training from scratch.
-tags: ["machine-learning", "deep-learning", "llm", "training", "ai-engineering"]
-related: ["llm", "transformer", "supervised-learning", "prompt-engineering", "rag"]
-category: "machine-learning"
-difficulty: "intermediate"
-updated: "2025-01-15"
+aliases:
+- fine-tuning
+- model fine-tuning
+- transfer learning
+- supervised fine-tuning
+category: machine-learning
+difficulty: intermediate
+related:
+- llm
+- transformer
+- supervised-learning
+- prompt-engineering
+- rag
 sources:
-  - source_url: "https://arxiv.org/abs/1801.06146"
-    source_title: "Universal Language Model Fine-tuning for Text Classification"
-    license: "cc-by"
-    author: "Jeremy Howard, Sebastian Ruder"
-  - source_url: "https://arxiv.org/abs/2203.02155"
-    source_title: "Training language models to follow instructions with human feedback"
-    license: "cc-by"
-    author: "Long Ouyang et al."
+- author: Jeremy Howard, Sebastian Ruder
+  license: cc-by
+  source_title: Universal Language Model Fine-tuning for Text Classification
+  source_url: https://arxiv.org/abs/1801.06146
+- author: Long Ouyang et al.
+  license: cc-by
+  source_title: Training language models to follow instructions with human feedback
+  source_url: https://arxiv.org/abs/2203.02155
+summary: Fine-tuning is the process of adapting a pre-trained machine learning model
+  to specific tasks or domains by continuing training on task-specific data. This
+  transfer learning approach leverages the general knowledge learned during pre-training
+  while specializing the model for particular applications, achieving better performance
+  with less data and computational resources than training from scratch.
+tags:
+- machine-learning
+- deep-learning
+- llm
+- training
+- ai-engineering
+title: Fine-tuning
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-Fine-tuning is a critical technique in modern machine learning that enables the adaptation of pre-trained models to specific tasks, domains, or use cases. Rather than training a model from scratch, fine-tuning continues the training process on a pre-trained foundation model using task-specific data. This approach has become essential in the era of large language models, where pre-trained models like BERT, GPT, and T5 serve as starting points for countless specialized applications.
+Fine-tuning is a critical technique in modern machine learning that enables the adaptation of pre-trained models to
+specific tasks, domains, or use cases. Rather than training a model from scratch, fine-tuning continues the training
+process on a pre-trained foundation model using task-specific data. This approach has become essential in the era of
+large language models, where pre-trained models like BERT, GPT, and T5 serve as starting points for countless
+specialized applications.
 
 ## Core Concepts
 
@@ -29,7 +51,9 @@ Fine-tuning is a critical technique in modern machine learning that enables the 
 Fine-tuning is fundamentally a transfer learning approach:
 
 ```python
+
 # Conceptual flow of fine-tuning
+
 def fine_tuning_process():
     """The general fine-tuning workflow"""
     
@@ -50,7 +74,8 @@ def fine_tuning_process():
     )
     
     return fine_tuned_model
-```
+
+```text
 
 ### Why Fine-tuning Works
 
@@ -65,7 +90,8 @@ Layer 5-8 (Semantics): Word meanings, relationships, context
 Layer 9-12 (High-level): Complex reasoning, task-specific patterns
 
 Fine-tuning adapts higher layers while preserving lower-level knowledge
-```
+
+```text
 
 ## Types of Fine-tuning
 
@@ -100,7 +126,8 @@ class FullFineTuning:
         
         return optimizer
 
-# Example: BERT for sentiment classification
+## Example: BERT for sentiment classification
+
 class BERTSentimentClassifier(nn.Module):
     def __init__(self, model_name, num_classes=3):
         super().__init__()
@@ -113,7 +140,8 @@ class BERTSentimentClassifier(nn.Module):
         pooled_output = outputs.pooler_output
         pooled_output = self.dropout(pooled_output)
         return self.classifier(pooled_output)
-```
+
+```text
 
 ### 2. Parameter-Efficient Fine-tuning (PEFT)
 
@@ -171,7 +199,8 @@ class LoRALinear(nn.Module):
         original_output = self.original_layer(x)
         return self.lora(x, original_output)
 
-# Apply LoRA to transformer model
+## Apply LoRA to transformer model
+
 def apply_lora_to_model(model, target_modules=["query", "key", "value"]):
     """Apply LoRA to specific modules in the model"""
     
@@ -184,13 +213,14 @@ def apply_lora_to_model(model, target_modules=["query", "key", "value"]):
                     parent_module = getattr(parent_module, part)
                     
                 setattr(
-                    parent_module, 
-                    name.split('.')[-1], 
+                    parent_module,
+                    name.split('.')[-1],
                     LoRALinear(module, rank=4, alpha=32)
                 )
     
     return model
-```
+
+```text
 
 #### Adapter Layers
 
@@ -233,11 +263,11 @@ class TransformerWithAdapters(nn.Module):
             
         # Add adapters
         self.adapter_attn = AdapterLayer(
-            self.transformer.config.hidden_size, 
+            self.transformer.config.hidden_size,
             adapter_size
         )
         self.adapter_ffn = AdapterLayer(
-            self.transformer.config.hidden_size, 
+            self.transformer.config.hidden_size,
             adapter_size
         )
         
@@ -250,7 +280,8 @@ class TransformerWithAdapters(nn.Module):
         ffn_output = self.adapter_ffn(ffn_output)     # Apply adapter
         
         return ffn_output
-```
+
+```text
 
 ### 3. Layer-wise Fine-tuning
 
@@ -303,7 +334,8 @@ class LayerwiseFineTuner:
         
         return torch.optim.AdamW(trainable_params)
 
-# Training loop with gradual unfreezing
+## Training loop with gradual unfreezing
+
 def train_with_layerwise_unfreezing(model, train_data, val_data, epochs_per_unfreeze=2):
     
     fine_tuner = LayerwiseFineTuner(model, num_layers=12)
@@ -321,7 +353,8 @@ def train_with_layerwise_unfreezing(model, train_data, val_data, epochs_per_unfr
         
         # Unfreeze next layer
         fine_tuner.unfreeze_next_layer()
-```
+
+```text
 
 ## Task-Specific Fine-tuning
 
@@ -332,7 +365,7 @@ class TextClassificationFineTuner:
     def __init__(self, model_name, num_classes):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSequenceClassification.from_pretrained(
-            model_name, 
+            model_name,
             num_labels=num_classes
         )
         
@@ -405,7 +438,8 @@ class TextClassificationFineTuner:
             'precision': precision_score(labels, predictions, average='weighted'),
             'recall': recall_score(labels, predictions, average='weighted')
         }
-```
+
+```text
 
 ### Question Answering
 
@@ -494,7 +528,8 @@ class QAFineTuner:
         
         trainer.train()
         return trainer
-```
+
+```text
 
 ### Named Entity Recognition
 
@@ -581,7 +616,8 @@ class NERFineTuner:
             'f1': f1_score(true_labels, true_predictions),
             'accuracy': accuracy_score(true_labels, true_predictions)
         }
-```
+
+```text
 
 ## Advanced Fine-tuning Techniques
 
@@ -666,7 +702,8 @@ class MultiTaskFineTuner:
         # Implementation depends on specific requirements
         # Could use round-robin, weighted sampling, or other strategies
         pass
-```
+
+```text
 
 ### Continual Fine-tuning
 
@@ -739,7 +776,8 @@ class ContinualFineTuner:
                 'param': param_copy,
                 'fisher': fisher_info
             }
-```
+
+```text
 
 ## Instruction Tuning and RLHF
 
@@ -809,7 +847,8 @@ class InstructionTuner:
         
         trainer.train()
         return trainer
-```
+
+```text
 
 ### Reinforcement Learning from Human Feedback (RLHF)
 
@@ -902,7 +941,8 @@ class RLHFTrainer:
             rewards = self.reward_model(**inputs).logits.squeeze(-1)
             
         return rewards
-```
+
+```text
 
 ## Optimization Strategies
 
@@ -954,13 +994,14 @@ class FineTuningOptimizer:
                 # Linear decay
                 return max(
                     0.0,
-                    float(num_training_steps - current_step) / 
+                    float(num_training_steps - current_step) /
                     float(max(1, num_training_steps - num_warmup_steps))
                 )
         
         scheduler = LambdaLR(optimizer, lr_lambda)
         return scheduler
-```
+
+```text
 
 ### Gradient Clipping and Accumulation
 
@@ -996,7 +1037,8 @@ class GradientManager:
         # Reset accumulation counter
         self.accumulated_steps = 0
 
-# Usage in training loop
+## Usage in training loop
+
 gradient_manager = GradientManager(max_grad_norm=1.0, accumulation_steps=4)
 
 for batch in dataloader:
@@ -1007,7 +1049,8 @@ for batch in dataloader:
     
     if should_step:
         gradient_manager.step_with_clipping(optimizer, model)
-```
+
+```text
 
 ## Evaluation and Monitoring
 
@@ -1107,7 +1150,8 @@ class FineTuningMonitor:
                 print(f"Warning: Performance drop at epoch {epoch}")
         
         return metrics
-```
+
+```text
 
 ## Best Practices and Common Pitfalls
 
@@ -1124,7 +1168,7 @@ class FineTuningBestPractices:
         best_practices = {
             'data_quality': [
                 "Remove duplicates and near-duplicates",
-                "Fix obvious errors and inconsistencies", 
+                "Fix obvious errors and inconsistencies",
                 "Ensure label quality and consistency",
                 "Balance class distributions when possible"
             ],
@@ -1152,7 +1196,7 @@ class FineTuningBestPractices:
         recommendations = {
             'learning_rate': {
                 'classification': '2e-5 to 5e-5',
-                'generation': '1e-5 to 3e-5', 
+                'generation': '1e-5 to 3e-5',
                 'instruction_tuning': '5e-6 to 1e-5'
             },
             
@@ -1217,6 +1261,11 @@ def avoid_common_pitfalls():
     }
     
     return pitfalls
-```
 
-Fine-tuning represents one of the most practical and effective approaches to adapting powerful pre-trained models for specific tasks and domains. As foundation models continue to grow in capability and size, fine-tuning techniques—from full parameter updates to parameter-efficient methods like LoRA—enable practitioners to harness these capabilities for specialized applications. The key to successful fine-tuning lies in understanding the trade-offs between different approaches, carefully preparing high-quality training data, and monitoring the training process to prevent common pitfalls like overfitting and catastrophic forgetting.
+```text
+Fine-tuning represents one of the most practical and effective approaches to adapting powerful pre-trained models for
+specific tasks and domains. As foundation models continue to grow in capability and size, fine-tuning techniques—from
+full parameter updates to parameter-efficient methods like LoRA—enable practitioners to harness these capabilities for
+specialized applications. The key to successful fine-tuning lies in understanding the trade-offs between different
+approaches, carefully preparing high-quality training data, and monitoring the training process to prevent common
+pitfalls like overfitting and catastrophic forgetting.

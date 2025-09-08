@@ -1,53 +1,82 @@
 ---
-title: Tokenization
-aliases: ["tokenization", "tokenizer", "text tokenization", "subword tokenization"]
-summary: Tokenization is the process of breaking down text into smaller units called tokens (words, subwords, or characters) that can be processed by machine learning models. Modern tokenization methods like Byte-Pair Encoding (BPE) and SentencePiece enable language models to handle diverse vocabularies efficiently while managing out-of-vocabulary words and supporting multilingual text processing.
-tags: ["nlp", "fundamentals", "data", "machine-learning"]
-related: ["embedding", "transformer", "bert", "gpt", "llm"]
-category: "nlp"
-difficulty: "beginner"
-updated: "2025-01-15"
+aliases:
+- tokenization
+- tokenizer
+- text tokenization
+- subword tokenization
+category: nlp
+difficulty: beginner
+related:
+- embedding
+- transformer
+- bert
+- gpt
+- llm
 sources:
-  - source_url: "https://arxiv.org/abs/1508.07909"
-    source_title: "Neural Machine Translation of Rare Words with Subword Units"
-    license: "cc-by"
-    author: "Rico Sennrich et al."
-  - source_url: "https://arxiv.org/abs/1804.10959"
-    source_title: "SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing"
-    license: "cc-by"
-    author: "Taku Kudo, John Richardson"
+- author: Rico Sennrich et al.
+  license: cc-by
+  source_title: Neural Machine Translation of Rare Words with Subword Units
+  source_url: https://arxiv.org/abs/1508.07909
+- author: Taku Kudo, John Richardson
+  license: cc-by
+  source_title: 'SentencePiece: A simple and language independent subword tokenizer
+    and detokenizer for Neural Text Processing'
+  source_url: https://arxiv.org/abs/1804.10959
+summary: Tokenization is the process of breaking down text into smaller units called
+  tokens (words, subwords, or characters) that can be processed by machine learning
+  models. Modern tokenization methods like Byte-Pair Encoding (BPE) and SentencePiece
+  enable language models to handle diverse vocabularies efficiently while managing
+  out-of-vocabulary words and supporting multilingual text processing.
+tags:
+- nlp
+- fundamentals
+- data
+- machine-learning
+title: Tokenization
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-Tokenization is the fundamental preprocessing step that converts raw text into a structured format that machine learning models can understand. By breaking text into discrete units (tokens), tokenization bridges the gap between human language and computational processing, enabling everything from simple word counting to complex language model training.
+Tokenization is the fundamental preprocessing step that converts raw text into a structured format that machine learning
+models can understand. By breaking text into discrete units (tokens), tokenization bridges the gap between human
+language and computational processing, enabling everything from simple word counting to complex language model training.
 
 ## Core Concepts
 
-### What Are Tokens?
+### What Are Tokens
 
 Tokens are the basic units of text processing that represent meaningful segments:
 
 ```python
+
 # Different tokenization approaches for the same sentence
+
 text = "The cat's running quickly!"
 
-# Word tokenization
+## Word tokenization
+
 word_tokens = ["The", "cat's", "running", "quickly", "!"]
 
-# Subword tokenization (BPE-style)
+## Subword tokenization (BPE-style)
+
 subword_tokens = ["The", "cat", "'s", "run", "ning", "quick", "ly", "!"]
 
-# Character tokenization  
-char_tokens = ["T", "h", "e", " ", "c", "a", "t", "'", "s", " ", "r", "u", "n", "n", "i", "n", "g", " ", "q", "u", "i", "c", "k", "l", "y", "!"]
-```
+## Character tokenization  
+
+char_tokens = ["T", "h", "e", " ", "c", "a", "t", "'", "s", " ", "r", "u", "n", "n", "i", "n", "g", " ", "q", "u", "i",
+"c", "k", "l", "y", "!"]
+
+```text
 
 ### Token IDs and Vocabularies
 
 Tokenizers map tokens to numerical IDs for model processing:
 
 ```python
-# Example vocabulary mapping
+
+## Example vocabulary mapping
+
 vocabulary = {
     "<pad>": 0,    # Padding token
     "<unk>": 1,    # Unknown token  
@@ -60,11 +89,13 @@ vocabulary = {
     # ... more tokens
 }
 
-# Text to IDs conversion
+## Text to IDs conversion
+
 text = "the cat running"
 tokens = ["the", "cat", "run", "ning"]
 token_ids = [4, 5, 6, 7]
-```
+
+```text
 
 ## Evolution of Tokenization Methods
 
@@ -83,15 +114,18 @@ def simple_word_tokenize(text):
 
 text = "Hello, world! How are you?"
 tokens = simple_word_tokenize(text)
-# Result: ["hello", "world", "how", "are", "you"]
-```
 
-**Advantages:**
+## Result: ["hello", "world", "how", "are", "you"]
+
+```text
+### Advantages
+
 - Simple and interpretable
 - Preserves semantic word boundaries
 - Works well for morphologically simple languages
 
-**Disadvantages:**
+### Disadvantages
+
 - Large vocabulary sizes (millions of unique words)
 - Out-of-vocabulary (OOV) problems
 - Poor handling of morphologically rich languages
@@ -108,15 +142,18 @@ def char_tokenize(text):
 
 text = "hello"
 tokens = char_tokenize(text)
-# Result: ["h", "e", "l", "l", "o"]
-```
 
-**Advantages:**
+## Result: ["h", "e", "l", "l", "o"]
+
+```text
+### Advantages
+
 - Small, fixed vocabulary size
 - No out-of-vocabulary issues
 - Can handle any text in the character set
 
-**Disadvantages:**
+### Disadvantages
+
 - Very long sequences
 - Harder to capture semantic meaning
 - Increased computational requirements
@@ -126,15 +163,20 @@ tokens = char_tokenize(text)
 Modern approach that balances vocabulary size and semantic preservation:
 
 ```python
-# Example subword tokenization
+
+## Example subword tokenization
+
 text = "unhappiness"
 
-# Possible subword breakdown:
+## Possible subword breakdown
+
 subwords = ["un", "happi", "ness"]  # Meaningful morphological units
 
-# Or BPE-style:
+## Or BPE-style
+
 bpe_tokens = ["unha", "ppi", "ness"]  # Data-driven splits
-```
+
+```text
 
 ## Modern Tokenization Algorithms
 
@@ -178,7 +220,7 @@ def learn_bpe(corpus, num_merges):
         new_word_freqs = {}
         for word in word_freqs:
             new_word = word.replace(
-                best_pair[0] + best_pair[1], 
+                best_pair[0] + best_pair[1],
                 best_pair[0] + best_pair[1]  # Merged token
             )
             new_word_freqs[new_word] = word_freqs[word]
@@ -189,49 +231,61 @@ def learn_bpe(corpus, num_merges):
     
     return vocab, merges
 
-# Usage example
+## Usage example
+
 corpus = ["hello", "world", "help", "held", "world", "hello"]  
 vocab, merges = learn_bpe(corpus, num_merges=10)
-```
+
+```text
 
 #### BPE in Practice
 
 ```python
-# Using Hugging Face tokenizers library
+
+## Using Hugging Face tokenizers library
+
 from tokenizers import Tokenizer, models, pre_tokenizers, decoders, trainers
 
-# Create BPE tokenizer
+## Create BPE tokenizer
+
 tokenizer = Tokenizer(models.BPE())
 tokenizer.pre_tokenizer = pre_tokenizers.Whitespace()
 
-# Train on corpus
+## Train on corpus
+
 trainer = trainers.BpeTrainer(vocab_size=1000, special_tokens=["<pad>", "<unk>"])
 files = ["training_corpus.txt"]
 tokenizer.train(files, trainer)
 
-# Tokenize text
+## Tokenize text
+
 output = tokenizer.encode("Hello world!")
 print(f"Tokens: {output.tokens}")
 print(f"IDs: {output.ids}")
-```
+
+```text
 
 ### WordPiece
 
 Developed by Google, used in BERT and other models:
 
 ```python
-# WordPiece differs from BPE in merge criteria
-# Instead of most frequent pairs, it maximizes likelihood increase
+
+## WordPiece differs from BPE in merge criteria
+
+## Instead of most frequent pairs, it maximizes likelihood increase
 
 def wordpiece_score(pair_freq, left_freq, right_freq):
     """WordPiece scoring function"""
     return pair_freq / (left_freq * right_freq)
 
-# WordPiece also uses special prefix (##) for continuation tokens
-# Example: "playing" → ["play", "##ing"]
-```
+## WordPiece also uses special prefix (##) for continuation tokens
 
+## Example: "playing" → ["play", "##ing"]
+
+```text
 Key differences from BPE:
+
 - Uses likelihood-based merge criteria instead of frequency
 - Uses ## prefix for subword continuation
 - More linguistically motivated merges
@@ -243,7 +297,8 @@ Language-agnostic tokenization that works directly on raw text:
 ```python
 import sentencepiece as spm
 
-# Train SentencePiece model
+## Train SentencePiece model
+
 spm.SentencePieceTrainer.train(
     input='corpus.txt',
     model_prefix='tokenizer',
@@ -252,19 +307,23 @@ spm.SentencePieceTrainer.train(
     character_coverage=0.9995
 )
 
-# Load and use trained model
+## Load and use trained model
+
 sp = smp.SentencePieceProcessor(model_file='tokenizer.model')
 
-# Tokenize text
+## Tokenize text
+
 tokens = sp.encode('This is a test sentence.', out_type=str)
 print(tokens)  # ['▁This', '▁is', '▁a', '▁test', '▁sent', 'ence', '.']
 
-# Convert to IDs
+## Convert to IDs
+
 ids = sp.encode('This is a test sentence.', out_type=int)
 print(ids)  # [46, 25, 9, 688, 1370, 4005, 7]
-```
 
+```text
 Benefits of SentencePiece:
+
 - Language independent (no need for word segmentation)
 - Handles whitespace as regular characters
 - Reversible tokenization
@@ -275,8 +334,10 @@ Benefits of SentencePiece:
 Alternative to BPE used in some SentencePiece models:
 
 ```python
-# Unigram starts with large vocabulary and prunes iteratively
-# Keeps subwords that minimize loss when removed
+
+## Unigram starts with large vocabulary and prunes iteratively
+
+## Keeps subwords that minimize loss when removed
 
 def unigram_tokenize(text, model):
     """Tokenize using unigram language model"""
@@ -287,7 +348,8 @@ def unigram_tokenize(text, model):
     best_segmentation = []
     # ... complex dynamic programming implementation
     return best_segmentation
-```
+
+```text
 
 ## Practical Implementation
 
@@ -298,7 +360,8 @@ def unigram_tokenize(text, model):
 ```python
 import tiktoken
 
-# GPT-3.5/GPT-4 tokenizer
+## GPT-3.5/GPT-4 tokenizer
+
 encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
 text = "Hello, world! This is a test."
@@ -306,29 +369,35 @@ tokens = encoding.encode(text)
 print(f"Tokens: {tokens}")
 print(f"Decoded: {encoding.decode(tokens)}")
 
-# Count tokens (important for API limits)
+## Count tokens (important for API limits)
+
 print(f"Token count: {len(tokens)}")
-```
+
+```text
 
 #### Hugging Face Transformers
 
 ```python
 from transformers import AutoTokenizer
 
-# Load pre-trained tokenizer
+## Load pre-trained tokenizer
+
 tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
 
 text = "The quick brown fox jumps over the lazy dog."
 
-# Basic tokenization
+## Basic tokenization
+
 tokens = tokenizer.tokenize(text)
 print(f"Tokens: {tokens}")
 
-# Convert to IDs
+## Convert to IDs
+
 input_ids = tokenizer.encode(text, add_special_tokens=True)
 print(f"Input IDs: {input_ids}")
 
-# Full preprocessing for model input
+## Full preprocessing for model input
+
 inputs = tokenizer(
     text,
     padding=True,
@@ -337,7 +406,8 @@ inputs = tokenizer(
     return_tensors='pt'
 )
 print(inputs)
-```
+
+```text
 
 ### Custom Tokenizer Training
 
@@ -374,17 +444,21 @@ def train_custom_tokenizer(files, vocab_size=10000):
     
     return tokenizer
 
-# Usage
+## Usage
+
 tokenizer = train_custom_tokenizer(["corpus.txt"], vocab_size=5000)
 tokenizer.save("my_tokenizer.json")
-```
+
+```text
 
 ## Handling Special Cases
 
 ### Multilingual Tokenization
 
 ```python
-# Challenges with different scripts and languages
+
+## Challenges with different scripts and languages
+
 texts = [
     "Hello world",                    # English
     "Bonjour le monde",              # French
@@ -393,10 +467,12 @@ texts = [
     "Здравствуй мир"                 # Russian
 ]
 
-# SentencePiece handles multilingual text well
+## SentencePiece handles multilingual text well
+
 import sentencepiece as spm
 
-# Train multilingual model
+## Train multilingual model
+
 spm.SentencePieceTrainer.train(
     input='multilingual_corpus.txt',
     model_prefix='multilingual_tokenizer',
@@ -404,26 +480,32 @@ spm.SentencePieceTrainer.train(
     character_coverage=0.9995,  # Important for multilingual
     model_type='unigram'
 )
-```
+
+```text
 
 ### Code Tokenization
 
 ```python
-# Special considerations for programming languages
+
+## Special considerations for programming languages
+
 code_text = """
 def hello_world():
     print("Hello, World!")
     return True
 """
 
-# Code-specific tokenizers preserve meaningful units
-# Example: keeping function names, operators, keywords intact
+## Code-specific tokenizers preserve meaningful units
+
+## Example: keeping function names, operators, keywords intact
+
 code_tokens = [
     "def", "hello_world", "(", ")", ":",
     "print", "(", '"Hello, World!"', ")",
     "return", "True"
 ]
-```
+
+```text
 
 ### Out-of-Vocabulary Handling
 
@@ -444,7 +526,8 @@ class RobustTokenizer:
     def character_fallback(self, text):
         """Character-level tokenization for OOV text"""
         return [self.unk_token if c not in self.vocab else c for c in text]
-```
+
+```text
 
 ## Performance Considerations
 
@@ -474,7 +557,8 @@ def benchmark_tokenizers(texts: List[str], tokenizers: dict):
     
     return results
 
-# Example benchmark
+## Example benchmark
+
 texts = ["Sample text"] * 10000
 tokenizers = {
     'sentencepiece': sp_tokenizer,
@@ -483,12 +567,15 @@ tokenizers = {
 }
 
 results = benchmark_tokenizers(texts, tokenizers)
-```
+
+```text
 
 ### Memory Efficiency
 
 ```python
-# Vocabulary size affects memory usage
+
+## Vocabulary size affects memory usage
+
 def estimate_tokenizer_memory(vocab_size, embedding_dim):
     """Estimate memory usage for token embeddings"""
     
@@ -506,10 +593,12 @@ def estimate_tokenizer_memory(vocab_size, embedding_dim):
         'total_mb': total_mb
     }
 
-# Example: GPT-3 tokenizer
+## Example: GPT-3 tokenizer
+
 gpt3_memory = estimate_tokenizer_memory(vocab_size=50257, embedding_dim=12288)
 print(f"GPT-3 tokenizer memory usage: {gpt3_memory['total_mb']:.2f} MB")
-```
+
+```text
 
 ## Evaluation Metrics
 
@@ -535,14 +624,16 @@ def calculate_compression_ratio(text, tokenizer):
         'compression_ratio': ratio
     }
 
-# Compare different tokenizers
+## Compare different tokenizers
+
 text = "The quick brown fox jumps over the lazy dog repeatedly."
 ratios = {}
 
 for name, tokenizer in tokenizers.items():
     ratios[name] = calculate_compression_ratio(text, tokenizer)
     print(f"{name}: {ratios[name]['compression_ratio']:.2f}")
-```
+
+```text
 
 ### Fertility Score
 
@@ -560,20 +651,24 @@ def calculate_fertility(word, tokenizer):
     fertility = total_tokens / len(words)
     return fertility
 
-# Lower fertility is generally better
+## Lower fertility is generally better
+
 fertility_scores = {}
 test_text = "internationalization specialization"
 
 for name, tokenizer in tokenizers.items():
     fertility_scores[name] = calculate_fertility(test_text, tokenizer)
-```
+
+```text
 
 ## Common Pitfalls and Solutions
 
 ### 1. Inconsistent Preprocessing
 
 ```python
-# Problem: Different preprocessing for training vs inference
+
+## Problem: Different preprocessing for training vs inference
+
 def consistent_preprocessing(text):
     """Ensure consistent text preprocessing"""
     
@@ -585,10 +680,12 @@ def consistent_preprocessing(text):
     
     return text
 
-# Apply before tokenization
+## Apply before tokenization
+
 preprocessed_text = consistent_preprocessing(raw_text)
 tokens = tokenizer.encode(preprocessed_text)
-```
+
+```text
 
 ### 2. Special Token Handling
 
@@ -623,7 +720,8 @@ class SafeTokenizer:
             token_ids,
             skip_special_tokens=skip_special_tokens
         )
-```
+
+```text
 
 ### 3. Subword Boundary Issues
 
@@ -651,11 +749,13 @@ def fix_subword_boundaries(tokens):
     
     return words
 
-# Example usage
+## Example usage
+
 wordpiece_tokens = ["play", "##ing", "foot", "##ball"]
 words = fix_subword_boundaries(wordpiece_tokens)
 print(words)  # ["playing", "football"]
-```
+
+```text
 
 ## Advanced Applications
 
@@ -693,7 +793,8 @@ class AdaptiveTokenizer:
         # Apply domain-specific merging rules
         adapted_tokens = self.apply_domain_merging(base_tokens)
         return adapted_tokens
-```
+
+```text
 
 ### Privacy-Preserving Tokenization
 
@@ -728,22 +829,26 @@ class PrivateTokenizer:
         private_tokens = [self.hash_sensitive_tokens(t) for t in tokens]
         return private_tokens
 
-# Example: Protect email addresses and phone numbers
+## Example: Protect email addresses and phone numbers
+
 sensitive_patterns = [
     r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # Email
     r'\b\d{3}-\d{3}-\d{4}\b'  # Phone number
 ]
 
 private_tokenizer = PrivateTokenizer(base_tokenizer, sensitive_patterns)
-```
+
+```text
 
 ## Future Trends
 
 ### Byte-Level Tokenization
 
 ```python
-# GPT-2 style byte-level BPE
-# Works directly on UTF-8 bytes instead of characters
+
+## GPT-2 style byte-level BPE
+
+## Works directly on UTF-8 bytes instead of characters
 
 class ByteLevelBPE:
     def __init__(self):
@@ -764,13 +869,16 @@ class ByteLevelBPE:
         text_unicode = ''.join([self.byte_encoder[b] for b in text_bytes])
         # Apply standard BPE on the unicode representation
         return self.bpe_encode(text_unicode)
-```
+
+```text
 
 ### Neural Tokenization
 
 ```python
-# Learned tokenization using neural networks
-# Tokenization as a differentiable operation
+
+## Learned tokenization using neural networks
+
+## Tokenization as a differentiable operation
 
 class NeuralTokenizer(nn.Module):
     def __init__(self, vocab_size, max_length):
@@ -789,7 +897,8 @@ class NeuralTokenizer(nn.Module):
         
         # Use boundaries to create differentiable tokenization
         return self.create_tokens(char_embeddings, boundaries)
-```
+
+```text
 
 ### Dynamic Vocabulary
 
@@ -810,7 +919,7 @@ class DynamicVocabularyTokenizer:
             self.token_frequencies[token] = self.token_frequencies.get(token, 0) + 1
             
             # Add to vocabulary if frequency exceeds threshold
-            if (self.token_frequencies[token] > 10 and 
+            if (self.token_frequencies[token] > 10 and
                 token not in self.dynamic_vocab):
                 self.dynamic_vocab[token] = len(self.dynamic_vocab)
     
@@ -825,6 +934,9 @@ class DynamicVocabularyTokenizer:
         
         # Re-tokenize with updated vocabulary
         return self.tokenize_with_dynamic_vocab(text)
-```
 
-Tokenization remains a critical component in the NLP pipeline, and ongoing research continues to improve how we break down and represent human language for machine learning models. As language models become more sophisticated and multilingual, tokenization methods must evolve to handle the increasing complexity and diversity of textual data while maintaining efficiency and semantic preservation.
+```text
+Tokenization remains a critical component in the NLP pipeline, and ongoing research continues to improve how we break
+down and represent human language for machine learning models. As language models become more sophisticated and
+multilingual, tokenization methods must evolve to handle the increasing complexity and diversity of textual data while
+maintaining efficiency and semantic preservation.

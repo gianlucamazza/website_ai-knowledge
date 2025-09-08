@@ -1,45 +1,70 @@
 ---
-title: BERT (Bidirectional Encoder Representations from Transformers)
-aliases: ["BERT", "bidirectional encoder", "BERT model", "masked language model"]
-summary: BERT (Bidirectional Encoder Representations from Transformers) is a transformer-based language model developed by Google that revolutionized natural language understanding by using bidirectional context. Unlike autoregressive models like GPT, BERT can attend to both past and future tokens simultaneously, making it exceptionally effective for understanding tasks like question answering, sentiment analysis, and text classification.
-tags: ["nlp", "deep-learning", "transformer", "machine-learning", "fundamentals"]
-related: ["transformer", "llm", "gpt", "attention-mechanism", "fine-tuning"]
-category: "nlp"
-difficulty: "intermediate"
-updated: "2025-01-15"
+aliases:
+- BERT
+- bidirectional encoder
+- BERT model
+- masked language model
+category: nlp
+difficulty: intermediate
+related:
+- transformer
+- llm
+- gpt
+- attention-mechanism
+- fine-tuning
 sources:
-  - source_url: "https://arxiv.org/abs/1810.04805"
-    source_title: "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"
-    license: "cc-by"
-    author: "Jacob Devlin et al."
-  - source_url: "https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html"
-    source_title: "Open Sourcing BERT: State-of-the-art Pre-training for Natural Language Processing"
-    license: "proprietary"
-    author: "Google AI"
+- author: Jacob Devlin et al.
+  license: cc-by
+  source_title: 'BERT: Pre-training of Deep Bidirectional Transformers for Language
+    Understanding'
+  source_url: https://arxiv.org/abs/1810.04805
+- author: Google AI
+  license: proprietary
+  source_title: 'Open Sourcing BERT: State-of-the-art Pre-training for Natural Language
+    Processing'
+  source_url: https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html
+summary: BERT (Bidirectional Encoder Representations from Transformers) is a transformer-based
+  language model developed by Google that revolutionized natural language understanding
+  by using bidirectional context. Unlike autoregressive models like GPT, BERT can
+  attend to both past and future tokens simultaneously, making it exceptionally effective
+  for understanding tasks like question answering, sentiment analysis, and text classification.
+tags:
+- nlp
+- deep-learning
+- transformer
+- machine-learning
+- fundamentals
+title: BERT (Bidirectional Encoder Representations from Transformers)
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-BERT (Bidirectional Encoder Representations from Transformers) represents a fundamental shift in how language models process text. Introduced by Google in 2018, BERT's key innovation is its ability to understand context from both directions simultaneously—looking at words that come before AND after a target word. This bidirectional approach makes BERT exceptionally powerful for language understanding tasks, though it cannot generate text like GPT models.
+BERT (Bidirectional Encoder Representations from Transformers) represents a fundamental shift in how language models
+process text. Introduced by Google in 2018, BERT's key innovation is its ability to understand context from both
+directions simultaneously—looking at words that come before AND after a target word. This bidirectional approach makes
+BERT exceptionally powerful for language understanding tasks, though it cannot generate text like GPT models.
 
 ## Core Innovation: Bidirectional Context
 
 ### Traditional vs. Bidirectional Processing
 
-**Traditional Left-to-Right Processing (like GPT):**
+### Traditional Left-to-Right Processing (like GPT)
+
 ```text
 "The cat sat on the [MASK]"
 Context available: "The cat sat on the"
 Missing context: What comes after [MASK]
-```
 
-**BERT's Bidirectional Processing:**
+```text
+### BERT's Bidirectional Processing
+
 ```text
 "The cat sat on the [MASK] under the tree"
 Context available: "The cat sat on the" + "under the tree"  
 Full context: Both directions help predict [MASK] = "mat/ground/grass"
-```
 
+```text
 This bidirectional understanding allows BERT to make more informed predictions by considering the complete context.
 
 ### Architectural Foundation
@@ -58,15 +83,18 @@ BERT uses a **encoder-only** transformer architecture:
 BERT's primary training objective involves randomly masking tokens and predicting them:
 
 ```python
+
 # Example MLM training data
+
 original_text = "The quick brown fox jumps over the lazy dog"
 masked_text = "The [MASK] brown fox [MASK] over the lazy dog"
 targets = ["quick", "jumps"]
 
-# BERT learns to predict masked tokens using bidirectional context
-```
+## BERT learns to predict masked tokens using bidirectional context
 
-**Masking Strategy:**
+```text
+### Masking Strategy
+
 - 15% of tokens are selected for masking
 - Of these selected tokens:
   - 80% replaced with [MASK] token
@@ -80,7 +108,9 @@ This strategy prevents overfitting to the [MASK] token and improves robustness.
 BERT also learns to understand relationships between sentences:
 
 ```python
-# Training examples for NSP
+
+## Training examples for NSP
+
 positive_example = {
     "sentence_a": "The cat sat on the mat.",
     "sentence_b": "It was a comfortable spot to rest.",
@@ -92,8 +122,8 @@ negative_example = {
     "sentence_b": "The stock market opened higher today.",
     "is_next": False
 }
-```
 
+```text
 This objective helps BERT understand discourse and paragraph-level coherence.
 
 ## Model Architecture
@@ -103,30 +133,37 @@ This objective helps BERT understand discourse and paragraph-level coherence.
 BERT combines three types of embeddings:
 
 ```python
-# BERT input embedding
+
+## BERT input embedding
+
 total_embedding = (
     token_embeddings +      # WordPiece vocabulary
     segment_embeddings +    # Sentence A vs Sentence B
     position_embeddings     # Absolute position in sequence
 )
-```
+
+```text
 
 #### Token Embeddings
+
 - Uses WordPiece tokenization with 30,000 vocabulary
 - Handles out-of-vocabulary words by breaking into subwords
 - Special tokens: [CLS], [SEP], [MASK], [PAD]
 
 #### Segment Embeddings  
+
 - Distinguishes between sentence A and sentence B
 - Enables processing of sentence pairs for tasks like question answering
 
 #### Position Embeddings
+
 - Learned embeddings for each position (up to 512 tokens)
 - Different from transformer's sinusoidal positional encoding
 
 ### Model Variants
 
 #### BERT-Base
+
 ```python
 bert_base_config = {
     "hidden_size": 768,        # Embedding dimension
@@ -137,9 +174,11 @@ bert_base_config = {
     "max_position_embeddings": 512,  # Max sequence length
     "parameters": "110M"       # Total parameters
 }
-```
+
+```text
 
 #### BERT-Large  
+
 ```python
 bert_large_config = {
     "hidden_size": 1024,       # Larger embeddings
@@ -148,7 +187,8 @@ bert_large_config = {
     "intermediate_size": 4096, # Larger feed-forward
     "parameters": "340M"       # Total parameters
 }
-```
+
+```text
 
 ## Training Process
 
@@ -164,6 +204,7 @@ BERT was trained on a massive text corpus:
 ### Training Specifications
 
 #### BERT-Base Training
+
 - **Hardware**: 4 Cloud TPUs (16 TPU chips total)
 - **Duration**: 4 days
 - **Batch Size**: 256 sequences
@@ -171,6 +212,7 @@ BERT was trained on a massive text corpus:
 - **Optimization**: Adam with weight decay
 
 #### BERT-Large Training  
+
 - **Hardware**: 16 Cloud TPUs (64 TPU chips total)
 - **Duration**: 4 days
 - **Batch Size**: 256 sequences
@@ -197,7 +239,8 @@ def bert_loss(masked_tokens, nsp_labels, predictions):
     # Combined loss
     total_loss = mlm_loss + nsp_loss
     return total_loss
-```
+
+```text
 
 ## Fine-tuning for Downstream Tasks
 
@@ -206,6 +249,7 @@ def bert_loss(masked_tokens, nsp_labels, predictions):
 BERT can be fine-tuned for various NLP tasks with minimal architecture changes:
 
 #### Text Classification
+
 ```python
 class BERTClassifier(nn.Module):
     def __init__(self, bert_model, num_classes):
@@ -218,9 +262,11 @@ class BERTClassifier(nn.Module):
         # Use [CLS] token representation
         pooled_output = outputs.pooler_output
         return self.classifier(pooled_output)
-```
+
+```text
 
 #### Question Answering
+
 ```python
 class BERTQuestionAnswering(nn.Module):
     def __init__(self, bert_model):
@@ -237,9 +283,11 @@ class BERTQuestionAnswering(nn.Module):
         start_logits, end_logits = logits.split(1, dim=-1)
         
         return start_logits.squeeze(-1), end_logits.squeeze(-1)
-```
+
+```text
 
 #### Named Entity Recognition
+
 ```python
 class BERTTokenClassifier(nn.Module):
     def __init__(self, bert_model, num_labels):
@@ -253,21 +301,26 @@ class BERTTokenClassifier(nn.Module):
         
         # Classify each token
         return self.classifier(sequence_output)
-```
+
+```text
 
 ### Fine-tuning Process
 
 ```python
-# Fine-tuning example for sentiment analysis
+
+## Fine-tuning example for sentiment analysis
+
 from transformers import BertForSequenceClassification, BertTokenizer
 
-# Load pre-trained model
+## Load pre-trained model
+
 model = BertForSequenceClassification.from_pretrained(
     'bert-base-uncased',
     num_labels=2  # Binary classification
 )
 
-# Fine-tune on task-specific data
+## Fine-tune on task-specific data
+
 optimizer = torch.optim.AdamW(model.parameters(), lr=2e-5)
 
 for epoch in range(3):  # Typically 2-4 epochs
@@ -279,7 +332,8 @@ for epoch in range(3):  # Typically 2-4 epochs
         loss.backward()
         
         optimizer.step()
-```
+
+```text
 
 ## Key Applications and Performance
 
@@ -301,11 +355,13 @@ BERT achieved state-of-the-art results on the General Language Understanding Eva
 ### Reading Comprehension
 
 **SQuAD 1.1** (Stanford Question Answering Dataset):
+
 - BERT-Large: 93.2 F1 score
 - Previous best: 91.8 F1 score
 - Human performance: 91.2 F1 score
 
 **SQuAD 2.0** (with unanswerable questions):
+
 - BERT-Large: 83.1 F1 score  
 - Previous best: 76.3 F1 score
 - Human performance: 89.5 F1 score
@@ -313,6 +369,7 @@ BERT achieved state-of-the-art results on the General Language Understanding Eva
 ### Named Entity Recognition
 
 **CoNLL-2003 NER**:
+
 - BERT-Large: 96.4 F1 score
 - Previous best: 95.7 F1 score
 
@@ -364,22 +421,27 @@ Microsoft's enhanced attention mechanism:
 from transformers import BertTokenizer, BertModel
 import torch
 
-# Initialize tokenizer and model
+## Initialize tokenizer and model
+
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 
-# Tokenize input
+## Tokenize input
+
 text = "BERT is a powerful language model."
 inputs = tokenizer(text, return_tensors='pt', padding=True, truncation=True)
 
-# Get BERT embeddings
+## Get BERT embeddings
+
 with torch.no_grad():
     outputs = model(**inputs)
     
-# Access different outputs
+## Access different outputs
+
 last_hidden_states = outputs.last_hidden_state  # All token representations
 pooler_output = outputs.pooler_output           # [CLS] token representation
-```
+
+```text
 
 ### Feature Extraction
 
@@ -391,7 +453,7 @@ def extract_bert_features(texts, model, tokenizer, layer=-1):
     model.eval()
     
     for text in texts:
-        inputs = tokenizer(text, return_tensors='pt', 
+        inputs = tokenizer(text, return_tensors='pt',
                           padding=True, truncation=True, max_length=512)
         
         with torch.no_grad():
@@ -407,20 +469,23 @@ def extract_bert_features(texts, model, tokenizer, layer=-1):
             features.append(cls_embedding.numpy())
     
     return np.array(features)
-```
+
+```text
 
 ### Fine-tuning Example
 
 ```python
 from transformers import BertForSequenceClassification, Trainer, TrainingArguments
 
-# Load model for classification
+## Load model for classification
+
 model = BertForSequenceClassification.from_pretrained(
     'bert-base-uncased',
     num_labels=3  # Multi-class classification
 )
 
-# Training arguments
+## Training arguments
+
 training_args = TrainingArguments(
     output_dir='./results',
     num_train_epochs=3,
@@ -432,7 +497,8 @@ training_args = TrainingArguments(
     learning_rate=2e-5
 )
 
-# Create trainer
+## Create trainer
+
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -440,20 +506,24 @@ trainer = Trainer(
     eval_dataset=eval_dataset
 )
 
-# Fine-tune
+## Fine-tune
+
 trainer.train()
-```
+
+```text
 
 ## Limitations and Considerations
 
 ### Computational Requirements
 
 **Memory Usage**:
+
 - BERT-Base: ~1.3GB GPU memory for inference
 - BERT-Large: ~5GB GPU memory for inference
 - Fine-tuning requires 2-3x more memory
 
 **Inference Speed**:
+
 - Slower than simpler models due to transformer complexity
 - Full attention computation scales quadratically with sequence length
 
@@ -461,13 +531,16 @@ trainer.train()
 
 ```text
 Maximum sequence length: 512 tokens
+
 - Longer texts need truncation or segmentation
 - Important information might be lost at boundaries
-```
+
+```text
 
 ### Generation Limitations
 
 BERT cannot generate text naturally:
+
 - Designed for understanding, not generation
 - Bidirectional context makes autoregressive generation impossible
 - Need specialized approaches for text generation tasks
@@ -514,6 +587,7 @@ BERT's publication led to significant advances:
 ### Subsequent Developments
 
 BERT's success spawned numerous improvements:
+
 - **Efficiency**: DistilBERT, MobileBERT for deployment
 - **Scale**: RoBERTa, DeBERTa for better performance  
 - **Specialization**: BioBERT, FinBERT for domain adaptation
@@ -539,4 +613,7 @@ BERT's success spawned numerous improvements:
 **Few-Shot Learning**: Better performance with limited task data
 **Continual Learning**: Updating knowledge without full retraining
 
-BERT fundamentally transformed natural language processing by demonstrating that bidirectional context understanding could dramatically improve performance on language tasks. Its encoder-only architecture and innovative training approach established new standards for language model pre-training and fine-tuning, influencing virtually all subsequent developments in NLP while remaining one of the most widely used models for language understanding applications.
+BERT fundamentally transformed natural language processing by demonstrating that bidirectional context understanding
+could dramatically improve performance on language tasks. Its encoder-only architecture and innovative training approach
+established new standards for language model pre-training and fine-tuning, influencing virtually all subsequent
+developments in NLP while remaining one of the most widely used models for language understanding applications.

@@ -1,0 +1,202 @@
+# Markdown Quality Control Configuration
+# Enterprise-grade config for AI Knowledge Website
+# Optimized for 25+ glossary entries and 50+ articles
+
+# File patterns to lint
+globs:
+  - "apps/site/src/content/**/*.md"
+  - "docs/**/*.md"
+  - "temp-articles/**/*.md"
+
+# Files to ignore
+ignores:
+  - "node_modules/**"
+  - "dist/**"
+  - "coverage/**"
+  - "**/.astro/**"
+  - "**/.git/**"
+  - "**/test-results/**"
+
+# Core configuration with AI-specific optimizations
+config:
+  # Enable all rules by default, then customize
+  default: true
+  
+  # HEADINGS - Enforce semantic structure for technical content
+  MD001: # Heading levels increment by one
+    enforce_at: 1
+  MD003: # Heading style (ATX for consistency)
+    style: "atx"
+  MD022: # Headings surrounded by blank lines (relaxed for dense content)
+    lines_above: 1
+    lines_below: 1
+  MD025: # Single title per document (handle frontmatter titles)
+    front_matter_title: "^\\s*title\\s*[:=]"
+    level: 1
+  MD041: # First line must be top-level heading (handle frontmatter)
+    front_matter_title: "^\\s*title\\s*[:=]"
+    level: 1
+    
+  # LISTS - Critical fix needed (674 violations)
+  MD004: # Unordered list style consistency
+    style: "dash"
+  MD007: # List indentation
+    indent: 2
+    start_indented: false
+    start_indent: 2
+  MD030: # Spaces after list markers
+    ul_single: 1
+    ol_single: 1
+    ul_multi: 1
+    ol_multi: 1
+  MD032: # Lists surrounded by blank lines - MAJOR ISSUE
+    list_items: true
+    code_blocks: true
+    # More lenient for nested lists in AI content
+    
+  # LINE LENGTH - Optimized for technical AI content (52 violations)
+  MD013: # Line length limits - balance readability with AI terminology
+    line_length: 120           # Standard for code projects
+    heading_line_length: 100   # Allow longer for AI terms
+    code_block_line_length: 140  # More space for examples
+    code_blocks: true
+    tables: true
+    headers: true
+    strict: false              # Essential for AI content with long terms
+    stern: false
+    # Ignore lines with URLs or specific patterns
+    
+  # WHITESPACE - Clean formatting
+  MD009: # Trailing spaces
+    br_spaces: 2
+    list_item_empty_lines: false
+    strict: false
+  MD012: # Multiple consecutive blank lines
+    maximum: 2                 # Allow extra space in long articles
+  MD047: # Files end with newline - CRITICAL (23 violations)
+    enabled: true
+    
+  # CODE BLOCKS - Critical for AI examples (134 violations)
+  MD031: # Fenced code blocks surrounded by blank lines
+    list_items: true
+    code_blocks: true
+  MD040: # Language specified for fenced code blocks - MAJOR ISSUE
+    enabled: true
+    allowed_languages:
+      - "python"
+      - "javascript" 
+      - "typescript"
+      - "bash"
+      - "shell"
+      - "json"
+      - "yaml"
+      - "markdown"
+      - "text"
+      - "plaintext"
+      - "console"
+      - "output"
+      - "math"
+      - "latex"
+  MD046: # Code block style
+    style: "fenced"
+  MD048: # Code fence style
+    style: "backtick"
+    
+  # EMPHASIS - AI content specific (47 violations)
+  MD036: # Emphasis not used as heading - CRITICAL for AI sections
+    punctuation: ".,;:!?。，；：！？"
+    # More lenient for AI terminology that uses emphasis
+  MD049: # Emphasis style
+    style: "asterisk"
+  MD050: # Strong style
+    style: "asterisk"
+    
+  # HTML - Allow rich content elements for AI explanations
+  MD033: # HTML elements allowed
+    allowed_elements:
+      # Basic formatting
+      - "br"
+      - "span"
+      - "div"
+      - "kbd"
+      - "mark"
+      - "sub"
+      - "sup"
+      - "code"
+      # Semantic elements
+      - "abbr"
+      - "cite"
+      - "time"
+      - "small"
+      - "details"
+      - "summary"
+      - "dfn"
+      # Media elements
+      - "figure"
+      - "figcaption"
+      - "img"
+      - "video"
+      - "audio"
+      - "source"
+      - "picture"
+      # Table elements
+      - "table"
+      - "thead"
+      - "tbody"
+      - "tfoot"
+      - "tr"
+      - "th"
+      - "td"
+      - "colgroup"
+      - "col"
+      - "caption"
+      # Math elements
+      - "math"
+      - "mi"
+      - "mn"
+      - "mo"
+      - "mrow"
+      - "msup"
+      - "msub"
+      - "mfrac"
+      - "msqrt"
+      
+  # LINKS - Relaxed for AI reference content
+  MD034: false  # Bare URLs (common in AI references)
+  MD051: false  # Link fragments (Astro routing handles)
+  MD052: false  # Reference links (useful for glossary)
+  MD053: false  # Link reference definitions
+  
+  # PUNCTUATION - Allow flexibility for AI terminology
+  MD026: # Trailing punctuation in headings
+    punctuation: ".,;:!。，；：！"
+    
+  # TABLES - Essential for AI comparisons
+  MD055: false  # Table pipe style (allow flexibility)
+  
+  # HORIZONTAL RULES
+  MD058: # Horizontal rule style
+    style: "consistent"
+
+# Enhanced fixes configuration with safety checks
+fixes:
+  MD022: true   # Auto-fix heading spacing
+  MD032: true   # Auto-fix list spacing - CRITICAL
+  MD047: true   # Auto-fix final newlines - CRITICAL  
+  MD012: true   # Auto-fix multiple blank lines
+  MD009: true   # Auto-fix trailing spaces
+  MD031: true   # Auto-fix code block spacing
+  # Don't auto-fix MD040 (language specification) to avoid breaking content
+  
+# Performance optimizations for large content sets
+outputFormatters:
+  - "markdownlint-cli2-formatter-pretty"
+  
+# Custom rule configuration for AI content
+customRules:
+  # Allow certain patterns common in AI documentation
+  ai-terminology-exceptions:
+    - "AI/ML"
+    - "NLP/NLU"
+    - "CV/NLP"
+    - "GPU/TPU"

@@ -1,0 +1,151 @@
+# AI Knowledge Website - Accepted Vocabulary
+# Technical terms, product names, and domain-specific language
+
+# Core AI/ML Terms
+artificial intelligence
+machine learning  
+deep learning
+neural network
+backpropagation
+gradient descent
+overfitting
+underfitting
+hyperparameter
+embedding
+tokenization
+transformer
+attention mechanism
+self-attention
+multi-head attention
+fine-tuning
+pre-training
+zero-shot
+few-shot
+in-context learning
+
+# Model Architectures
+convolutional neural network
+recurrent neural network
+long short-term memory
+gated recurrent unit
+generative adversarial network
+autoencoder
+variational autoencoder
+BERT
+GPT
+T5
+CLIP
+DALL-E
+ResNet
+VGG
+AlexNet
+LeNet
+
+# AI Techniques
+supervised learning
+unsupervised learning
+semi-supervised learning
+reinforcement learning
+transfer learning  
+federated learning
+curriculum learning
+contrastive learning
+self-supervised learning
+meta-learning
+multi-task learning
+
+# Data & Processing
+dataset
+data preprocessing
+data augmentation
+feature engineering
+dimensionality reduction
+principal component analysis
+t-SNE
+UMAP
+normalization
+standardization
+one-hot encoding
+word embedding
+sentence embedding
+contextual embedding
+
+# Evaluation & Metrics
+accuracy
+precision
+recall
+F1-score
+ROC curve
+AUC
+confusion matrix
+cross-validation
+train-validation-test split
+bias-variance tradeoff
+perplexity
+BLEU score
+ROUGE score
+
+# Tools & Frameworks
+TensorFlow
+PyTorch
+Keras
+scikit-learn
+Hugging Face
+OpenAI
+Anthropic
+LangChain
+LangGraph
+Streamlit
+Gradio
+Jupyter
+Colab
+MLflow
+Weights & Biases
+Neptune
+
+# Technical Infrastructure
+API
+REST
+GraphQL
+WebSocket
+microservices
+containerization
+Docker
+Kubernetes
+CI/CD
+DevOps
+MLOps
+cloud computing
+edge computing
+GPU
+TPU
+CUDA
+distributed computing
+parallel processing
+
+# File Formats & Standards
+JSON
+YAML
+XML
+CSV
+Parquet
+HDF5
+ONNX
+TensorRT
+OpenVINO
+CoreML
+
+# Organizations & Companies
+OpenAI
+Anthropic
+Google
+DeepMind
+Meta
+Microsoft
+Amazon
+NVIDIA
+Hugging Face
+Stanford
+MIT
+Berkeley
+Carnegie Mellon

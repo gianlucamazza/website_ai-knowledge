@@ -1,32 +1,50 @@
 ---
-title: Neural Network
-aliases: ["artificial neural network", "ANN", "neural net", "connectionist model"]
-summary: A neural network is a computational model inspired by biological neural networks, consisting of interconnected nodes (neurons) that process and transmit information. These networks learn patterns from data by adjusting connection weights through training, forming the foundation of modern deep learning and AI systems.
-tags: ["deep-learning", "machine-learning", "fundamentals", "algorithms"]
-related: ["deep-learning", "backpropagation", "gradient-descent", "artificial-intelligence"]
-category: "fundamentals"
-difficulty: "intermediate"
-updated: "2025-01-15"
+aliases:
+- artificial neural network
+- ANN
+- neural net
+- connectionist model
+category: fundamentals
+difficulty: intermediate
+related:
+- deep-learning
+- backpropagation
+- gradient-descent
+- artificial-intelligence
 sources:
-  - source_url: "https://www.deeplearningbook.org/"
-    source_title: "Deep Learning"
-    license: "cc-by"
-    author: "Ian Goodfellow, Yoshua Bengio, Aaron Courville"
-  - source_url: "https://www.nature.com/articles/nature14539"
-    source_title: "Deep learning"
-    license: "proprietary"
-    author: "Yann LeCun, Yoshua Bengio, Geoffrey Hinton"
+- author: Ian Goodfellow, Yoshua Bengio, Aaron Courville
+  license: cc-by
+  source_title: Deep Learning
+  source_url: https://www.deeplearningbook.org/
+- author: Yann LeCun, Yoshua Bengio, Geoffrey Hinton
+  license: proprietary
+  source_title: Deep learning
+  source_url: https://www.nature.com/articles/nature14539
+summary: A neural network is a computational model inspired by biological neural networks,
+  consisting of interconnected nodes (neurons) that process and transmit information.
+  These networks learn patterns from data by adjusting connection weights through
+  training, forming the foundation of modern deep learning and AI systems.
+tags:
+- deep-learning
+- machine-learning
+- fundamentals
+- algorithms
+title: Neural Network
+updated: '2025-01-15'
 ---
 
-## What is a Neural Network?
+## What is a Neural Network
 
-A neural network is a computational model inspired by the structure and function of biological neural networks found in animal brains. It consists of interconnected processing units called artificial neurons or nodes, organized in layers that transform input data through weighted connections and activation functions to produce outputs.
+A neural network is a computational model inspired by the structure and function of biological neural networks found in
+animal brains. It consists of interconnected processing units called artificial neurons or nodes, organized in layers
+that transform input data through weighted connections and activation functions to produce outputs.
 
 ## Biological Inspiration
 
 ### Biological Neurons
 
 Real neurons in the brain:
+
 - Receive signals through dendrites
 - Process signals in the cell body (soma)
 - Transmit output through the axon
@@ -35,6 +53,7 @@ Real neurons in the brain:
 ### Artificial Neurons
 
 Artificial neurons mimic this structure:
+
 - **Inputs**: Receive signals from previous neurons or external data
 - **Weights**: Represent the strength of connections (like synapses)
 - **Activation Function**: Determines if and how strongly the neuron fires
@@ -48,14 +67,16 @@ The simplest neural network unit:
 
 ```text
 Inputs (x₁, x₂, ..., xₙ) → Weights (w₁, w₂, ..., wₙ) → Σ → Activation Function → Output
-```
 
-**Mathematical Formula:**
-```
+```text
+### Mathematical Formula
+
+```text
 output = f(w₁x₁ + w₂x₂ + ... + wₙxₙ + b)
-```
 
+```text
 Where:
+
 - `f` is the activation function
 - `w` are weights
 - `x` are inputs
@@ -63,17 +84,20 @@ Where:
 
 ### Multi-Layer Networks
 
-**Input Layer**
+### Input Layer
+
 - Receives raw data
 - No computation, just passes data forward
 - Number of neurons equals input features
 
-**Hidden Layer(s)**
+### Hidden Layer(s)
+
 - Perform computations and feature extraction
 - Can have multiple hidden layers (deep networks)
 - Number and size vary based on problem complexity
 
-**Output Layer**
+### Output Layer
+
 - Produces final predictions or classifications
 - Number of neurons depends on task type
 - Uses appropriate activation function for the problem
@@ -84,43 +108,53 @@ Where:
 
 Functions that determine neuron output based on weighted input sum:
 
-**Sigmoid**
-```
+### Sigmoid
+
+```text
 f(x) = 1 / (1 + e^(-x))
-```
+
+```text
 - Output range: (0, 1)
 - Historical importance but prone to vanishing gradient
 
-**ReLU (Rectified Linear Unit)**
-```
+### ReLU (Rectified Linear Unit)
+
+```text
 f(x) = max(0, x)
-```
+
+```text
 - Most popular in deep networks
 - Computationally efficient
 - Helps mitigate vanishing gradient problem
 
-**Tanh (Hyperbolic Tangent)**
-```
+### Tanh (Hyperbolic Tangent)
+
+```text
 f(x) = (e^x - e^(-x)) / (e^x + e^(-x))
-```
+
+```text
 - Output range: (-1, 1)
 - Zero-centered output
 
-**Softmax**
-```
+### Softmax
+
+```text
 f(xᵢ) = e^xᵢ / Σⱼ e^xⱼ
-```
+
+```text
 - Used in output layer for multi-class classification
 - Produces probability distribution
 
 ### Weights and Biases
 
-**Weights**
+### Weights
+
 - Represent connection strength between neurons
 - Learned during training through optimization
 - Control information flow through the network
 
-**Biases**
+### Biases
+
 - Additional parameters added to neuron inputs
 - Allow neurons to fire even with zero input
 - Improve model flexibility and learning capacity
@@ -129,15 +163,18 @@ f(xᵢ) = e^xᵢ / Σⱼ e^xⱼ
 
 Measure difference between predicted and actual outputs:
 
-**Mean Squared Error (Regression)**
-```
-MSE = (1/n) Σ(yᵢ - ŷᵢ)²
-```
+### Mean Squared Error (Regression)
 
-**Cross-Entropy (Classification)**
-```
+```text
+MSE = (1/n) Σ(yᵢ - ŷᵢ)²
+
+```text
+### Cross-Entropy (Classification)
+
+```text
 CE = -Σ yᵢ log(ŷᵢ)
-```
+
+```text
 
 ## Learning Process
 
@@ -161,14 +198,18 @@ CE = -Σ yᵢ log(ŷᵢ)
 ### Training Algorithm
 
 ```text
+
 1. Initialize weights and biases randomly
 2. For each training example:
+
    a. Forward propagation
    b. Calculate loss
    c. Backpropagation
    d. Update weights and biases
+
 3. Repeat until convergence or maximum iterations
-```
+
+```text
 
 ## Types of Neural Networks
 
@@ -227,17 +268,20 @@ CE = -Σ yᵢ log(ŷᵢ)
 
 ### Training Difficulties
 
-**Vanishing Gradient Problem**
+### Vanishing Gradient Problem
+
 - Gradients become very small in deep networks
 - Early layers learn slowly or not at all
 - Mitigated by better activation functions and architectures
 
-**Overfitting**
+### Overfitting
+
 - Network memorizes training data
 - Poor generalization to new data
 - Addressed through regularization techniques
 
-**Local Minima**
+### Local Minima
+
 - Optimization may get stuck in suboptimal solutions
 - Modern deep networks less susceptible due to high dimensionality
 - Advanced optimizers help escape local minima
@@ -304,17 +348,20 @@ CE = -Σ yᵢ log(ŷᵢ)
 
 ### Regularization Techniques
 
-**Dropout**
+### Dropout
+
 - Randomly deactivate neurons during training
 - Prevents over-reliance on specific neurons
 - Reduces overfitting
 
-**Weight Decay**
+### Weight Decay
+
 - Add penalty term to loss function
 - Encourages smaller weight values
 - Improves generalization
 
-**Batch Normalization**
+### Batch Normalization
+
 - Normalize inputs to each layer
 - Speeds up training and improves stability
 - Acts as implicit regularization
@@ -342,4 +389,6 @@ CE = -Σ yᵢ log(ŷᵢ)
 - **Pruning**: Removing unnecessary connections
 - **Edge Computing**: Running neural networks on mobile devices
 
-Neural networks have revolutionized artificial intelligence and continue to be the backbone of most modern AI systems. Their ability to learn complex patterns from data has enabled breakthroughs across numerous fields, from computer vision to natural language processing, making them one of the most important computational tools of our time.
+Neural networks have revolutionized artificial intelligence and continue to be the backbone of most modern AI systems.
+Their ability to learn complex patterns from data has enabled breakthroughs across numerous fields, from computer vision
+to natural language processing, making them one of the most important computational tools of our time.

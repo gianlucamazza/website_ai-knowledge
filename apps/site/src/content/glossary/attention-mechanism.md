@@ -1,26 +1,48 @@
 ---
-title: Attention Mechanism
-aliases: ["attention", "self-attention", "multi-head attention", "scaled dot-product attention"]
-summary: The attention mechanism is a neural network component that allows models to focus on relevant parts of input sequences when making predictions. Introduced to address limitations of RNNs, attention enables models to directly access any input position and has become the foundation of transformer architectures, revolutionizing natural language processing and enabling the development of powerful models like BERT and GPT.
-tags: ["deep-learning", "nlp", "transformer", "fundamentals", "algorithms"]
-related: ["transformer", "bert", "gpt", "llm", "rnn"]
-category: "deep-learning"
-difficulty: "advanced"
-updated: "2025-01-15"
+aliases:
+- attention
+- self-attention
+- multi-head attention
+- scaled dot-product attention
+category: deep-learning
+difficulty: advanced
+related:
+- transformer
+- bert
+- gpt
+- llm
+- rnn
 sources:
-  - source_url: "https://arxiv.org/abs/1409.0473"
-    source_title: "Neural Machine Translation by Jointly Learning to Align and Translate"
-    license: "cc-by"
-    author: "Dzmitry Bahdanau et al."
-  - source_url: "https://arxiv.org/abs/1706.03762"
-    source_title: "Attention Is All You Need"
-    license: "cc-by"
-    author: "Ashish Vaswani et al."
+- author: Dzmitry Bahdanau et al.
+  license: cc-by
+  source_title: Neural Machine Translation by Jointly Learning to Align and Translate
+  source_url: https://arxiv.org/abs/1409.0473
+- author: Ashish Vaswani et al.
+  license: cc-by
+  source_title: Attention Is All You Need
+  source_url: https://arxiv.org/abs/1706.03762
+summary: The attention mechanism is a neural network component that allows models
+  to focus on relevant parts of input sequences when making predictions. Introduced
+  to address limitations of RNNs, attention enables models to directly access any
+  input position and has become the foundation of transformer architectures, revolutionizing
+  natural language processing and enabling the development of powerful models like
+  BERT and GPT.
+tags:
+- deep-learning
+- nlp
+- transformer
+- fundamentals
+- algorithms
+title: Attention Mechanism
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-The attention mechanism is one of the most transformative innovations in deep learning, fundamentally changing how neural networks process sequential data. By allowing models to dynamically focus on different parts of the input when making each prediction, attention solves the information bottleneck problem of traditional sequence-to-sequence architectures and enables the direct modeling of long-range dependencies.
+The attention mechanism is one of the most transformative innovations in deep learning, fundamentally changing how
+neural networks process sequential data. By allowing models to dynamically focus on different parts of the input when
+making each prediction, attention solves the information bottleneck problem of traditional sequence-to-sequence
+architectures and enables the direct modeling of long-range dependencies.
 
 ## The Problem Attention Solves
 
@@ -29,7 +51,9 @@ The attention mechanism is one of the most transformative innovations in deep le
 Traditional RNN-based sequence-to-sequence models compress entire input sequences into fixed-size context vectors:
 
 ```python
+
 # Traditional Encoder-Decoder without Attention
+
 class TraditionalSeq2Seq(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super().__init__()
@@ -45,9 +69,10 @@ class TraditionalSeq2Seq(nn.Module):
         # Decode using only the context vector
         decoder_output, _ = self.decoder(target_seq, (context, cell))
         return self.output_layer(decoder_output)
-```
 
-**Problems with this approach:**
+```text
+### Problems with this approach
+
 - **Information Loss**: Long sequences compressed into fixed-size vectors
 - **Vanishing Gradients**: Earlier inputs have diminishing influence
 - **No Selectivity**: Decoder can't focus on relevant input parts
@@ -57,7 +82,9 @@ class TraditionalSeq2Seq(nn.Module):
 Attention allows the decoder to access all encoder outputs directly:
 
 ```python
-# With Attention: Direct access to all encoder states
+
+## With Attention: Direct access to all encoder states
+
 def attention_example():
     input_text = "The cat sat on the mat"
     target_word = "gato"  # Spanish translation
@@ -69,7 +96,8 @@ def attention_example():
     encoder_states = [h1, h2, h3, h4, h5, h6]  # All time steps
     attention_weights = [0.1, 0.7, 0.1, 0.05, 0.03, 0.02]  # Focus on "cat"
     context = sum(w * h for w, h in zip(attention_weights, encoder_states))
-```
+
+```text
 
 ## Core Attention Components
 
@@ -78,7 +106,9 @@ def attention_example():
 Modern attention mechanisms use three vectors for each input element:
 
 ```python
-# Attention components
+
+## Attention components
+
 def compute_attention(Q, K, V):
     """
     Q (Query): What am I looking for?
@@ -100,7 +130,8 @@ def compute_attention(Q, K, V):
     output = torch.matmul(attention_weights, V)
     
     return output, attention_weights
-```
+
+```text
 
 ### Intuitive Understanding
 
@@ -111,6 +142,7 @@ Input Sentence: "The cat sat on the mat"
 Query: "What animal is mentioned?"
 
 Attention Process:
+
 1. Query looks at each word
 2. Computes relevance scores:
    - "The": 0.05 (not relevant)
@@ -121,7 +153,8 @@ Attention Process:
    - "mat": 0.05 (somewhat relevant)
 
 3. Weighted combination focuses on "cat"
-```
+
+```text
 
 ## Evolution of Attention Mechanisms
 
@@ -156,7 +189,8 @@ class AdditiveAttention(nn.Module):
         context = torch.sum(attention_weights.unsqueeze(-1) * keys, dim=1)
         
         return context, attention_weights
-```
+
+```text
 
 ### 2. Multiplicative Attention (Luong, 2015)
 
@@ -181,7 +215,8 @@ class MultiplicativeAttention(nn.Module):
         context = torch.sum(attention_weights.unsqueeze(-1) * keys, dim=1)
         
         return context, attention_weights
-```
+
+```text
 
 ### 3. Scaled Dot-Product Attention (Transformer)
 
@@ -208,7 +243,8 @@ def scaled_dot_product_attention(Q, K, V, mask=None):
     
     return output, attention_weights
 
-# Usage in practice
+## Usage in practice
+
 class AttentionLayer(nn.Module):
     def __init__(self, d_model):
         super().__init__()
@@ -224,18 +260,24 @@ class AttentionLayer(nn.Module):
         
         output, weights = scaled_dot_product_attention(Q, K, V)
         return output, weights
-```
+
+```text
 
 ## Self-Attention
 
 Self-attention allows a sequence to attend to itself, capturing internal relationships:
 
 ```python
-# Self-attention example
+
+## Self-attention example
+
 sentence = "The cat that I saw yesterday was black"
-# Self-attention helps "cat" attend to its descriptors:
-# - "that I saw yesterday" (relative clause)
-# - "was black" (predicate)
+
+## Self-attention helps "cat" attend to its descriptors
+
+## - "that I saw yesterday" (relative clause)
+
+## - "was black" (predicate)
 
 def self_attention_example():
     # Input sequence attends to itself
@@ -255,7 +297,8 @@ def self_attention_example():
         }
     }
     return attention_pattern
-```
+
+```text
 
 ### Self-Attention Matrix
 
@@ -275,7 +318,8 @@ def visualize_self_attention():
     ]
     
     return attention_matrix
-```
+
+```text
 
 ## Multi-Head Attention
 
@@ -325,7 +369,8 @@ class MultiHeadAttention(nn.Module):
         
         return output, attention_weights
 
-# Different heads capture different relationships
+## Different heads capture different relationships
+
 def multi_head_example():
     """Example of what different attention heads might learn"""
     
@@ -337,14 +382,17 @@ def multi_head_example():
     }
     
     return heads
-```
 
-### Why Multiple Heads?
+```text
+
+### Why Multiple Heads
 
 Different heads specialize in different types of relationships:
 
 ```python
-# Example attention patterns for "The cat sat on the mat"
+
+## Example attention patterns for "The cat sat on the mat"
+
 head_patterns = {
     "Head 1 (Syntactic)": {
         "cat": ["The", "sat"],      # Determiner and verb
@@ -364,7 +412,8 @@ head_patterns = {
         "mat": ["the", "on"]        # Local neighborhood
     }
 }
-```
+
+```text
 
 ## Attention Variants
 
@@ -391,11 +440,15 @@ def causal_attention(Q, K, V):
     
     return output, attention_weights
 
-# Example: GPT-style text generation
-# When predicting "cat", can only attend to ["The"]
-# When predicting "sat", can only attend to ["The", "cat"]  
-# When predicting "on", can only attend to ["The", "cat", "sat"]
-```
+## Example: GPT-style text generation
+
+## When predicting "cat", can only attend to ["The"]
+
+## When predicting "sat", can only attend to ["The", "cat"]  
+
+## When predicting "on", can only attend to ["The", "cat", "sat"]
+
+```text
 
 ### 2. Cross-Attention
 
@@ -420,11 +473,15 @@ class CrossAttention(nn.Module):
         output, weights = scaled_dot_product_attention(Q, K, V)
         return output, weights
 
-# Usage in translation:
-# English: "The cat sat on the mat"  
-# Spanish decoder generating: "El gato se sentó..."
-# Cross-attention helps Spanish decoder attend to relevant English words
-```
+## Usage in translation
+
+## English: "The cat sat on the mat"  
+
+## Spanish decoder generating: "El gato se sentó..."
+
+## Cross-attention helps Spanish decoder attend to relevant English words
+
+```text
 
 ### 3. Sparse Attention
 
@@ -453,14 +510,16 @@ class SparseAttention(nn.Module):
         
         return mask
 
-# Sparse patterns reduce O(n²) to O(n√n) or O(n log n)
+## Sparse patterns reduce O(n²) to O(n√n) or O(n log n)
+
 sparse_patterns = [
     "Local window",      # Attend to nearby tokens
     "Global tokens",     # Special tokens attend globally  
     "Random sampling",   # Randomly sample distant tokens
     "Hierarchical",      # Multi-level attention patterns
 ]
-```
+
+```text
 
 ## Practical Implementation
 
@@ -526,19 +585,23 @@ class SimpleAttention(nn.Module):
         output = self.output_linear(context)
         return output, attention_probs
 
-# Usage example
+## Usage example
+
 d_model = 512
 attention_layer = SimpleAttention(d_model, num_heads=8)
 
-# Input sequences
+## Input sequences
+
 batch_size, seq_len = 32, 100
 x = torch.randn(batch_size, seq_len, d_model)
 
-# Self-attention
+## Self-attention
+
 output, attention_weights = attention_layer(x, x, x)
 print(f"Output shape: {output.shape}")
 print(f"Attention weights shape: {attention_weights.shape}")
-```
+
+```text
 
 ### Attention Visualization
 
@@ -568,11 +631,15 @@ def visualize_attention(attention_weights, input_tokens, layer=0, head=0):
     plt.tight_layout()
     plt.show()
 
-# Usage
+## Usage
+
 tokens = ["The", "cat", "sat", "on", "the", "mat"]
-# attention_weights from model forward pass
+
+## attention_weights from model forward pass
+
 visualize_attention(attention_weights, tokens)
-```
+
+```text
 
 ## Applications Beyond NLP
 
@@ -619,7 +686,8 @@ class VisionTransformer(nn.Module):
         
         # Use class token for classification
         return output[:, 0]
-```
+
+```text
 
 ### Speech Processing: Conformer
 
@@ -647,7 +715,8 @@ class ConformerAttention(nn.Module):
         x = x + ff_out
         
         return x
-```
+
+```text
 
 ## Performance Characteristics
 
@@ -679,7 +748,8 @@ def attention_complexity_analysis():
     
     return complexities
 
-# Practical implications for different sequence lengths
+## Practical implications for different sequence lengths
+
 def memory_usage_estimate(seq_len, d_model, batch_size):
     """Estimate memory usage for attention computation"""
     
@@ -697,11 +767,13 @@ def memory_usage_estimate(seq_len, d_model, batch_size):
         'total_mb': total_mb
     }
 
-# Example: Memory usage for different sequence lengths
+## Example: Memory usage for different sequence lengths
+
 for seq_len in [512, 1024, 2048, 4096]:
     usage = memory_usage_estimate(seq_len, 768, 32)
     print(f"Seq len {seq_len}: {usage['total_mb']:.1f} MB")
-```
+
+```text
 
 ### Optimization Techniques
 
@@ -768,7 +840,8 @@ def flash_attention(q, k, v, block_size=64):
             output[:, :, i:end_i, :] += torch.matmul(attn_weights, v_block)
     
     return output
-```
+
+```text
 
 ## Interpretability and Analysis
 
@@ -830,7 +903,8 @@ def classify_pattern(attention_matrix):
         return "uniform/unfocused"
     else:
         return "diverse/semantic"
-```
+
+```text
 
 ### Probing Attention for Linguistic Structure
 
@@ -885,7 +959,8 @@ def compute_syntactic_alignment(attention_matrix, syntax_tree):
             alignment_scores.append(0.0)
     
     return np.mean(alignment_scores)
-```
+
+```text
 
 ## Common Issues and Solutions
 
@@ -908,13 +983,14 @@ def fix_attention_collapse():
     """Solutions for attention collapse"""
     solutions = [
         "Add attention dropout",
-        "Use attention temperature scaling", 
+        "Use attention temperature scaling",
         "Apply attention regularization",
         "Use different initialization",
         "Add positional encoding variations"
     ]
     return solutions
-```
+
+```text
 
 ### 2. Gradient Flow Issues
 
@@ -938,7 +1014,8 @@ class AttentionWithGradientClipping(nn.Module):
             )
         
         return output, weights
-```
+
+```text
 
 ### 3. Position Bias
 
@@ -953,8 +1030,8 @@ def add_relative_position_bias(attention_scores, max_relative_position=128):
     
     # Clip relative positions
     relative_positions = torch.clamp(
-        relative_positions, 
-        -max_relative_position, 
+        relative_positions,
+        -max_relative_position,
         max_relative_position
     )
     
@@ -964,14 +1041,17 @@ def add_relative_position_bias(attention_scores, max_relative_position=128):
     
     # Add bias to attention scores
     return attention_scores + bias
-```
+
+```text
 
 ## Future Directions
 
 ### Efficient Attention Variants
 
 ```python
-# Linear Attention: O(n) complexity
+
+## Linear Attention: O(n) complexity
+
 class LinearAttention(nn.Module):
     def __init__(self, d_model):
         super().__init__()
@@ -990,7 +1070,8 @@ class LinearAttention(nn.Module):
         output = torch.matmul(Q, context)
         
         return output
-```
+
+```text
 
 ### Dynamic Attention
 
@@ -1013,6 +1094,10 @@ class AdaptiveAttention(nn.Module):
             return self.standard_attention(x, x, x)
         else:
             return self.sparse_attention(x)
-```
 
-The attention mechanism represents one of the most significant breakthroughs in deep learning, fundamentally changing how neural networks process sequential data. Its ability to capture long-range dependencies and enable parallel computation has made it the cornerstone of modern NLP and increasingly important in computer vision, speech processing, and other domains. As research continues, attention mechanisms are becoming more efficient, interpretable, and capable of handling longer sequences while maintaining their core advantage of selective focus on relevant information.
+```text
+The attention mechanism represents one of the most significant breakthroughs in deep learning, fundamentally changing
+how neural networks process sequential data. Its ability to capture long-range dependencies and enable parallel
+computation has made it the cornerstone of modern NLP and increasingly important in computer vision, speech processing,
+and other domains. As research continues, attention mechanisms are becoming more efficient, interpretable, and capable
+of handling longer sequences while maintaining their core advantage of selective focus on relevant information.

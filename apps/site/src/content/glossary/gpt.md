@@ -1,30 +1,51 @@
 ---
-title: GPT (Generative Pre-trained Transformer)
-aliases: ["GPT", "generative pre-trained transformer", "GPT model", "OpenAI GPT"]
-summary: GPT (Generative Pre-trained Transformer) is a series of large language models developed by OpenAI that use transformer architecture for autoregressive text generation. Starting with GPT-1 in 2018, the series evolved through GPT-2, GPT-3, and GPT-4, demonstrating how scaling model size and training data leads to emergent capabilities in language understanding, reasoning, and code generation.
-tags: ["nlp", "deep-learning", "llm", "machine-learning", "ai-engineering"]
-related: ["transformer", "llm", "attention-mechanism", "prompt-engineering", "fine-tuning"]
-category: "nlp"
-difficulty: "intermediate"
-updated: "2025-01-15"
+aliases:
+- GPT
+- generative pre-trained transformer
+- GPT model
+- OpenAI GPT
+category: nlp
+difficulty: intermediate
+related:
+- transformer
+- llm
+- attention-mechanism
+- prompt-engineering
+- fine-tuning
 sources:
-  - source_url: "https://arxiv.org/abs/1706.03762"
-    source_title: "Attention Is All You Need"
-    license: "cc-by"
-    author: "Ashish Vaswani et al."
-  - source_url: "https://arxiv.org/abs/2005.14165"
-    source_title: "Language Models are Few-Shot Learners"
-    license: "cc-by"
-    author: "Tom B. Brown et al."
-  - source_url: "https://openai.com/research/gpt-4"
-    source_title: "GPT-4 Technical Report"
-    license: "proprietary"
-    author: "OpenAI"
+- author: Ashish Vaswani et al.
+  license: cc-by
+  source_title: Attention Is All You Need
+  source_url: https://arxiv.org/abs/1706.03762
+- author: Tom B. Brown et al.
+  license: cc-by
+  source_title: Language Models are Few-Shot Learners
+  source_url: https://arxiv.org/abs/2005.14165
+- author: OpenAI
+  license: proprietary
+  source_title: GPT-4 Technical Report
+  source_url: https://openai.com/research/gpt-4
+summary: GPT (Generative Pre-trained Transformer) is a series of large language models
+  developed by OpenAI that use transformer architecture for autoregressive text generation.
+  Starting with GPT-1 in 2018, the series evolved through GPT-2, GPT-3, and GPT-4,
+  demonstrating how scaling model size and training data leads to emergent capabilities
+  in language understanding, reasoning, and code generation.
+tags:
+- nlp
+- deep-learning
+- llm
+- machine-learning
+- ai-engineering
+title: GPT (Generative Pre-trained Transformer)
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-GPT (Generative Pre-trained Transformer) represents a groundbreaking family of language models that demonstrated the power of scaling transformer architectures for natural language generation. Developed by OpenAI, GPT models are trained using an autoregressive approach where the model learns to predict the next word in a sequence, enabling coherent text generation and diverse language tasks through prompting alone.
+GPT (Generative Pre-trained Transformer) represents a groundbreaking family of language models that demonstrated the
+power of scaling transformer architectures for natural language generation. Developed by OpenAI, GPT models are trained
+using an autoregressive approach where the model learns to predict the next word in a sequence, enabling coherent text
+generation and diverse language tasks through prompting alone.
 
 ## Core Architecture
 
@@ -39,7 +60,8 @@ Process: P(mat|The cat sat on the) = 0.7
          P(floor|The cat sat on the) = 0.1
 Output: "mat" (highest probability)
 Next: "The cat sat on the mat"
-```
+
+```text
 
 ### Transformer Foundation
 
@@ -55,24 +77,30 @@ GPT uses a **decoder-only** transformer architecture:
 Unlike BERT's bidirectional attention, GPT uses causal masking:
 
 ```python
+
 # Simplified attention mask for GPT
+
 import torch
 
 sequence_length = 4
 mask = torch.tril(torch.ones(sequence_length, sequence_length))
-# Result: [[1, 0, 0, 0],
-#          [1, 1, 0, 0], 
-#          [1, 1, 1, 0],
-#          [1, 1, 1, 1]]
-```
 
+## Result: [[1, 0, 0, 0]
+
+##          [1, 1, 0, 0]
+
+##          [1, 1, 1, 0]
+
+##          [1, 1, 1, 1]]
+
+```text
 This ensures the model can only use information from previous positions during training.
 
 ## Evolution of the GPT Series
 
 ### GPT-1 (2018)
 
-**"Improving Language Understanding by Generative Pre-Training"**
+### "Improving Language Understanding by Generative Pre-Training"
 
 - **Parameters**: 117 million
 - **Architecture**: 12-layer decoder-only transformer
@@ -83,7 +111,7 @@ Key insight: Pre-training on large text corpora creates useful representations f
 
 ### GPT-2 (2019)
 
-**"Language Models are Unsupervised Multitask Learners"**
+### "Language Models are Unsupervised Multitask Learners"
 
 - **Parameters**: 124M, 355M, 774M, 1.5B (multiple sizes)
 - **Training Data**: WebText dataset (~40GB)
@@ -95,7 +123,9 @@ Breakthrough demonstration: A sufficiently large language model can perform many
 #### GPT-2 Architecture Details
 
 ```python
-# GPT-2 configuration (1.5B parameters)
+
+## GPT-2 configuration (1.5B parameters)
+
 config = {
     "vocab_size": 50257,
     "n_positions": 1024,    # Context length
@@ -104,11 +134,12 @@ config = {
     "n_layer": 48,          # Number of layers
     "n_head": 25            # Attention heads
 }
-```
+
+```text
 
 ### GPT-3 (2020)
 
-**"Language Models are Few-Shot Learners"**
+### "Language Models are Few-Shot Learners"
 
 - **Parameters**: 175 billion
 - **Training Data**: Common Crawl, WebText2, Books1, Books2, Wikipedia (~570GB)
@@ -135,7 +166,8 @@ French: Comment allez-vous?
 Query:
 English: Thank you
 French: [GPT-3 generates] Merci
-```
+
+```text
 
 #### Scale Impact
 
@@ -148,7 +180,7 @@ GPT-3 showed that scaling leads to qualitative improvements:
 
 ### GPT-4 (2023)
 
-**Multimodal and Enhanced Reasoning**
+### Multimodal and Enhanced Reasoning
 
 - **Parameters**: Not publicly disclosed (rumored ~1.7 trillion)
 - **Modality**: Text and image inputs (vision capabilities)
@@ -163,14 +195,15 @@ GPT-3 showed that scaling leads to qualitative improvements:
 User: [uploads image of a chart]
 Describe the trends in this sales data.
 
-GPT-4: This chart shows quarterly sales from 2020-2023. 
+GPT-4: This chart shows quarterly sales from 2020-2023.
 Key trends include:
+
 1. Initial decline in Q2 2020 (likely COVID impact)
 2. Steady recovery through 2021
 3. Accelerated growth in 2022-2023
 4. Peak performance in Q3 2023 at $2.1M
-```
 
+```text
 **Enhanced Reasoning**: Better performance on complex problems
 
 - **Mathematical Reasoning**: Can solve multi-step word problems
@@ -184,7 +217,9 @@ Key trends include:
 #### Data Collection and Preparation
 
 ```python
-# Conceptual data pipeline for GPT training
+
+## Conceptual data pipeline for GPT training
+
 training_data = [
     "web_crawl_data",      # Common Crawl, filtered
     "books",               # Literature and non-fiction  
@@ -194,9 +229,11 @@ training_data = [
     "reference_works"      # Dictionaries, manuals
 ]
 
-# Tokenization and preprocessing
+## Tokenization and preprocessing
+
 tokenized_data = tokenize(clean_and_filter(training_data))
-```
+
+```text
 
 #### Objective Function
 
@@ -206,11 +243,13 @@ GPT training optimizes the likelihood of the training data:
 Loss = -∑(log P(token_i | token_1, ..., token_{i-1}))
 
 Maximize the probability of each token given its context
-```
+
+```text
 
 #### Training Scale
 
 GPT-3 training specifications:
+
 - **Compute**: ~3640 petaflop-days
 - **Hardware**: V100 GPUs in Microsoft Azure
 - **Duration**: Several weeks of continuous training
@@ -229,7 +268,9 @@ For GPT-3.5 and GPT-4, additional training phases included:
 #### Reinforcement Learning from Human Feedback (RLHF)
 
 ```python
-# RLHF training process
+
+## RLHF training process
+
 def rlhf_training(base_model, human_feedback_data):
     # 1. Train reward model on human preferences
     reward_model = train_reward_model(human_feedback_data)
@@ -242,18 +283,21 @@ def rlhf_training(base_model, human_feedback_data):
     )
     
     return policy_model
-```
+
+```text
 
 ## Capabilities and Applications
 
 ### Text Generation
 
-**Creative Writing**
+### Creative Writing
+
 - Stories, poetry, screenplays
 - Marketing copy and advertisements  
 - Social media content
 
-**Technical Documentation**
+### Technical Documentation
+
 - API documentation
 - User manuals
 - Tutorial content
@@ -282,18 +326,22 @@ def fibonacci(n):
     
     return fib
 
-# Example usage
+## Example usage
+
 print(fibonacci(10))  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
-```
+
+```text
 
 ### Reasoning and Analysis
 
-**Mathematical Problem Solving**
+### Mathematical Problem Solving
+
 - Word problems requiring multi-step reasoning
 - Basic arithmetic and algebra
 - Statistical analysis and interpretation
 
-**Logical Reasoning**
+### Logical Reasoning
+
 - Syllogistic reasoning
 - Causal inference
 - Pattern recognition
@@ -310,7 +358,8 @@ Classify the following text as positive, negative, or neutral sentiment:
 "I love this new restaurant. The food was amazing and the service was excellent."
 
 Classification: Positive
-```
+
+```text
 
 ### Few-Shot Prompting
 
@@ -327,34 +376,41 @@ Question: Did she finish her homework yesterday?
 
 Statement: The meeting starts at 3 PM.
 Question: Does the meeting start at 3 PM?
-```
+
+```text
 
 ### Chain-of-Thought Prompting
 
 Encouraging step-by-step reasoning:
 
 ```text
-Problem: A store has 24 apples. If they sell 3/4 of them in the morning and 1/3 of the remaining apples in the afternoon, how many apples are left?
+Problem: A store has 24 apples. If they sell 3/4 of them in the morning and 1/3 of the remaining apples in the
+afternoon, how many apples are left?
 
 Let me solve this step by step:
 
 Step 1: Calculate morning sales
+
 - 3/4 of 24 apples = 18 apples sold
 - Remaining: 24 - 18 = 6 apples
 
 Step 2: Calculate afternoon sales  
+
 - 1/3 of 6 remaining apples = 2 apples sold
 - Final remaining: 6 - 2 = 4 apples
 
 Answer: 4 apples are left.
-```
+
+```text
 
 ## Technical Implementation
 
 ### Model Architecture
 
 ```python
-# Simplified GPT model structure
+
+## Simplified GPT model structure
+
 import torch
 import torch.nn as nn
 
@@ -368,7 +424,7 @@ class GPTModel(nn.Module):
         
         # Transformer blocks
         self.blocks = nn.ModuleList([
-            TransformerBlock(n_embd, n_head) 
+            TransformerBlock(n_embd, n_head)
             for _ in range(n_layer)
         ])
         
@@ -393,7 +449,8 @@ class GPTModel(nn.Module):
         logits = self.head(x)
         
         return logits
-```
+
+```text
 
 ### Inference Process
 
@@ -421,23 +478,27 @@ def generate_text(model, prompt, max_length=100, temperature=0.7):
                 break
     
     return detokenize(tokens)
-```
+
+```text
 
 ## Limitations and Challenges
 
 ### Knowledge Limitations
 
 **Training Data Cutoff**: Knowledge limited to training data timestamp
+
 - GPT-3: September 2021 cutoff
 - GPT-4: April 2023 cutoff
 - Cannot access real-time information
 
-**Factual Accuracy Issues**
+### Factual Accuracy Issues
+
 ```text
 Query: What is the population of Mars?
 Problematic Response: Mars has a population of approximately 1.2 million people living in underground colonies.
 Correct Response: Mars has no permanent human population. Only robotic missions have been sent to Mars.
-```
+
+```text
 
 ### Reasoning Limitations
 
@@ -454,13 +515,14 @@ GPT-3: 2,048 tokens (~1,500 words)
 GPT-3.5: 4,096 tokens (~3,000 words)  
 GPT-4: 8,192 tokens (~6,000 words)
 GPT-4-32K: 32,768 tokens (~24,000 words)
-```
 
+```text
 Long conversations or documents require careful context management.
 
 #### Computational Requirements
 
 **Inference Costs**:
+
 - GPT-3.5-Turbo: $0.0015-0.002 per 1K tokens
 - GPT-4: $0.03-0.06 per 1K tokens
 - GPT-4-32K: $0.06-0.12 per 1K tokens
@@ -513,4 +575,7 @@ Long conversations or documents require careful context management.
 **API Improvements**: Lower latency and more flexible interfaces
 **Cost Reduction**: More efficient training and inference methods
 
-The GPT series has fundamentally transformed natural language processing and demonstrated the potential of scaling transformer architectures. From the initial proof-of-concept in GPT-1 to the multimodal capabilities of GPT-4, these models continue to push the boundaries of what's possible with artificial intelligence while raising important questions about the responsible development and deployment of powerful AI systems.
+The GPT series has fundamentally transformed natural language processing and demonstrated the potential of scaling
+transformer architectures. From the initial proof-of-concept in GPT-1 to the multimodal capabilities of GPT-4, these
+models continue to push the boundaries of what's possible with artificial intelligence while raising important questions
+about the responsible development and deployment of powerful AI systems.

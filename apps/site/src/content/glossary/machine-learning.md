@@ -1,24 +1,39 @@
 ---
-title: Machine Learning
-aliases: ["ML", "statistical learning", "automated learning"]
-summary: Machine Learning is a subset of artificial intelligence that enables computers to learn and make decisions from data without being explicitly programmed for every task. It uses algorithms to identify patterns, make predictions, and improve performance through experience, forming the foundation for most modern AI applications.
-tags: ["machine-learning", "fundamentals", "algorithms", "data", "ai-engineering"]
-related: ["deep-learning", "supervised-learning", "unsupervised-learning", "reinforcement-learning"]
-category: "fundamentals"
-difficulty: "beginner"
-updated: "2025-01-15"
+aliases:
+- ML
+- statistical learning
+- automated learning
+category: fundamentals
+difficulty: beginner
+related:
+- deep-learning
+- supervised-learning
+- unsupervised-learning
+- reinforcement-learning
 sources:
-  - source_url: "https://web.stanford.edu/~hastie/ElemStatLearn/"
-    source_title: "The Elements of Statistical Learning"
-    license: "cc-by"
-    author: "Trevor Hastie, Robert Tibshirani, Jerome Friedman"
-  - source_url: "https://www.coursera.org/learn/machine-learning"
-    source_title: "Machine Learning Course"
-    license: "proprietary"
-    author: "Andrew Ng"
+- author: Trevor Hastie, Robert Tibshirani, Jerome Friedman
+  license: cc-by
+  source_title: The Elements of Statistical Learning
+  source_url: https://web.stanford.edu/~hastie/ElemStatLearn/
+- author: Andrew Ng
+  license: proprietary
+  source_title: Machine Learning Course
+  source_url: https://www.coursera.org/learn/machine-learning
+summary: Machine Learning is a subset of artificial intelligence that enables computers
+  to learn and make decisions from data without being explicitly programmed for every
+  task. It uses algorithms to identify patterns, make predictions, and improve performance
+  through experience, forming the foundation for most modern AI applications.
+tags:
+- machine-learning
+- fundamentals
+- algorithms
+- data
+- ai-engineering
+title: Machine Learning
+updated: '2025-01-15'
 ---
 
-## What is Machine Learning?
+## What is Machine Learning
 
 Machine Learning (ML) is a field of artificial intelligence that focuses on building systems that can learn
 from data to make predictions or decisions without being explicitly programmed for each specific task.
@@ -29,18 +44,18 @@ to make informed predictions about new, unseen data.
 
 At its heart, machine learning transforms the traditional programming paradigm:
 
-**Traditional Programming:**
+### Traditional Programming
 
 ```text
 Data + Program → Output
-```
 
-**Machine Learning:**
+```text
+### Machine Learning
 
 ```text
 Data + Desired Output → Program (Model)
-```
 
+```text
 The "program" in machine learning is called a **model**, which is created through a process called **training**.
 
 ## Types of Machine Learning
@@ -49,12 +64,12 @@ The "program" in machine learning is called a **model**, which is created throug
 
 Learning with labeled examples where the correct answer is provided during training.
 
-**Examples:**
+### Examples
 
 - **Classification**: Email spam detection, image recognition
 - **Regression**: Price prediction, temperature forecasting
 
-**Process:**
+### Process
 
 1. Train on labeled data (input-output pairs)
 2. Learn patterns between inputs and outputs
@@ -64,13 +79,13 @@ Learning with labeled examples where the correct answer is provided during train
 
 Finding hidden patterns in data without labeled examples.
 
-**Examples:**
+### Examples
 
 - **Clustering**: Customer segmentation, gene sequencing
 - **Dimensionality Reduction**: Data visualization, feature extraction
 - **Anomaly Detection**: Fraud detection, network security
 
-**Process:**
+### Process
 
 1. Analyze unlabeled data
 2. Discover hidden structures or patterns
@@ -80,13 +95,13 @@ Finding hidden patterns in data without labeled examples.
 
 Learning through interaction with an environment using rewards and penalties.
 
-**Examples:**
+### Examples
 
 - Game playing (Chess, Go, video games)
 - Robotics and autonomous vehicles
 - Trading algorithms
 
-**Process:**
+### Process
 
 1. Agent takes actions in an environment
 2. Environment provides feedback (rewards/penalties)

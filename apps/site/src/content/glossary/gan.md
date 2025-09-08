@@ -1,26 +1,49 @@
 ---
-title: GAN (Generative Adversarial Network)
-aliases: ["GAN", "generative adversarial network", "adversarial network", "generative model"]
-summary: A Generative Adversarial Network (GAN) is a machine learning architecture consisting of two neural networks—a generator and a discriminator—that compete against each other in a game-theoretic framework. The generator learns to create realistic synthetic data while the discriminator learns to distinguish between real and generated data, leading to increasingly sophisticated data generation capabilities across domains like images, text, and audio.
-tags: ["deep-learning", "generative-ai", "machine-learning", "computer-vision", "algorithms"]
-related: ["neural-network", "deep-learning", "machine-learning", "transformer", "cnn"]
-category: "deep-learning"
-difficulty: "advanced"
-updated: "2025-01-15"
+aliases:
+- GAN
+- generative adversarial network
+- adversarial network
+- generative model
+category: deep-learning
+difficulty: advanced
+related:
+- neural-network
+- deep-learning
+- machine-learning
+- transformer
+- cnn
 sources:
-  - source_url: "https://arxiv.org/abs/1406.2661"
-    source_title: "Generative Adversarial Networks"
-    license: "cc-by"
-    author: "Ian J. Goodfellow et al."
-  - source_url: "https://arxiv.org/abs/1511.06434"
-    source_title: "Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks"
-    license: "cc-by"
-    author: "Alec Radford et al."
+- author: Ian J. Goodfellow et al.
+  license: cc-by
+  source_title: Generative Adversarial Networks
+  source_url: https://arxiv.org/abs/1406.2661
+- author: Alec Radford et al.
+  license: cc-by
+  source_title: Unsupervised Representation Learning with Deep Convolutional Generative
+    Adversarial Networks
+  source_url: https://arxiv.org/abs/1511.06434
+summary: A Generative Adversarial Network (GAN) is a machine learning architecture
+  consisting of two neural networks—a generator and a discriminator—that compete against
+  each other in a game-theoretic framework. The generator learns to create realistic
+  synthetic data while the discriminator learns to distinguish between real and generated
+  data, leading to increasingly sophisticated data generation capabilities across
+  domains like images, text, and audio.
+tags:
+- deep-learning
+- generative-ai
+- machine-learning
+- computer-vision
+- algorithms
+title: GAN (Generative Adversarial Network)
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-Generative Adversarial Networks (GANs) represent a revolutionary approach to generative modeling introduced by Ian Goodfellow in 2014. By setting up a competitive game between two neural networks, GANs have achieved remarkable success in generating realistic images, videos, audio, and other types of data. The adversarial training process leads to a generator that can produce increasingly convincing synthetic data, making GANs foundational to modern generative AI.
+Generative Adversarial Networks (GANs) represent a revolutionary approach to generative modeling introduced by Ian
+Goodfellow in 2014. By setting up a competitive game between two neural networks, GANs have achieved remarkable success
+in generating realistic images, videos, audio, and other types of data. The adversarial training process leads to a
+generator that can produce increasingly convincing synthetic data, making GANs foundational to modern generative AI.
 
 ## Core Architecture
 
@@ -50,7 +73,8 @@ class GAN:
         # min_G max_D V(D,G) = E[log(D(x))] + E[log(1-D(G(z)))]
         
         return "Nash equilibrium when G creates perfect fakes and D can't tell difference"
-```
+
+```text
 
 ### Generator Network
 
@@ -102,13 +126,16 @@ class Generator(nn.Module):
         return img
 
 # Example usage
+
 generator = Generator(latent_dim=100, img_size=28, channels=1)
 
-# Generate fake MNIST digits
+## Generate fake MNIST digits
+
 batch_size = 64
 noise = torch.randn(batch_size, 100)  # Random noise
 fake_images = generator(noise)         # Generated images
-```
+
+```text
 
 ### Discriminator Network
 
@@ -155,16 +182,19 @@ class Discriminator(nn.Module):
         
         return validity
 
-# Example usage
+## Example usage
+
 discriminator = Discriminator(img_size=28, channels=1)
 
-# Evaluate real and fake images
+## Evaluate real and fake images
+
 real_images = torch.randn(64, 1, 28, 28)  # Real data
 fake_images = generator(torch.randn(64, 100))  # Generated data
 
 real_scores = discriminator(real_images)      # Should be close to 1
 fake_scores = discriminator(fake_images)      # Should be close to 0
-```
+
+```text
 
 ## Training Process
 
@@ -287,10 +317,12 @@ class GANTrainer:
         
         self.generator.train()
 
-# Training example
+## Training example
+
 trainer = GANTrainer(generator, discriminator)
 trainer.train(dataloader, epochs=200)
-```
+
+```text
 
 ### Training Challenges and Solutions
 
@@ -423,7 +455,8 @@ class ImprovedGANTrainer(GANTrainer):
             'generator_loss': g_loss.item(),
             'gradient_penalty': gp.item()
         }
-```
+
+```text
 
 ## GAN Variants
 
@@ -500,11 +533,12 @@ class DCGANDiscriminator(nn.Module):
     def forward(self, input):
         return self.main(input).view(-1, 1).squeeze(1)
 
-# DCGAN architectural guidelines
+## DCGAN architectural guidelines
+
 dcgan_principles = {
     "generator": [
         "Use transposed convolutions for upsampling",
-        "Use batch normalization in all layers except output", 
+        "Use batch normalization in all layers except output",
         "Use ReLU activation in all layers except output (use Tanh)",
         "No fully connected layers except first layer"
     ],
@@ -516,7 +550,8 @@ dcgan_principles = {
         "No fully connected layers except last layer"
     ]
 }
-```
+
+```text
 
 ### Conditional GAN (cGAN)
 
@@ -609,7 +644,8 @@ class ConditionalDiscriminator(nn.Module):
         
         return validity
 
-# Conditional GAN training
+## Conditional GAN training
+
 def train_conditional_gan(generator, discriminator, dataloader):
     """Training loop for conditional GAN"""
     
@@ -648,7 +684,8 @@ def train_conditional_gan(generator, discriminator, dataloader):
             g_loss = adversarial_loss(fake_validity, torch.ones_like(fake_validity))
             g_loss.backward()
             optimizer_G.step()
-```
+
+```text
 
 ### StyleGAN
 
@@ -754,7 +791,8 @@ def style_mixing_regularization(generator, z1, z2, mixing_prob=0.5):
         return generator.synthesis_forward(mixed_w)
     else:
         return generator(z1)
-```
+
+```text
 
 ## Applications and Use Cases
 
@@ -819,7 +857,8 @@ class ImageGANApplications:
         
         return torch.cat(augmented_data, dim=0)
 
-# Text-to-Image Generation (Simplified)
+## Text-to-Image Generation (Simplified)
+
 class TextToImageGAN:
     """Simplified text-to-image GAN"""
     
@@ -857,7 +896,8 @@ class TextToImageGAN:
             interpolated_images.append(img)
         
         return torch.cat(interpolated_images, dim=0)
-```
+
+```text
 
 ### Audio and Music Generation
 
@@ -944,7 +984,8 @@ class AudioGAN:
                 audio_waveform = F.pad(audio_waveform, (0, padding))
         
         return audio_waveform.squeeze()
-```
+
+```text
 
 ## Evaluation Metrics
 
@@ -1095,14 +1136,16 @@ class GANEvaluator:
         
         return results
 
-# Usage example
+## Usage example
+
 evaluator = GANEvaluator()
 metrics = evaluator.comprehensive_evaluation(generator, test_dataloader)
 
 print("GAN Evaluation Results:")
 for metric, value in metrics.items():
     print(f"{metric}: {value:.4f}")
-```
+
+```text
 
 ### Qualitative Assessment
 
@@ -1150,8 +1193,8 @@ class QualitativeEvaluator:
         # Compute pairwise similarities
         flattened = all_samples.view(n_samples, -1)
         similarities = F.cosine_similarity(
-            flattened.unsqueeze(1), 
-            flattened.unsqueeze(0), 
+            flattened.unsqueeze(1),
+            flattened.unsqueeze(0),
             dim=2
         )
         
@@ -1208,7 +1251,8 @@ class QualitativeEvaluator:
             duration=500,
             loop=0
         )
-```
+
+```text
 
 ## Common Challenges and Solutions
 
@@ -1323,7 +1367,8 @@ class TrainingStabilizer:
                 discriminator = self.add_resolution_layer(discriminator, next_resolution)
         
         return generator, discriminator
-```
+
+```text
 
 ## Future Directions
 
@@ -1392,7 +1437,7 @@ class NextGenGANs:
                     dropout=0.1
                 )
                 self.transformer = nn.TransformerEncoder(
-                    encoder_layer, 
+                    encoder_layer,
                     num_layers=num_layers
                 )
                 
@@ -1480,6 +1525,11 @@ class NextGenGANs:
         except ImportError:
             print("torchdiffeq not available, returning standard generator")
             return None
-```
 
-Generative Adversarial Networks have fundamentally transformed the landscape of generative modeling, enabling the creation of highly realistic synthetic data across multiple domains. From their original formulation as a minimax game between generator and discriminator networks to sophisticated variants like StyleGAN and beyond, GANs continue to push the boundaries of what's possible in artificial data generation. While training stability remains a challenge, ongoing research in architecture design, training techniques, and evaluation metrics continues to expand the capabilities and applications of this powerful framework.
+```text
+Generative Adversarial Networks have fundamentally transformed the landscape of generative modeling, enabling the
+creation of highly realistic synthetic data across multiple domains. From their original formulation as a minimax game
+between generator and discriminator networks to sophisticated variants like StyleGAN and beyond, GANs continue to push
+the boundaries of what's possible in artificial data generation. While training stability remains a challenge, ongoing
+research in architecture design, training techniques, and evaluation metrics continues to expand the capabilities and
+applications of this powerful framework.

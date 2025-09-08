@@ -1,30 +1,53 @@
 ---
-title: Prompt Engineering
-aliases: ["prompt engineering", "prompting", "prompt design", "prompt optimization"]
-summary: Prompt engineering is the practice of designing and optimizing text prompts to effectively communicate with large language models and guide them toward desired outputs. This discipline combines understanding of model behavior, task specification, and iterative refinement to achieve better performance without model training, using techniques like few-shot learning, chain-of-thought reasoning, and structured prompting formats.
-tags: ["llm", "nlp", "ai-engineering", "applications", "fundamentals"]
-related: ["llm", "gpt", "fine-tuning", "rag", "agent"]
-category: "applications"
-difficulty: "intermediate"
-updated: "2025-01-15"
+aliases:
+- prompt engineering
+- prompting
+- prompt design
+- prompt optimization
+category: applications
+difficulty: intermediate
+related:
+- llm
+- gpt
+- fine-tuning
+- rag
+- agent
 sources:
-  - source_url: "https://arxiv.org/abs/2005.14165"
-    source_title: "Language Models are Few-Shot Learners"
-    license: "cc-by"
-    author: "Tom B. Brown et al."
-  - source_url: "https://arxiv.org/abs/2201.11903"
-    source_title: "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models"
-    license: "cc-by"
-    author: "Jason Wei et al."
+- author: Tom B. Brown et al.
+  license: cc-by
+  source_title: Language Models are Few-Shot Learners
+  source_url: https://arxiv.org/abs/2005.14165
+- author: Jason Wei et al.
+  license: cc-by
+  source_title: Chain-of-Thought Prompting Elicits Reasoning in Large Language Models
+  source_url: https://arxiv.org/abs/2201.11903
+summary: Prompt engineering is the practice of designing and optimizing text prompts
+  to effectively communicate with large language models and guide them toward desired
+  outputs. This discipline combines understanding of model behavior, task specification,
+  and iterative refinement to achieve better performance without model training, using
+  techniques like few-shot learning, chain-of-thought reasoning, and structured prompting
+  formats.
+tags:
+- llm
+- nlp
+- ai-engineering
+- applications
+- fundamentals
+title: Prompt Engineering
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-Prompt engineering is the art and science of crafting effective inputs to guide large language models toward producing desired outputs. Rather than training or fine-tuning models, prompt engineering leverages the pre-trained capabilities of LLMs through carefully designed text instructions, examples, and context. This approach has become essential as models like GPT-3, GPT-4, and Claude demonstrate remarkable abilities to perform diverse tasks through natural language prompting alone.
+Prompt engineering is the art and science of crafting effective inputs to guide large language models toward producing
+desired outputs. Rather than training or fine-tuning models, prompt engineering leverages the pre-trained capabilities
+of LLMs through carefully designed text instructions, examples, and context. This approach has become essential as
+models like GPT-3, GPT-4, and Claude demonstrate remarkable abilities to perform diverse tasks through natural language
+prompting alone.
 
 ## Core Concepts
 
-### What Makes a Good Prompt?
+### What Makes a Good Prompt
 
 Effective prompts combine several key elements:
 
@@ -37,14 +60,17 @@ Components of an Effective Prompt:
 4. Format Specification: Expected output structure
 5. Constraints: Boundaries and limitations
 6. Role Definition: Persona or expertise level
-```
+
+```text
 
 ### The Prompting Paradigm
 
 Traditional ML vs. Prompt Engineering:
 
 ```python
+
 # Traditional Machine Learning Approach
+
 def traditional_approach():
     """Traditional ML pipeline for text classification"""
     
@@ -58,7 +84,8 @@ def traditional_approach():
     prediction = model.predict("This movie was great!")
     return prediction
 
-# Prompt Engineering Approach  
+## Prompt Engineering Approach  
+
 def prompt_engineering_approach():
     """Prompt engineering for the same task"""
     
@@ -75,7 +102,8 @@ def prompt_engineering_approach():
     # Use pre-trained LLM (immediate results)
     response = llm.generate(prompt)
     return response
-```
+
+```text
 
 ## Prompting Techniques
 
@@ -88,10 +116,11 @@ Basic Zero-Shot Example:
 "Translate the following English text to French: Hello, how are you?"
 
 Advanced Zero-Shot with Role:
-"You are a professional translator. Translate the following English text to French, 
-maintaining the formal tone and cultural context: 
+"You are a professional translator. Translate the following English text to French,
+maintaining the formal tone and cultural context:
 'Good morning, I would like to schedule a business meeting.'"
-```
+
+```text
 
 ### 2. Few-Shot Prompting
 
@@ -115,7 +144,8 @@ Classification: not spam
 
 Email: 'URGENT: Verify your account or it will be deleted!'
 Classification:"
-```
+
+```text
 
 ### 3. Chain-of-Thought (CoT) Prompting
 
@@ -134,21 +164,24 @@ Step 2: Multiply: 240 × 0.15 = 36
 Therefore, 15% of 240 is 36."
 
 Complex CoT Example:
-"A store had 120 apples. They sold 3/4 of them in the morning and 1/3 of the 
+"A store had 120 apples. They sold 3/4 of them in the morning and 1/3 of the
 remaining apples in the afternoon. How many apples are left?
 
 Let me solve this step by step:
 
 Step 1: Calculate morning sales
+
 - 3/4 of 120 apples = 120 × 3/4 = 90 apples sold
 - Remaining after morning: 120 - 90 = 30 apples
 
 Step 2: Calculate afternoon sales  
+
 - 1/3 of 30 remaining apples = 30 × 1/3 = 10 apples sold
 - Final remaining: 30 - 10 = 20 apples
 
 Answer: 20 apples are left."
-```
+
+```text
 
 ### 4. Tree of Thoughts
 
@@ -156,30 +189,34 @@ Exploring multiple reasoning paths:
 
 ```text
 Tree of Thoughts Example:
-"I need to plan a surprise birthday party for 50 people with a $500 budget. 
+"I need to plan a surprise birthday party for 50 people with a $500 budget.
 Let me explore different approaches:
 
 Path A - Venue Focus:
+
 - Rent community center ($200)  
 - Simple food and decorations ($300)
 - Pros: Professional space, good for 50 people
 - Cons: High venue cost limits other options
 
 Path B - Home Party Focus:
+
 - Use someone's backyard (free)
 - Invest more in food and entertainment ($500)
 - Pros: More budget for quality experience
 - Cons: Weather dependency, space limitations
 
 Path C - Potluck Style:
+
 - Public park pavilion ($50)
 - Guests bring food, focus budget on decorations/entertainment ($450)  
 - Pros: Community involvement, creative budget use
 - Cons: Less control over food quality
 
-Evaluation: Path C offers the best balance of cost-effectiveness and community 
+Evaluation: Path C offers the best balance of cost-effectiveness and community
 engagement while managing risks through good planning."
-```
+
+```text
 
 ## Advanced Prompting Patterns
 
@@ -190,24 +227,25 @@ Defining specific expertise or perspective:
 ```python
 role_prompts = {
     "expert_consultant": """
-        You are a senior management consultant with 15 years of experience 
-        helping Fortune 500 companies optimize operations. Analyze the following 
+        You are a senior management consultant with 15 years of experience
+        helping Fortune 500 companies optimize operations. Analyze the following
         business scenario and provide strategic recommendations:
     """,
     
     "creative_writer": """
-        You are a creative writing instructor and published author specializing 
-        in science fiction. Help me develop this story concept by focusing on 
+        You are a creative writing instructor and published author specializing
+        in science fiction. Help me develop this story concept by focusing on
         character development and world-building:
     """,
     
     "technical_reviewer": """
-        You are a senior software engineer with expertise in system design and 
-        code review. Examine this code for potential issues, performance 
+        You are a senior software engineer with expertise in system design and
+        code review. Examine this code for potential issues, performance
         optimizations, and adherence to best practices:
     """
 }
-```
+
+```text
 
 ### 2. Template-Based Prompting
 
@@ -234,7 +272,8 @@ Implications: [What this means]
 Recommendations: [Actionable next steps]
 Confidence Level: [How certain are you]
 ---
-```
+
+```text
 
 ### 3. Iterative Refinement
 
@@ -245,17 +284,18 @@ Initial Prompt:
 "Write a product description for a new smartphone."
 
 Refinement 1:
-"The previous description was too generic. Rewrite focusing on the unique 
+"The previous description was too generic. Rewrite focusing on the unique
 camera AI features that distinguish this phone from competitors."
 
 Refinement 2:  
-"Great! Now adapt this description for a technical audience of photography 
+"Great! Now adapt this description for a technical audience of photography
 enthusiasts, including specific technical specifications."
 
 Refinement 3:
-"Perfect. Create a shorter version (under 100 words) suitable for social 
+"Perfect. Create a shorter version (under 100 words) suitable for social
 media advertising while keeping the technical credibility."
-```
+
+```text
 
 ### 4. Multi-Step Prompting
 
@@ -267,8 +307,9 @@ def multi_step_analysis(topic):
     
     steps = [
         # Step 1: Information gathering
-        f"""First, let's gather key information about {topic}. 
+        f"""First, let's gather key information about {topic}.
         Please provide:
+
         1. Current market size and trends
         2. Major players and competitors  
         3. Key challenges and opportunities
@@ -278,6 +319,7 @@ def multi_step_analysis(topic):
         
         # Step 2: Analysis (uses output from step 1)
         """Based on the information you just provided, analyze:
+
         1. What are the strongest market forces at play?
         2. Which trends are most likely to continue?
         3. Where do you see the biggest opportunities?
@@ -285,14 +327,17 @@ def multi_step_analysis(topic):
         
         # Step 3: Recommendations (uses outputs from steps 1-2)  
         """Now, synthesizing your research and analysis, provide:
+
         1. Three specific strategic recommendations
         2. Timeline and priorities for implementation
         3. Key metrics to track success
         4. Potential obstacles and how to overcome them"""
+
     ]
     
     return steps
-```
+
+```text
 
 ## Domain-Specific Applications
 
@@ -306,6 +351,7 @@ Advanced Code Prompt:
 "You are an expert Python developer. Write a factorial function that:
 
 Requirements:
+
 - Handles edge cases (negative numbers, zero)
 - Includes comprehensive docstring with examples
 - Uses type hints for parameters and return value
@@ -314,12 +360,14 @@ Requirements:
 - Follows PEP 8 style guidelines
 
 Additional considerations:
+
 - Performance implications of each approach
 - Memory usage for large numbers
 - Error handling with informative messages
 
 Please provide the complete implementation with explanations."
-```
+
+```text
 
 ### Creative Writing
 
@@ -335,19 +383,21 @@ Length: 800-1000 words
 Theme: Human adaptability and community
 
 Style notes:
+
 - Use vivid sensory details about the Martian environment
 - Include technical details about hydroponics that feel authentic
 - Show character growth through actions, not exposition
 - End with a resolution that feels earned, not convenient
 
 Begin with a scene that immediately establishes the stakes."
-```
+
+```text
 
 ### Business Analysis
 
 ```text
 Comprehensive Business Prompt:
-"As a strategy consultant, analyze the potential for launching a subscription-based 
+"As a strategy consultant, analyze the potential for launching a subscription-based
 meal kit service targeting busy professionals in mid-sized US cities (200K-500K population).
 
 Structure your analysis using:
@@ -373,7 +423,8 @@ Structure your analysis using:
    - Milestone tracking
 
 Provide specific, actionable insights supported by market research and industry benchmarks."
-```
+
+```text
 
 ## Optimization Techniques
 
@@ -404,9 +455,11 @@ class PromptOptimizer:
             "constraint_focused": f"""Complete this task: {self.base_task}
             
             Important constraints:
+
             - Be specific and detailed
             - Use professional tone
             - Provide actionable recommendations""",
+
         }
         
         return variants
@@ -438,7 +491,8 @@ class PromptOptimizer:
         best_result = max(self.results, key=lambda x: x['total_score'])
         return best_result['variant']
 
-# Usage example
+## Usage example
+
 optimizer = PromptOptimizer("Write a product description for a fitness tracker")
 variants = optimizer.create_variants()
 
@@ -455,7 +509,8 @@ for variant_name, prompt in variants.items():
     print(f"{variant_name}: {score:.2f}")
 
 best_prompt = optimizer.get_best_prompt()
-```
+
+```text
 
 ### Parameter Tuning
 
@@ -509,7 +564,8 @@ def evaluate_config(config):
         total_score += score
     
     return total_score / len(test_prompts)
-```
+
+```text
 
 ## Prompt Libraries and Frameworks
 
@@ -550,6 +606,7 @@ class PromptLibrary:
                 Write a persuasive {content_type} about {topic} for {audience}.
                 
                 Structure:
+
                 1. Hook: Compelling opening that grabs attention
                 2. Problem: Clear articulation of the issue
                 3. Solution: Your proposed approach
@@ -565,6 +622,7 @@ class PromptLibrary:
                 Create technical documentation for {subject}.
                 
                 Include:
+
                 - Clear overview and purpose
                 - Step-by-step instructions
                 - Code examples with explanations
@@ -591,14 +649,16 @@ class PromptLibrary:
         
         self.prompts[category][prompt_type] = template
 
-# Usage
+## Usage
+
 library = PromptLibrary()
 swot_prompt = library.get_prompt(
-    'analysis', 
+    'analysis',
     'swot',
     subject="electric vehicle startup in the US market"
 )
-```
+
+```text
 
 ### Chain Prompting Framework
 
@@ -642,7 +702,8 @@ class PromptChain:
         
         return results
 
-# Example: Research and analysis chain
+## Example: Research and analysis chain
+
 def create_research_chain():
     chain = PromptChain()
     
@@ -652,6 +713,7 @@ def create_research_chain():
         """Research the following topic: {input}
         
         Provide:
+
         1. Key facts and statistics  
         2. Current trends and developments
         3. Major stakeholders or players
@@ -666,6 +728,7 @@ def create_research_chain():
         """Based on this research: {research}
         
         Analyze:
+
         1. What are the most significant trends?
         2. Who are the key players and what are their strategies?
         3. What opportunities exist?
@@ -681,6 +744,7 @@ def create_research_chain():
         And this analysis: {analysis}
         
         Provide specific, actionable recommendations:
+
         1. Three strategic recommendations
         2. Implementation priorities and timeline
         3. Success metrics to track
@@ -690,7 +754,8 @@ def create_research_chain():
     )
     
     return chain
-```
+
+```text
 
 ## Evaluation and Metrics
 
@@ -741,8 +806,8 @@ class PromptEvaluator:
         
         # Check for transition words
         transition_words = ['however', 'therefore', 'furthermore', 'additionally', 'consequently']
-        transitions = sum(1 for sentence in sentences 
-                         for word in transition_words 
+        transitions = sum(1 for sentence in sentences
+                         for word in transition_words
                          if word in sentence.lower())
         
         # Normalize by sentence count
@@ -783,7 +848,8 @@ class PromptEvaluator:
             'overall_score': overall_score
         }
 
-# Usage example
+## Usage example
+
 evaluator = PromptEvaluator()
 
 criteria = {
@@ -802,7 +868,8 @@ criteria = {
 
 evaluation = evaluator.evaluate_prompt_quality(prompt, response, criteria)
 print(f"Overall score: {evaluation['overall_score']:.2f}")
-```
+
+```text
 
 ### Human Evaluation Framework
 
@@ -894,7 +961,8 @@ class HumanEvaluationFramework:
         mean = sum(scores) / len(scores)
         variance = sum((x - mean) ** 2 for x in scores) / (len(scores) - 1)
         return variance ** 0.5
-```
+
+```text
 
 ## Common Pitfalls and Best Practices
 
@@ -907,25 +975,29 @@ def common_prompt_mistakes():
     mistakes = {
         "vague_instructions": {
             "bad": "Write something about climate change.",
-            "good": "Write a 300-word summary of the three main causes of climate change, including specific examples and recent statistics.",
+            "good": "Write a 300-word summary of the three main causes of climate change, including specific examples
+            and recent statistics.",
             "why": "Specific instructions lead to better, more focused outputs."
         },
         
         "missing_context": {
             "bad": "Is this a good strategy?",
-            "good": "You are a business consultant. Is this pricing strategy good for a SaaS startup targeting small businesses in the healthcare sector? [Include strategy details]",
+            "good": "You are a business consultant. Is this pricing strategy good for a SaaS startup targeting small
+            businesses in the healthcare sector? [Include strategy details]",
             "why": "Context helps the model understand the evaluation framework."
         },
         
         "conflicting_instructions": {
             "bad": "Write a brief but comprehensive detailed analysis.",
-            "good": "Write a 200-word executive summary highlighting the three most important findings from this analysis.",
+            "good": "Write a 200-word executive summary highlighting the three most important findings from this
+            analysis.",
             "why": "Clear, non-contradictory instructions prevent confusion."
         },
         
         "assuming_knowledge": {
             "bad": "Fix the bug in the authentication system.",
-            "good": "Here's the authentication code: [code]. The bug is that users can't log in after password reset. Please identify the issue and suggest a fix.",
+            "good": "Here's the authentication code: [code]. The bug is that users can't log in after password reset.
+            Please identify the issue and suggest a fix.",
             "why": "Provide necessary information rather than assuming the model knows specifics."
         }
     }
@@ -938,7 +1010,8 @@ def best_practices():
     practices = {
         "be_specific": {
             "principle": "Specificity leads to better results",
-            "example": "Instead of 'analyze this', use 'perform a competitive analysis focusing on pricing, features, and market positioning'"
+            "example": "Instead of 'analyze this', use 'perform a competitive analysis focusing on pricing, features,
+            and market positioning'"
         },
         
         "use_examples": {
@@ -963,7 +1036,8 @@ def best_practices():
     }
     
     return practices
-```
+
+```text
 
 ### Bias and Safety Considerations
 
@@ -972,7 +1046,7 @@ class PromptSafetyChecker:
     def __init__(self):
         self.bias_indicators = [
             'gender stereotypes',
-            'racial assumptions', 
+            'racial assumptions',
             'age discrimination',
             'cultural bias',
             'socioeconomic assumptions'
@@ -1043,7 +1117,8 @@ class PromptSafetyChecker:
         
         return suggestions
 
-# Usage
+## Usage
+
 safety_checker = PromptSafetyChecker()
 concerns = safety_checker.check_prompt_safety(your_prompt)
 
@@ -1056,7 +1131,8 @@ if concerns:
     print("\nSuggested improvements:")
     for suggestion in suggestions:
         print(f"- {suggestion}")
-```
+
+```text
 
 ## Future of Prompt Engineering
 
@@ -1106,7 +1182,8 @@ class AutomaticPromptOptimizer:
         optimized_prompt = self.generate_from_patterns(patterns)
         
         return optimized_prompt
-```
+
+```text
 
 ### Integration with AI Systems
 
@@ -1165,6 +1242,10 @@ class AdaptivePromptingSystem:
         refined_prompt = prompt + "\n\nAdditional requirements:\n" + "\n".join(refinements)
         
         return refined_prompt
-```
 
-Prompt engineering represents a fundamental shift in how we interact with AI systems, moving from code-based programming to natural language instruction. As models become more sophisticated, the art and science of prompting continues to evolve, requiring practitioners to combine creativity, analytical thinking, and iterative refinement to unlock the full potential of large language models. The field continues to mature with new techniques, tools, and best practices emerging regularly, making it an essential skill for anyone working with modern AI systems.
+```text
+Prompt engineering represents a fundamental shift in how we interact with AI systems, moving from code-based programming
+to natural language instruction. As models become more sophisticated, the art and science of prompting continues to
+evolve, requiring practitioners to combine creativity, analytical thinking, and iterative refinement to unlock the full
+potential of large language models. The field continues to mature with new techniques, tools, and best practices
+emerging regularly, making it an essential skill for anyone working with modern AI systems.

@@ -1,0 +1,119 @@
+# Enterprise Pre-commit Configuration
+# AI Knowledge Website Quality Control System
+# Multi-tier validation with auto-fix capabilities
+
+repos:
+  # Repository metadata and basic formatting
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-yaml
+        exclude: \.github/workflows/.*\.yml$
+      - id: check-json
+      - id: end-of-file-fixer
+        types: [text]
+        exclude: \.md$  # Let markdownlint handle this
+      - id: trailing-whitespace
+        types: [text]
+        exclude: \.md$  # Let markdownlint handle this
+        
+  # Python code quality (for pipeline scripts)
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        files: ^(pipelines|scripts|tests)/.*\.py$
+        
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        files: ^(pipelines|scripts|tests)/.*\.py$
+        args: ['--max-line-length=120', '--ignore=E203,W503']
+        
+  # JavaScript/TypeScript quality (for site)
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.44.0
+    hooks:
+      - id: eslint
+        files: \.js$|\.ts$|\.jsx$|\.tsx$
+        additional_dependencies:
+          - eslint@8.44.0
+        args: ['--fix']
+        
+  # Markdown quality control - CORE SYSTEM
+  - repo: local
+    hooks:
+      # Stage 1: Fast validation and auto-fix
+      - id: markdown-lint-and-fix
+        name: 'Markdown Quality Control (Auto-fix)'
+        entry: scripts/markdown_quality_hook.py
+        language: python
+        files: \.md$
+        additional_dependencies:
+          - python-frontmatter
+          - pyyaml
+        args: ['--auto-fix']
+        
+      # Stage 2: Comprehensive validation
+      - id: markdown-comprehensive-check
+        name: 'Markdown Comprehensive Validation'
+        entry: bash -c 'cd apps/site && npm run lint'
+        language: system
+        files: \.md$
+        pass_filenames: false
+        
+      # Stage 3: Content-specific validation
+      - id: markdown-content-validation
+        name: 'Content Schema Validation'
+        entry: scripts/validate_frontmatter_hook.py
+        language: python
+        files: ^apps/site/src/content/.*\.md$
+        additional_dependencies:
+          - python-frontmatter
+          - pyyaml
+          
+      # Stage 4: Link validation (lightweight)
+      - id: internal-link-check
+        name: 'Internal Link Validation'
+        entry: scripts/pre-commit-link-check.sh
+        language: system
+        files: \.md$
+        
+  # Security checks
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package-lock\.json|\.backup$
+        
+  # Git commit message validation
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+        
+# Global configuration
+default_language_version:
+  python: python3.11
+  node: 20.x
+  
+fail_fast: false  # Continue checking all hooks even if one fails
+
+# Exclude patterns
+exclude: |
+  (?x)^(
+    .*\.backup$|
+    node_modules/.*|
+    dist/.*|
+    coverage/.*|
+    \.git/.*|
+    test-results/.*|
+    playwright-report/.*
+  )$

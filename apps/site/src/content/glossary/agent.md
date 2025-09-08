@@ -1,24 +1,37 @@
 ---
-title: Agent (AI)
-aliases: ["autonomous agent", "ai agent", "intelligent agent"]
-summary: An AI agent is an autonomous system that perceives its environment, maintains internal state, and takes actions to achieve specific goals through a perceive-plan-act-observe cycle. Agents can use tools, interact with external systems, and adapt their behavior based on feedback and changing conditions.
-tags: ["agents", "orchestration", "ai-engineering", "fundamentals"]
-related: ["langgraph", "toolformer", "reasoning"]
-category: "fundamentals"
-difficulty: "intermediate"
-updated: "2025-01-15"
+aliases:
+- autonomous agent
+- ai agent
+- intelligent agent
+category: fundamentals
+difficulty: intermediate
+related:
+- langgraph
+- toolformer
+- reasoning
 sources:
-  - source_url: "https://langchain-ai.github.io/langgraph/"
-    source_title: "LangGraph Documentation"
-    license: "proprietary"
-    author: "LangChain AI"
-  - source_url: "https://arxiv.org/abs/2302.04761"
-    source_title: "Toolformer: Language Models Can Teach Themselves to Use Tools"
-    license: "cc-by"
-    author: "Timo Schick et al."
+- author: LangChain AI
+  license: proprietary
+  source_title: LangGraph Documentation
+  source_url: https://langchain-ai.github.io/langgraph/
+- author: Timo Schick et al.
+  license: cc-by
+  source_title: 'Toolformer: Language Models Can Teach Themselves to Use Tools'
+  source_url: https://arxiv.org/abs/2302.04761
+summary: An AI agent is an autonomous system that perceives its environment, maintains
+  internal state, and takes actions to achieve specific goals through a perceive-plan-act-observe
+  cycle. Agents can use tools, interact with external systems, and adapt their behavior
+  based on feedback and changing conditions.
+tags:
+- agents
+- orchestration
+- ai-engineering
+- fundamentals
+title: Agent (AI)
+updated: '2025-01-15'
 ---
 
-## What is an AI Agent?
+## What is an AI Agent
 
 An AI agent is a software system designed to operate autonomously in an environment, making decisions and
 taking actions to achieve specific objectives. Unlike traditional software that follows predetermined paths,
@@ -63,7 +76,8 @@ Action: search_weather("New York")
 Observation: Temperature is 72°F, sunny
 Thought: Now I can provide a complete answer
 Action: respond("The weather in New York is 72°F and sunny")
-```
+
+```text
 
 ### Multi-Agent Systems
 

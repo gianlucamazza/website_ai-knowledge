@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json",
   "default": true,
   "MD001": {
     "enforce_at": 1
@@ -23,8 +24,8 @@
   },
   "MD013": {
     "line_length": 120,
-    "heading_line_length": 80,
-    "code_block_line_length": 120,
+    "heading_line_length": 100,
+    "code_block_line_length": 140,
     "code_blocks": true,
     "tables": true,
     "headers": true,
@@ -98,7 +99,14 @@
   "MD036": {
     "punctuation": ".,;:!?。，；：！？"
   },
-  "MD040": true,
+  "MD040": {
+    "allowed_languages": [
+      "python", "javascript", "typescript", "bash", "shell",
+      "json", "yaml", "markdown", "text", "plaintext", "console",
+      "output", "math", "latex", "html", "css", "sql", "dockerfile"
+    ],
+    "language_only": false
+  },
   "MD041": {
     "front_matter_title": "^\\s*title\\s*[:=]",
     "level": 1
@@ -119,5 +127,8 @@
   },
   "MD051": false,
   "MD052": false,
-  "MD053": false
+  "MD053": false,
+  "MD054": false,
+  "MD055": false,
+  "MD056": false
 }

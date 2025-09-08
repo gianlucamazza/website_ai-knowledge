@@ -1,0 +1,133 @@
+# Pre-commit Configuration for AI Knowledge Website
+# Enterprise-grade quality gates for content and code
+
+repos:
+  # Python code quality
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--multi, --unsafe]
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      
+  # Python formatting and linting
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        files: ^(pipelines|scripts|tests)/.*\.py$
+        
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        files: ^(pipelines|scripts|tests)/.*\.py$
+        args: ["--profile", "black"]
+        
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        files: ^(pipelines|scripts|tests)/.*\.py$
+        args: [--max-line-length=100, --extend-ignore=E203,W503]
+
+  # JavaScript/TypeScript formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0
+    hooks:
+      - id: prettier
+        files: ^apps/site/src/.*\.(ts|astro|json)$
+        exclude: ^apps/site/node_modules/
+
+  # Markdown quality control - Primary engine with enhanced config
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.8.1
+    hooks:
+      - id: markdownlint-cli2
+        name: "Markdown Lint (Enhanced)"
+        files: ^(apps/site/src/content|docs|temp-articles)/.*\.md$
+        args: ["--config", "quality-control-configs/.markdownlint-cli2.yaml"]
+        
+  # Markdown quality control - Auto-fix with enterprise script
+  - repo: local
+    hooks:
+      - id: markdown-quality-autofix
+        name: "Markdown Quality Auto-fix (Enterprise)"
+        entry: python scripts/markdown_quality_fixer.py
+        language: python
+        files: ^apps/site/src/content/.*\.md$
+        args: ["apps/site/src/content", "--verbose"]
+        additional_dependencies: ["frontmatter", "pyyaml"]
+        stages: [pre-commit]
+        
+  # Link checking (fast local check)
+  - repo: local
+    hooks:
+      - id: markdown-link-check-local
+        name: "Markdown Link Check (Local)"
+        entry: scripts/pre-commit-link-check.sh
+        language: script
+        files: ^apps/site/src/content/.*\.md$
+        pass_filenames: true
+        stages: [pre-commit]
+        
+      # Frontmatter validation
+      - id: validate-frontmatter
+        name: "Validate Content Frontmatter"
+        entry: python scripts/validate_frontmatter_hook.py
+        language: python
+        files: ^apps/site/src/content/.*\.md$
+        pass_filenames: true
+        additional_dependencies: ["pyyaml", "pydantic", "frontmatter"]
+        
+      # Content quality scoring
+      - id: content-quality-check
+        name: "Content Quality Assessment"
+        entry: python scripts/content_quality_hook.py
+        language: python
+        files: ^apps/site/src/content/.*\.md$
+        pass_filenames: true
+        additional_dependencies: ["pyyaml", "textstat", "frontmatter"]
+        stages: [pre-push]
+        
+      # Duplicate content detection
+      - id: duplicate-content-check
+        name: "Duplicate Content Detection"
+        entry: python scripts/duplicate_content_hook.py
+        language: python
+        files: ^apps/site/src/content/.*\.md$
+        pass_filenames: true
+        additional_dependencies: ["scikit-learn", "frontmatter"]
+        stages: [pre-push]
+
+  # Security scanning
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: ^(.*\.lock|.*\.log)$
+
+# Configuration for different stages
+default_stages: [pre-commit]
+minimum_pre_commit_version: "3.0.0"
+
+# CI configuration
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+    
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: develop
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: monthly
+  skip: [markdown-link-check-local, validate-frontmatter, content-quality-check]
+  submodules: false

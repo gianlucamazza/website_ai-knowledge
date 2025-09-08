@@ -1,0 +1,15 @@
+{
+  "author": "AI Knowledge Team",
+  "description": "Custom style guide for AI Knowledge Website",
+  "email": "support@ai-knowledge.com",
+  "lang": "en",
+  "license": "MIT",
+  "name": "AIKnowledge",
+  "sources": [
+    "https://developers.google.com/style",
+    "https://docs.microsoft.com/en-us/style-guide/"
+  ],
+  "url": "https://ai-knowledge.com/style-guide",
+  "vale_version": ">=2.0.0",
+  "version": "1.0.0"
+}

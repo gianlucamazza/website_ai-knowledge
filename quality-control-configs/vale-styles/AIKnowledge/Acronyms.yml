@@ -1,0 +1,28 @@
+# AI Knowledge Website - Acronym Consistency
+extends: consistency
+message: "Use '%s' instead of '%s' for acronym consistency."
+level: error
+scope: text
+
+# AI/ML acronym standardization  
+either:
+  - 'AI|A\.I\.|ai'
+  - 'ML|M\.L\.|ml'
+  - 'DL|D\.L\.|dl'
+  - 'NLP|N\.L\.P\.|nlp'
+  - 'CNN|C\.N\.N\.|cnn'
+  - 'RNN|R\.N\.N\.|rnn'
+  - 'LSTM|L\.S\.T\.M\.|lstm'
+  - 'GAN|G\.A\.N\.|gan'
+  - 'GPT|G\.P\.T\.|gpt'
+  - 'BERT|B\.E\.R\.T\.|bert'
+  - 'API|A\.P\.I\.|api'
+  - 'REST|R\.E\.S\.T\.|rest'
+  - 'JSON|J\.S\.O\.N\.|json'
+  - 'XML|X\.M\.L\.|xml'
+  - 'HTTP|H\.T\.T\.P\.|http'
+  - 'HTTPS|H\.T\.T\.P\.S\.|https'
+  - 'URL|U\.R\.L\.|url'
+  - 'URI|U\.R\.I\.|uri'
+  - 'SQL|S\.Q\.L\.|sql'
+  - 'NoSQL|N\.o\.S\.Q\.L\.|nosql'

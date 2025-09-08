@@ -1,52 +1,80 @@
 ---
-title: RAG (Retrieval-Augmented Generation)
-aliases: ["RAG", "retrieval-augmented generation", "retrieval augmented generation", "RAG system"]
-summary: Retrieval-Augmented Generation (RAG) is a hybrid AI approach that combines large language models with external knowledge retrieval systems. By first retrieving relevant documents from a knowledge base and then using that context to generate responses, RAG systems can provide more accurate, up-to-date, and factually grounded answers while reducing hallucinations and enabling access to information beyond the model's training data.
-tags: ["llm", "nlp", "ai-engineering", "applications", "data"]
-related: ["llm", "embedding", "transformer", "prompt-engineering", "fine-tuning"]
-category: "applications"
-difficulty: "intermediate"
-updated: "2025-01-15"
+aliases:
+- RAG
+- retrieval-augmented generation
+- retrieval augmented generation
+- RAG system
+category: applications
+difficulty: intermediate
+related:
+- llm
+- embedding
+- transformer
+- prompt-engineering
+- fine-tuning
 sources:
-  - source_url: "https://arxiv.org/abs/2005.11401"
-    source_title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"
-    license: "cc-by"
-    author: "Patrick Lewis et al."
-  - source_url: "https://arxiv.org/abs/2312.10997"
-    source_title: "Retrieval-Augmented Generation for Large Language Models: A Survey"
-    license: "cc-by"
-    author: "Yunfan Gao et al."
+- author: Patrick Lewis et al.
+  license: cc-by
+  source_title: Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
+  source_url: https://arxiv.org/abs/2005.11401
+- author: Yunfan Gao et al.
+  license: cc-by
+  source_title: 'Retrieval-Augmented Generation for Large Language Models: A Survey'
+  source_url: https://arxiv.org/abs/2312.10997
+summary: Retrieval-Augmented Generation (RAG) is a hybrid AI approach that combines
+  large language models with external knowledge retrieval systems. By first retrieving
+  relevant documents from a knowledge base and then using that context to generate
+  responses, RAG systems can provide more accurate, up-to-date, and factually grounded
+  answers while reducing hallucinations and enabling access to information beyond
+  the model's training data.
+tags:
+- llm
+- nlp
+- ai-engineering
+- applications
+- data
+title: RAG (Retrieval-Augmented Generation)
+updated: '2025-01-15'
 ---
 
 ## Overview
 
-Retrieval-Augmented Generation (RAG) represents a paradigm shift in how AI systems access and utilize knowledge. Rather than relying solely on information encoded in model parameters during training, RAG systems dynamically retrieve relevant information from external knowledge sources and incorporate it into the generation process. This approach addresses key limitations of pure language models: knowledge cutoffs, hallucinations, and inability to access private or real-time information.
+Retrieval-Augmented Generation (RAG) represents a paradigm shift in how AI systems access and utilize knowledge. Rather
+than relying solely on information encoded in model parameters during training, RAG systems dynamically retrieve
+relevant information from external knowledge sources and incorporate it into the generation process. This approach
+addresses key limitations of pure language models: knowledge cutoffs, hallucinations, and inability to access private or
+real-time information.
 
 ## Core Architecture
 
 ### Traditional LLM vs. RAG Approach
 
-**Traditional LLM Response Process:**
+### Traditional LLM Response Process
+
 ```text
 User Query → LLM → Response (based only on training data)
 
 Limitations:
+
 - Knowledge cutoff date
 - Cannot access private documents  
 - May hallucinate facts
 - No source citations
-```
 
-**RAG Response Process:**
+```text
+### RAG Response Process
+
 ```text
 User Query → Retrieval System → Relevant Documents → LLM + Context → Augmented Response
 
 Benefits:
+
 - Up-to-date information
 - Private knowledge base access
 - Reduced hallucinations
 - Source attribution
-```
+
+```text
 
 ### RAG System Components
 
@@ -94,7 +122,7 @@ class RAGSystem:
         
         # Semantic search in vector database
         similar_docs = self.vector_store.similarity_search(
-            query_embedding, 
+            query_embedding,
             k=5  # Top-5 most relevant documents
         )
         
@@ -117,7 +145,8 @@ class RAGSystem:
         Answer:"""
         
         return prompt
-```
+
+```text
 
 ## Retrieval Strategies
 
@@ -139,7 +168,7 @@ class DenseVectorRetriever:
         
         # 2. Search vector database
         results = self.vector_db.similarity_search(
-            query_vector, 
+            query_vector,
             k=top_k,
             metric="cosine"  # or "dot_product", "euclidean"
         )
@@ -148,6 +177,7 @@ class DenseVectorRetriever:
         return results
 
 # Example usage with different embedding models
+
 retrievers = {
     "openai": DenseVectorRetriever(
         OpenAIEmbeddings("text-embedding-ada-002"),
@@ -164,7 +194,8 @@ retrievers = {
         Weaviate()
     )
 }
-```
+
+```text
 
 ### 2. Hybrid Retrieval (Dense + Sparse)
 
@@ -213,7 +244,8 @@ class HybridRetriever:
         
         return doc_scores
 
-# BM25 sparse retriever example
+## BM25 sparse retriever example
+
 from rank_bm25 import BM25Okapi
 
 class BM25Retriever:
@@ -239,7 +271,8 @@ class BM25Retriever:
             })
         
         return results
-```
+
+```text
 
 ### 3. Multi-Step Retrieval
 
@@ -282,7 +315,7 @@ class MultiStepRetriever:
         Question: {query}
         Retrieved Information: {context}
         
-        Can the question be fully answered with the provided information? 
+        Can the question be fully answered with the provided information?
         Respond with only "YES" or "NO".
         """
         
@@ -304,7 +337,8 @@ class MultiStepRetriever:
         Follow-up query:"""
         
         return self.llm.generate(followup_prompt).strip()
-```
+
+```text
 
 ## Knowledge Base Construction
 
@@ -376,7 +410,8 @@ class DocumentProcessor:
         
         return document_chunks
 
-# Advanced chunking strategies
+## Advanced chunking strategies
+
 class AdvancedChunker:
     def __init__(self):
         self.strategies = {
@@ -398,7 +433,7 @@ class AdvancedChunker:
         
         for i in range(1, len(sentences)):
             similarity = cosine_similarity(
-                sentence_embeddings[i-1:i], 
+                sentence_embeddings[i-1:i],
                 sentence_embeddings[i:i+1]
             )[0][0]
             
@@ -412,7 +447,8 @@ class AdvancedChunker:
             chunks.append(" ".join(current_chunk))
         
         return chunks
-```
+
+```text
 
 ### Metadata Enhancement
 
@@ -484,7 +520,8 @@ class MetadataEnricher:
                 questions.append(question)
         
         return questions
-```
+
+```text
 
 ## Advanced RAG Techniques
 
@@ -530,7 +567,8 @@ class RelevanceFilter:
                 relevant_docs.append(doc)
         
         return relevant_docs
-```
+
+```text
 
 ### 2. Context Optimization
 
@@ -599,7 +637,8 @@ Source {i}: {source}
 """
         
         return structured_context.strip()
-```
+
+```text
 
 ### 3. Query Enhancement
 
@@ -690,7 +729,8 @@ class IterativeQueryRefinement:
                 return True
         
         return False
-```
+
+```text
 
 ## Evaluation and Optimization
 
@@ -787,7 +827,7 @@ class RAGEvaluator:
         Context: {context}
         Answer: {answer}
         
-        Is the answer faithful to the context? Does it only use information 
+        Is the answer faithful to the context? Does it only use information
         present in the context without adding unsupported claims?
         
         Rate faithfulness on a scale of 1-5 (5 = completely faithful).
@@ -809,6 +849,7 @@ class RAGEvaluator:
         
         How well is the answer grounded in the provided context?
         Consider:
+
         - Does the answer cite or reference the context appropriately?
         - Are claims supported by the context?
         - Is there appropriate attribution?
@@ -822,7 +863,8 @@ class RAGEvaluator:
             return int(response.strip())
         except ValueError:
             return 3
-```
+
+```text
 
 ### A/B Testing Framework
 
@@ -832,7 +874,7 @@ class RAGABTester:
         self.experiments = {}
         self.metrics = [
             'response_quality',
-            'retrieval_accuracy', 
+            'retrieval_accuracy',
             'user_satisfaction',
             'response_time'
         ]
@@ -888,7 +930,8 @@ class RAGABTester:
             }
         
         return results
-```
+
+```text
 
 ## Production Deployment
 
@@ -1015,7 +1058,7 @@ class RAGMonitoring:
         
         # Update average processing time
         current_avg = self.metrics['avg_processing_time']
-        new_avg = ((current_avg * (self.metrics['queries_processed'] - 1) + 
+        new_avg = ((current_avg * (self.metrics['queries_processed'] - 1) +
                    processing_time) / self.metrics['queries_processed'])
         self.metrics['avg_processing_time'] = new_avg
         
@@ -1036,7 +1079,8 @@ class RAGMonitoring:
             'top_queries': self.get_top_queries(),
             'retrieval_stats': self.get_retrieval_stats()
         }
-```
+
+```text
 
 ## Common Challenges and Solutions
 
@@ -1100,7 +1144,8 @@ class ContextWindowManager:
                 break
         
         return '. '.join(truncated_sentences)
-```
+
+```text
 
 ### 2. Retrieval Quality Issues
 
@@ -1155,7 +1200,8 @@ class RetrievalQualityImprover:
             return self.multi_vector_search(query)
         
         return []
-```
+
+```text
 
 ### 3. Hallucination Reduction
 
@@ -1188,8 +1234,9 @@ class HallucinationGuard:
         Context: {context}
         Response: {response}
         
-        Does the response contain information that is not present in or 
+        Does the response contain information that is not present in or
         contradicted by the context? Consider:
+
         1. Facts stated that aren't in the context
         2. Numbers or dates not mentioned in context
         3. Claims that contradict the context
@@ -1213,6 +1260,7 @@ class HallucinationGuard:
         explicitly state that the information is not available in the provided context.
         
         IMPORTANT CONSTRAINTS:
+
         - Only use information directly stated in the context
         - Do not infer or extrapolate beyond what is explicitly stated
         - If uncertain about any detail, indicate the uncertainty
@@ -1225,6 +1273,11 @@ class HallucinationGuard:
         Answer:"""
         
         return self.llm.generate(constrained_prompt)
-```
 
-Retrieval-Augmented Generation represents a significant advancement in making AI systems more accurate, up-to-date, and grounded in factual information. By combining the reasoning capabilities of large language models with the vast and current information available in external knowledge bases, RAG systems offer a practical solution to many limitations of standalone language models. As the technology continues to evolve, we can expect to see more sophisticated retrieval strategies, better integration techniques, and increasingly robust production deployments that make RAG an essential component of enterprise AI applications.
+```text
+Retrieval-Augmented Generation represents a significant advancement in making AI systems more accurate, up-to-date, and
+grounded in factual information. By combining the reasoning capabilities of large language models with the vast and
+current information available in external knowledge bases, RAG systems offer a practical solution to many limitations of
+standalone language models. As the technology continues to evolve, we can expect to see more sophisticated retrieval
+strategies, better integration techniques, and increasingly robust production deployments that make RAG an essential
+component of enterprise AI applications.

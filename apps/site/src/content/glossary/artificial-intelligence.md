@@ -1,26 +1,43 @@
 ---
-title: Artificial Intelligence
-aliases: ["AI", "machine intelligence", "artificial general intelligence", "AGI"]
-summary: Artificial Intelligence is the simulation of human intelligence in machines programmed to think and learn. AI systems can perceive their environment, reason about information, make decisions, and adapt their behavior to achieve specific goals across diverse domains.
-tags: ["fundamentals", "ai-engineering", "machine-learning", "reasoning"]
-related: ["machine-learning", "deep-learning", "agent"]
-category: "fundamentals"
-difficulty: "beginner"
-updated: "2025-01-15"
+aliases:
+- AI
+- machine intelligence
+- artificial general intelligence
+- AGI
+category: fundamentals
+difficulty: beginner
+related:
+- machine-learning
+- deep-learning
+- agent
 sources:
-  - source_url: "https://web.stanford.edu/~nilsson/MLBOOK.pdf"
-    source_title: "Introduction to Machine Learning"
-    license: "cc-by"
-    author: "Nils J. Nilsson"
-  - source_url: "https://ai.stanford.edu/~nilsson/QAI/qai.pdf"
-    source_title: "The Quest for Artificial Intelligence"
-    license: "cc-by"
-    author: "Nils J. Nilsson"
+- author: Nils J. Nilsson
+  license: cc-by
+  source_title: Introduction to Machine Learning
+  source_url: https://web.stanford.edu/~nilsson/MLBOOK.pdf
+- author: Nils J. Nilsson
+  license: cc-by
+  source_title: The Quest for Artificial Intelligence
+  source_url: https://ai.stanford.edu/~nilsson/QAI/qai.pdf
+summary: Artificial Intelligence is the simulation of human intelligence in machines
+  programmed to think and learn. AI systems can perceive their environment, reason
+  about information, make decisions, and adapt their behavior to achieve specific
+  goals across diverse domains.
+tags:
+- fundamentals
+- ai-engineering
+- machine-learning
+- reasoning
+title: Artificial Intelligence
+updated: '2025-01-15'
 ---
 
-## What is Artificial Intelligence?
+## What is Artificial Intelligence
 
-Artificial Intelligence (AI) refers to the development of computer systems capable of performing tasks that typically require human intelligence. These tasks include learning from experience, recognizing patterns, understanding natural language, solving problems, and making decisions. AI aims to create machines that can simulate cognitive functions associated with human minds.
+Artificial Intelligence (AI) refers to the development of computer systems capable of performing tasks that typically
+require human intelligence. These tasks include learning from experience, recognizing patterns, understanding natural
+language, solving problems, and making decisions. AI aims to create machines that can simulate cognitive functions
+associated with human minds.
 
 ## Core Capabilities
 
@@ -55,39 +72,46 @@ AI systems can improve their performance through experience:
 
 ### Based on Capabilities
 
-**Narrow AI (Weak AI)**
+### Narrow AI (Weak AI)
+
 - Designed for specific tasks or domains
 - Current state of most AI systems
 - Examples: Chess programs, recommendation systems, image recognition
 
-**General AI (Strong AI)**
+### General AI (Strong AI)
+
 - Human-level intelligence across all cognitive tasks
 - Theoretical goal not yet achieved
 - Would match human cognitive abilities in all areas
 
-**Superintelligence**
+### Superintelligence
+
 - Hypothetical AI that surpasses human intelligence
 - Subject of ongoing research and ethical debate
 - Potential future development with significant implications
 
 ### Based on Functionality
 
-**Reactive Machines**
+### Reactive Machines
+
 - Respond to specific inputs with predetermined outputs
 - No memory of past experiences
 - Example: IBM's Deep Blue chess computer
 
-**Limited Memory**
+### Limited Memory
+
 - Can use past experiences to inform current decisions
 - Most current AI systems fall into this category
 - Example: Self-driving cars using recent traffic data
 
-**Theory of Mind**
+### Theory of Mind
+
 - Understanding that others have beliefs and desires
 - Current research frontier
 - Would enable more natural human-AI interaction
 
-**Self-Aware**
+### Self-Aware
+
 - Consciousness and self-understanding
 - Theoretical and highly speculative
 - Would represent the pinnacle of AI development
@@ -167,39 +191,46 @@ Combining different AI methodologies:
 
 ### Technical Challenges
 
-**Data Requirements**
+### Data Requirements
+
 - Need for large, high-quality datasets
 - Data bias affecting system performance
 - Privacy concerns with data collection
 
-**Computational Complexity**
+### Computational Complexity
+
 - High computational requirements for training
 - Energy consumption of large AI systems
 - Real-time processing constraints
 
-**Generalization**
+### Generalization
+
 - Difficulty performing well on unseen data
 - Domain specificity of current systems
 - Robustness to adversarial examples
 
 ### Ethical and Social Considerations
 
-**Bias and Fairness**
+### Bias and Fairness
+
 - Algorithmic bias affecting different groups
 - Lack of diversity in AI development teams
 - Historical biases reflected in training data
 
-**Transparency and Explainability**
+### Transparency and Explainability
+
 - "Black box" nature of complex AI systems
 - Difficulty understanding AI decision-making
 - Regulatory requirements for explainable AI
 
-**Privacy and Security**
+### Privacy and Security
+
 - Personal data used in AI training
 - Potential for surveillance and monitoring
 - Cybersecurity vulnerabilities in AI systems
 
-**Economic Impact**
+### Economic Impact
+
 - Job displacement due to automation
 - Concentration of AI capabilities in few organizations
 - Economic inequality implications
@@ -244,4 +275,6 @@ Combining different AI methodologies:
 - **Educational Resources**: Online courses, textbooks, research papers
 - **Communities**: Academic conferences, online forums, local meetups
 
-Artificial Intelligence represents one of the most significant technological developments in human history, with the potential to transform virtually every aspect of society. As AI continues to advance, understanding its capabilities, limitations, and implications becomes increasingly important for individuals, organizations, and policymakers alike.
+Artificial Intelligence represents one of the most significant technological developments in human history, with the
+potential to transform virtually every aspect of society. As AI continues to advance, understanding its capabilities,
+limitations, and implications becomes increasingly important for individuals, organizations, and policymakers alike.
