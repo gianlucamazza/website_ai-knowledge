@@ -1,5 +1,5 @@
 ---
-title: The Transformer Revolution: How Attention Changed Everything
+title: "The Transformer Revolution: How Attention Changed Everything"
 summary: Explore how the transformer architecture revolutionized AI through the attention mechanism, enabling breakthroughs in language models, computer vision, and beyond. Learn the technical details behind BERT, GPT, and the foundation of modern AI systems.
 tags: ["transformer", "attention-mechanism", "nlp", "deep-learning", "algorithms"]
 updated: "2025-09-08"

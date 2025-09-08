@@ -1,5 +1,5 @@
 ---
-title: Practical Prompt Engineering: Mastering AI Conversations
+title: "Practical Prompt Engineering: Mastering AI Conversations"
 summary: A hands-on guide to effective prompt engineering techniques for large language models. Learn proven strategies, common patterns, and best practices to get better results from ChatGPT, Claude, and other AI systems through better communication.
 tags: ["prompt-engineering", "llm", "applications", "ai-engineering", "nlp"]
 updated: "2025-09-08"

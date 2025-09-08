@@ -1,5 +1,5 @@
 ---
-title: Getting Started with AI: A Beginner's Complete Guide
+title: "Getting Started with AI: A Beginner's Complete Guide"
 summary: A comprehensive introduction to artificial intelligence covering key concepts, types of AI systems, and practical applications. Perfect for newcomers looking to understand what AI is, how it works, and how to begin their journey in the field.
 tags: ["fundamentals", "machine-learning", "deep-learning", "applications"]
 updated: "2025-09-08"

@@ -1,5 +1,5 @@
 ---
-title: Understanding Neural Networks: From Neurons to Deep Learning
+title: "Understanding Neural Networks: From Neurons to Deep Learning"
 summary: A comprehensive deep dive into neural network fundamentals, covering biological inspiration, mathematical foundations, architecture design, and practical implementation considerations. Learn how artificial neurons work, why deep networks are powerful, and how to build effective neural systems.
 tags: ["neural-network", "deep-learning", "algorithms", "fundamentals", "training"]
 updated: "2025-09-08"

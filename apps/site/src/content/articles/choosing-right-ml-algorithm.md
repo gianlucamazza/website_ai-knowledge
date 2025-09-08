@@ -1,5 +1,5 @@
 ---
-title: Choosing the Right Machine Learning Algorithm: A Decision Guide
+title: "Choosing the Right Machine Learning Algorithm: A Decision Guide"
 summary: A comprehensive guide to selecting appropriate machine learning algorithms based on your data, problem type, and constraints. Learn when to use supervised vs. unsupervised learning, how to evaluate trade-offs, and practical decision frameworks for real-world projects.
 tags: ["machine-learning", "algorithms", "supervised-learning", "unsupervised-learning", "applications"]
 updated: "2025-09-08"
@@ -17,7 +17,7 @@ sources:
     author: "Christopher Bishop"
   - source_url: "https://scikit-learn.org/stable/tutorial/machine_learning_map/"
     source_title: "Choosing the right estimator"
-    license: "bsd"
+    license: "unknown"
     author: "scikit-learn developers"
 ---
 
