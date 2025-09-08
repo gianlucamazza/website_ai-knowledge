@@ -6,16 +6,13 @@ and sub-linear query performance.
 """
 
 import logging
-import pickle
+import pickle  # nosec B403 - Used only for trusted cache files
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 from datasketch import MinHash, MinHashLSH
 
-from ..config import config
-
 logger = logging.getLogger(__name__)
-
 
 class LSHIndex:
     """MinHash LSH index for efficient similarity search."""
@@ -382,7 +379,7 @@ class LSHIndex:
                 return False
 
             with open(filepath, "rb") as f:
-                index_data = pickle.load(f)
+                index_data = pickle.load(f)  # nosec B301 - Loading from trusted cache file
 
             # Restore index configuration
             self.threshold = index_data["threshold"]
@@ -478,7 +475,6 @@ class LSHIndex:
         except Exception as e:
             logger.error(f"Error calculating precision: {e}")
             return 0.0
-
 
 class LSHDeduplicator:
     """Wrapper class for LSH-based deduplication to match test interface."""

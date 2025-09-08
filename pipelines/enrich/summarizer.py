@@ -6,7 +6,7 @@ and extracting key insights.
 import asyncio
 import logging
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 
 import openai
 from anthropic import Anthropic
@@ -14,7 +14,6 @@ from anthropic import Anthropic
 from ..config import config
 
 logger = logging.getLogger(__name__)
-
 
 class ContentSummarizer:
     """AI-powered content summarization with multiple provider support."""
@@ -102,7 +101,7 @@ class ContentSummarizer:
                 logger.debug(f"Summarizing chunk {i+1}/{len(chunks)}")
 
                 chunk_result = await self._direct_summarization(
-                    chunk, f"{title} (Part {i+1})", "brief"
+                    chunk, f"{title} (Part {i+1})", "brie"
                 )
 
                 if chunk_result["summary"]:
@@ -193,7 +192,6 @@ class ContentSummarizer:
         try:
             import numpy as np
             from sklearn.feature_extraction.text import TfidfVectorizer
-            from sklearn.metrics.pairwise import cosine_similarity
 
             # Split into sentences
             sentences = self._split_into_sentences(content)
@@ -235,7 +233,7 @@ class ContentSummarizer:
             return {
                 "summary": summary,
                 "provider": "extractive",
-                "model": "tfidf",
+                "model": "tfid",
                 "sentences_selected": len(selected_sentences),
                 "method": "extractive",
             }
@@ -286,7 +284,7 @@ class ContentSummarizer:
                 "preserve important technical details, methodologies, and specific "
                 "findings. Maintain technical accuracy and include key terminology."
             ),
-            "brief": (
+            "brie": (
                 "You are a content summarization expert. Create brief, clear summaries "
                 "that capture the essence of the content in 2-3 sentences. Focus on "
                 "the most important points only."
@@ -297,7 +295,7 @@ class ContentSummarizer:
 
     def _get_user_prompt(self, content: str, title: str, summary_type: str) -> str:
         """Generate user prompt for summarization."""
-        prompt = f"Please summarize the following content"
+        prompt = "Please summarize the following content"
 
         if title:
             prompt += f" titled '{title}'"
@@ -306,7 +304,7 @@ class ContentSummarizer:
             prompt += " in 3-4 sentences, focusing on key insights and implications:"
         elif summary_type == "technical":
             prompt += " in 4-5 sentences, preserving important technical details:"
-        elif summary_type == "brief":
+        elif summary_type == "brie":
             prompt += " in 2-3 sentences, capturing only the most essential points:"
 
         prompt += f"\n\n{content}\n\nSummary:"
@@ -322,7 +320,7 @@ class ContentSummarizer:
             prompt = (
                 f"Extract the {max_points} most important key points from the following content. "
                 f"Return each point as a single, clear sentence:\n\n{content}\n\n"
-                f"Key points:"
+                "Key points:"
             )
 
             if self.openai_client:

@@ -7,11 +7,10 @@ and validation using Pydantic settings.
 
 import os
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, Field, SecretStr, validator
 from pydantic_settings import BaseSettings
-
 
 class DatabaseConfig(BaseModel):
     """Database connection configuration."""
@@ -43,7 +42,6 @@ class DatabaseConfig(BaseModel):
             raise ValueError("Database password must be at least 12 characters long")
         return v
 
-
 class ScrapingConfig(BaseModel):
     """Web scraping configuration."""
 
@@ -63,7 +61,6 @@ class ScrapingConfig(BaseModel):
     circuit_breaker_threshold: int = 5  # Failures before opening circuit
     circuit_breaker_timeout: int = 300  # 5 minutes circuit breaker timeout
 
-
 class DeduplicationConfig(BaseModel):
     """Deduplication algorithm configuration."""
 
@@ -72,7 +69,6 @@ class DeduplicationConfig(BaseModel):
     lsh_num_perm: int = 256  # Number of permutations for LSH
     lsh_threshold: float = 0.8  # LSH similarity threshold
     content_min_length: int = 100  # Minimum content length for dedup
-
 
 class EnrichmentConfig(BaseModel):
     """Content enrichment configuration."""
@@ -84,7 +80,6 @@ class EnrichmentConfig(BaseModel):
     similarity_threshold: float = 0.7
     max_related_articles: int = 5
 
-
 class PublishConfig(BaseModel):
     """Publishing configuration."""
 
@@ -94,7 +89,6 @@ class PublishConfig(BaseModel):
     taxonomies_subdir: str = "taxonomies"
     validate_frontmatter: bool = True
 
-
 class LoggingConfig(BaseModel):
     """Logging configuration."""
 
@@ -103,7 +97,6 @@ class LoggingConfig(BaseModel):
     file_path: Optional[str] = None
     max_file_size: int = 100 * 1024 * 1024  # 100MB
     backup_count: int = 5
-
 
 class PipelineConfig(BaseSettings):
     """Main pipeline configuration."""
@@ -165,7 +158,6 @@ class PipelineConfig(BaseSettings):
 
         for directory in directories:
             directory.mkdir(parents=True, exist_ok=True)
-
 
 # Global configuration instance
 config = PipelineConfig()

@@ -7,16 +7,15 @@ Handles parsing of RSS/Atom feeds and extraction of article metadata.
 import logging
 from datetime import datetime
 from typing import Dict, List, Optional
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 import feedparser
 from dateutil.parser import parse as parse_date
 
-from ..database.models import Article, ContentType
+from ..database.models import ContentType
 from .scraper import EthicalScraper
 
 logger = logging.getLogger(__name__)
-
 
 class RSSParser:
     """RSS/Atom feed parser with content extraction capabilities."""

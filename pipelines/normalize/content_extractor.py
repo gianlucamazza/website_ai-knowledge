@@ -7,8 +7,7 @@ Provides intelligent content extraction with quality scoring and metadata extrac
 import logging
 import re
 from datetime import datetime
-from typing import Dict, List, Optional, Tuple
-from urllib.parse import urlparse
+from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
 from langdetect import DetectorFactory, detect
@@ -22,7 +21,6 @@ from .html_cleaner import HTMLCleaner
 DetectorFactory.seed = 0
 
 logger = logging.getLogger(__name__)
-
 
 class ContentExtractor:
     """Advanced content extraction with quality assessment and metadata extraction."""

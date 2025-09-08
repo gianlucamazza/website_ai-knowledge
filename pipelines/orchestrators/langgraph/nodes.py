@@ -8,12 +8,10 @@ enrich, and publish stages with error handling and state management.
 import asyncio
 import logging
 from datetime import datetime
-from typing import Dict, List
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...config import config
 from ...database import get_db_session
 from ...database.models import Article, ContentStatus, PipelineRun, PipelineStage
 from ...dedup import LSHIndex, SimHashDeduplicator
@@ -25,7 +23,6 @@ from ...security import InputValidationError, default_validator
 from .workflow import PipelineState
 
 logger = logging.getLogger(__name__)
-
 
 class PipelineNodes:
     """Implementation of all pipeline processing nodes."""

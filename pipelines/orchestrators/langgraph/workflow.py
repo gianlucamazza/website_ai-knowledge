@@ -13,11 +13,9 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, StateGraph
 
 from ...config import config
-from ...database.models import ContentStatus, PipelineStage
 from .nodes import PipelineNodes
 
 logger = logging.getLogger(__name__)
-
 
 class PipelineState(TypedDict):
     """State model for the pipeline workflow."""
@@ -66,7 +64,6 @@ class PipelineState(TypedDict):
 
     # Database session info
     session_id: Optional[str]
-
 
 class PipelineWorkflow:
     """LangGraph workflow for content pipeline orchestration."""
@@ -458,13 +455,13 @@ class PipelineWorkflow:
             # For now, return a text description
             return """
             Content Pipeline Workflow:
-            
+
             initialize → ingest → normalize → dedup → enrich → publish → finalize
                   ↓         ↓         ↓         ↓        ↓        ↓
             handle_error ← error_check ← error_check ← error_check ← error_check
                   ↓
             retry_check → [retry to appropriate stage]
-            
+
             human_review_check → human_review_wait → [continue]
                   ↓
             [auto-continue or skip]

@@ -19,7 +19,6 @@ from rich.panel import Panel
 from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
 from rich.table import Table
 
-from .config import config
 from .database import close_database, get_db_session, init_database
 from .orchestrators.langgraph import PipelineWorkflow
 
@@ -35,7 +34,6 @@ console = Console()
 
 # Global workflow instance
 workflow = PipelineWorkflow()
-
 
 @app.callback()
 def main(
@@ -57,7 +55,6 @@ def main(
     if config_file and config_file.exists():
         # TODO: Load configuration from file
         rprint(f"[yellow]Loading configuration from: {config_file}[/yellow]")
-
 
 @app.command()
 def run(
@@ -127,7 +124,6 @@ def run(
 
     asyncio.run(_run_pipeline())
 
-
 @app.command()
 def ingest(
     sources: List[str] = typer.Option([], "--source", "-s", help="Filter by source names"),
@@ -193,7 +189,6 @@ def ingest(
             await close_database()
 
     asyncio.run(_run_ingest())
-
 
 @app.command()
 def publish(
@@ -280,7 +275,6 @@ def publish(
             await close_database()
 
     asyncio.run(_run_publish())
-
 
 @app.command()
 def status(
@@ -403,7 +397,6 @@ def status(
 
     asyncio.run(_show_status())
 
-
 @app.command()
 def sources(
     list_all: bool = typer.Option(False, "--list", "-l", help="List all configured sources"),
@@ -476,7 +469,6 @@ def sources(
 
     asyncio.run(_manage_sources())
 
-
 @app.command()
 def workflow():
     """Show workflow visualization."""
@@ -489,7 +481,6 @@ def workflow():
     )
 
     console.print(panel)
-
 
 def display_pipeline_results(results: dict):
     """Display formatted pipeline results."""
@@ -550,7 +541,6 @@ def display_pipeline_results(results: dict):
                 f"  - [{error.get('stage', 'unknown')}] {error.get('message', 'Unknown error')}"
             )
 
-
 def display_run_status(pipeline_run):
     """Display detailed status for a pipeline run."""
 
@@ -571,7 +561,6 @@ def display_run_status(pipeline_run):
     )
 
     console.print(panel)
-
 
 def calculate_duration(start_time: Optional[str], end_time: Optional[str]) -> str:
     """Calculate and format duration."""
@@ -595,7 +584,6 @@ def calculate_duration(start_time: Optional[str], end_time: Optional[str]) -> st
 
     except Exception:
         return "Unknown"
-
 
 if __name__ == "__main__":
     app()

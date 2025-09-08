@@ -9,14 +9,12 @@ import logging
 import logging.handlers
 import sys
 from pathlib import Path
-from typing import Optional
 
 import structlog
 from structlog import configure, get_logger
 from structlog.processors import JSONRenderer, TimeStamper, add_log_level
 
 from .config import config
-
 
 class PipelineLoggerSetup:
     """Centralized logging configuration for the pipeline."""
@@ -131,7 +129,6 @@ class PipelineLoggerSetup:
         """Get a structured logger for the given name."""
         return get_logger(name)
 
-
 class PerformanceLogger:
     """Performance monitoring and logging."""
 
@@ -165,7 +162,6 @@ class PerformanceLogger:
         self.logger.info(
             f"Metrics for {self.name}: " f"{' '.join(f'{k}={v}' for k, v in metrics.items())}"
         )
-
 
 class ErrorTracker:
     """Error tracking and reporting."""
@@ -215,31 +211,25 @@ class ErrorTracker:
             "total_errors": sum(self.error_counts.values()),
         }
 
-
 # Global instances
 logger_setup = PipelineLoggerSetup()
 error_tracker = ErrorTracker()
-
 
 def setup_pipeline_logging() -> None:
     """Setup logging for the entire pipeline."""
     logger_setup.setup_logging()
 
-
 def get_pipeline_logger(name: str) -> structlog.BoundLogger:
     """Get a pipeline logger with the given name."""
     return logger_setup.get_logger(name)
-
 
 def get_performance_logger(name: str) -> PerformanceLogger:
     """Get a performance logger for the given component."""
     return PerformanceLogger(name)
 
-
 def track_pipeline_error(error: Exception, context: dict = None) -> None:
     """Track a pipeline error."""
     error_tracker.track_error(error, context)
-
 
 def get_error_summary() -> dict:
     """Get error summary for reporting."""

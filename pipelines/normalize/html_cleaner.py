@@ -6,14 +6,13 @@ Provides robust HTML cleaning with configurable rules for different content type
 
 import logging
 import re
-from typing import Dict, List, Optional, Set
-from urllib.parse import urljoin, urlparse
+from typing import Dict, Optional
+from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 from markdownify import markdownify as md
 
 logger = logging.getLogger(__name__)
-
 
 class HTMLCleaner:
     """HTML content cleaner with configurable rules."""

@@ -12,14 +12,13 @@ from typing import Dict, List, Optional
 
 import yaml
 from slugify import slugify
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import config
 from ..database.models import Article, ContentStatus, ContentType
 
 logger = logging.getLogger(__name__)
-
 
 class MarkdownGenerator:
     """Generates markdown files with proper frontmatter for Astro content collections."""

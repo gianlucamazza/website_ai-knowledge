@@ -5,9 +5,7 @@ Defines database schema for articles, sources, duplicates, and pipeline runs.
 """
 
 import uuid
-from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
 
 from sqlalchemy import (
     JSON,
@@ -32,7 +30,6 @@ from sqlalchemy.sql import func
 
 Base = declarative_base()
 
-
 class PipelineStage(str, Enum):
     """Pipeline processing stages."""
 
@@ -41,7 +38,6 @@ class PipelineStage(str, Enum):
     DEDUP = "dedup"
     ENRICH = "enrich"
     PUBLISH = "publish"
-
 
 class ContentStatus(str, Enum):
     """Content processing status."""
@@ -52,7 +48,6 @@ class ContentStatus(str, Enum):
     FAILED = "failed"
     SKIPPED = "skipped"
 
-
 class ContentType(str, Enum):
     """Content type classification."""
 
@@ -61,7 +56,6 @@ class ContentType(str, Enum):
     TUTORIAL = "tutorial"
     REFERENCE = "reference"
     NEWS = "news"
-
 
 class Source(Base):
     """Content source configuration and metadata."""
@@ -88,7 +82,6 @@ class Source(Base):
 
     # Relationships
     articles = relationship("Article", back_populates="source")
-
 
 class Article(Base):
     """Article content and processing metadata."""
@@ -175,7 +168,6 @@ class Article(Base):
         ),
     )
 
-
 class ContentDuplicate(Base):
     """Duplicate content relationships and similarity scores."""
 
@@ -209,7 +201,6 @@ class ContentDuplicate(Base):
     __table_args__ = (
         UniqueConstraint("article_id", "duplicate_article_id", name="uq_duplicate_pair"),
     )
-
 
 class PipelineRun(Base):
     """Pipeline execution runs and their status."""
@@ -250,7 +241,6 @@ class PipelineRun(Base):
     # Metadata
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
-
 
 class EnrichmentTask(Base):
     """Content enrichment tasks and their results."""

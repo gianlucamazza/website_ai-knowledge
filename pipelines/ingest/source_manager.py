@@ -8,10 +8,10 @@ import asyncio
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import yaml
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import config
@@ -20,7 +20,6 @@ from .rss_parser import RSSParser
 from .scraper import EthicalScraper
 
 logger = logging.getLogger(__name__)
-
 
 class SourceManager:
     """Manages content sources and coordinates ingestion tasks."""
@@ -107,7 +106,7 @@ class SourceManager:
 
             # Query for active sources that are due for crawling
             query = select(Source).where(
-                Source.is_active == True,
+                Source.is_active,
                 (
                     (Source.last_crawl.is_(None))
                     | (

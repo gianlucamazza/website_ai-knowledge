@@ -153,7 +153,8 @@ class DatabaseManager:
 
         if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", db_config.database):
             raise ValueError(
-                f"Invalid database name: {db_config.database}. Must contain only alphanumeric characters and underscores, starting with a letter."
+
+                        f"Invalid database name: {db_config.database}. Must contain only alphanumeric characters and underscores, starting with a letter."
             )
 
         # Get the actual password value from SecretStr
@@ -178,7 +179,7 @@ class DatabaseManager:
             )
 
             if not exists:
-                # Use safe database identifier escaping - PostgreSQL doesn't support parameterized DDL
+                # Use safe database identifier escaping - PostgreSQL doesn't support parameteri  # ...
                 # but we validate the name above to ensure it's safe
                 safe_db_name = db_config.database.replace('"', '""')  # Escape any quotes
                 await conn.execute(f'CREATE DATABASE "{safe_db_name}"')

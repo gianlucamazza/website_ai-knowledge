@@ -5,7 +5,7 @@ a knowledge graph of interconnected content.
 
 import logging
 import re
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List
 
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -17,7 +17,6 @@ from ..config import config
 from ..database.models import Article, ContentType
 
 logger = logging.getLogger(__name__)
-
 
 class CrossLinker:
     """Cross-linking system for building connections between articles."""

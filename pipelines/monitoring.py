@@ -15,14 +15,12 @@ from typing import Any, Dict, List, Optional
 
 from prometheus_client import Counter, Gauge, Histogram, generate_latest
 from sqlalchemy import func, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from .config import config
 from .database import get_db_session
 from .database.models import Article, ContentStatus, PipelineRun, PipelineStage, Source
 
 logger = logging.getLogger(__name__)
-
 
 class PipelineMetrics:
     """Prometheus metrics for pipeline monitoring."""
@@ -76,7 +74,6 @@ class PipelineMetrics:
         self.quality_score_avg = Gauge(
             "pipeline_quality_score_average", "Average quality score of processed articles"
         )
-
 
 class PerformanceMonitor:
     """Performance monitoring for pipeline operations."""
@@ -198,7 +195,6 @@ class PerformanceMonitor:
 
         return summary
 
-
 class HealthChecker:
     """Health checking for pipeline components."""
 
@@ -285,7 +281,7 @@ class HealthChecker:
             async with get_db_session() as session:
                 # Get active sources
                 active_sources = await session.execute(
-                    select(Source).where(Source.is_active == True)
+                    select(Source).where(Source.is_active)
                 )
                 sources = active_sources.scalars().all()
 
@@ -396,7 +392,6 @@ class HealthChecker:
                 "message": "Could not check pipeline health",
             }
 
-
 class AlertManager:
     """Alert management for pipeline issues."""
 
@@ -456,12 +451,10 @@ class AlertManager:
             alert for alert in self.alerts if datetime.fromisoformat(alert["timestamp"]) > cutoff
         ]
 
-
 # Global monitoring instances
 performance_monitor = PerformanceMonitor()
 health_checker = HealthChecker()
 alert_manager = AlertManager()
-
 
 async def start_monitoring():
     """Start background monitoring tasks."""
@@ -492,7 +485,6 @@ async def start_monitoring():
     task = asyncio.create_task(monitoring_loop())
     logger.info("Started pipeline monitoring")
     return task
-
 
 def get_metrics_endpoint() -> str:
     """Get Prometheus metrics in text format."""

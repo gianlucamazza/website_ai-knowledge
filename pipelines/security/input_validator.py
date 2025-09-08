@@ -10,16 +10,14 @@ import logging
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-from urllib.parse import quote, urlparse
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
-
 
 class InputValidationError(Exception):
     """Input validation error."""
 
     pass
-
 
 class InputValidator:
     """Validates and sanitizes input data for pipeline processing."""
@@ -155,7 +153,7 @@ class InputValidator:
         # Check for localhost/private IPs (prevent SSRF)
         hostname = parsed.hostname
         if hostname:
-            if hostname in ["localhost", "127.0.0.1", "0.0.0.0"]:
+            if hostname in ["localhost", "127.0.0.1", "0.0.0.0"]:  # nosec B104 - Intentional localhost check
                 raise InputValidationError("URLs to localhost are not allowed")
 
             # Check for private IP ranges
@@ -380,31 +378,25 @@ class InputValidator:
 
         return validated_items
 
-
 # Global validator instance
 default_validator = InputValidator()
-
 
 # Convenience functions
 def validate_string(value: str, field_name: str, max_length: Optional[int] = None) -> str:
     """Validate and sanitize a string input."""
     return default_validator.validate_string(value, field_name, max_length)
 
-
 def validate_url(url: str, field_name: str = "URL") -> str:
     """Validate and sanitize a URL."""
     return default_validator.validate_url(url, field_name)
-
 
 def validate_html_content(content: str, field_name: str = "content") -> str:
     """Validate and sanitize HTML content."""
     return default_validator.validate_html_content(content, field_name)
 
-
 def validate_json(data: Union[str, dict], field_name: str = "data") -> dict:
     """Validate JSON data."""
     return default_validator.validate_json(data, field_name)
-
 
 def validate_file_path(path: str, field_name: str = "path") -> Path:
     """Validate a file path."""

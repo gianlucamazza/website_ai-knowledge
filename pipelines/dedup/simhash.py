@@ -7,14 +7,11 @@ Provides efficient similarity detection with configurable hamming distance thres
 import hashlib
 import logging
 import re
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from simhash import Simhash, SimhashIndex
 
-from ..config import config
-
 logger = logging.getLogger(__name__)
-
 
 class SimHashDeduplicator:
     """SimHash-based deduplication with efficient similarity search."""
