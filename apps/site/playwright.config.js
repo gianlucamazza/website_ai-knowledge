@@ -29,7 +29,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL || 'http://localhost:4321',
+    baseURL: process.env.BASE_URL || 'http://localhost:4321/website_ai-knowledge',
     
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -91,16 +91,16 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: process.env.CI ? {
-    // In CI, use preview mode for more reliable startup
-    command: `PORT=${process.env.DEV_SERVER_PORT || 4321} npm run preview`,
-    port: parseInt(process.env.DEV_SERVER_PORT || '4321'),
+    // In CI, use preview mode with fixed port (Astro doesn't support PORT env)
+    command: 'npm run preview',
+    port: 4321,  // Astro preview always uses 4321
+    url: 'http://localhost:4321/website_ai-knowledge',  // Full URL including base path
     reuseExistingServer: false,  // Never reuse in CI
     timeout: 120000,
     stdout: 'pipe',
     stderr: 'pipe',
     env: {
-      NODE_ENV: 'production',
-      PORT: process.env.DEV_SERVER_PORT || '4321'
+      NODE_ENV: 'production'
     }
   } : {
     // Local development - use default port

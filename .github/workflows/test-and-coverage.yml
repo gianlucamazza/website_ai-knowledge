@@ -48,14 +48,17 @@ jobs:
 
     - name: Install dependencies with timeout handling
       run: |
-        chmod +x scripts/install-dependencies.sh
-        scripts/install-dependencies.sh --tier ${{ env.DEPENDENCY_TIER }} --timeout 600
+        # Install base requirements first
+        cd pipelines
+        pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt || echo "Warning: Some base requirements failed"
         
-        # Ensure pytest is installed (fallback)
-        if ! command -v pytest &> /dev/null; then
-          echo "pytest not found, installing directly..."
-          pip install pytest pytest-cov pytest-mock pytest-asyncio
-        fi
+        # Install dev requirements
+        pip install -r requirements-dev.txt || echo "Warning: Some dev requirements failed"
+        cd ..
+        
+        # Ensure critical test dependencies are installed
+        pip install pytest pytest-cov pytest-mock pytest-asyncio sqlalchemy
 
     - name: Set up test environment
       env:
