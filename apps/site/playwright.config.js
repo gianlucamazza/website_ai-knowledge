@@ -91,10 +91,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: process.env.CI ? {
-    // In CI, use preview mode with fixed port (Astro doesn't support PORT env)
+    // In CI, use preview mode with dynamic port from environment
     command: 'npm run preview',
-    port: 4321,  // Astro preview always uses 4321
-    url: 'http://localhost:4321/website_ai-knowledge',  // Full URL including base path
+    url: process.env.BASE_URL || 'http://localhost:4321/website_ai-knowledge',
     reuseExistingServer: false,  // Never reuse in CI
     timeout: 120000,
     stdout: 'pipe',
