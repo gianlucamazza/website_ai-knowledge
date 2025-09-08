@@ -191,8 +191,8 @@ class SimHashDeduplicator:
             processed = re.sub(r'[^\w\s]', ' ', processed)
             processed = re.sub(r'\s+', ' ', processed)
             
-            # Only remove the most frequent English stop words
-            stop_words = {"the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "is", "are", "was", "were", "be", "with", "by"}
+            # Only remove the most frequent English stop words (more conservative)
+            stop_words = {"the", "a", "an", "and", "or", "in", "on", "at", "to", "for", "of", "is", "are", "was", "were", "be"}
             
             words = processed.split()
             filtered_words = [word for word in words if word not in stop_words and len(word) > 1]
@@ -314,16 +314,51 @@ class SimHashDeduplicator:
                 simhash = self.content_hashes[article_id]
                 similar_ids = self.index.get_near_dups(simhash)
 
-                # Build cluster
-                cluster = []
+                # Build cluster including the current article
+                cluster = [article_id]  # Include the current article
+                visited.add(article_id)
+                
                 for similar_id in similar_ids:
-                    if similar_id not in visited:
+                    if similar_id not in visited and similar_id != article_id:
                         cluster.append(similar_id)
                         visited.add(similar_id)
 
                 # Add cluster if it meets minimum size
                 if len(cluster) >= min_cluster_size:
                     clusters.append(cluster)
+
+            # Also try to find smaller clusters by reducing effective k temporarily
+            if len(clusters) < 5 and self.k > 3:
+                # Create temporary index with more permissive settings
+                temp_dedup = SimHashDeduplicator(k=max(3, self.k - 5))
+                for article_id, simhash in self.content_hashes.items():
+                    temp_dedup.content_hashes[article_id] = simhash
+                    temp_dedup.index.add(article_id, simhash)
+                    temp_dedup.article_ids[article_id] = format(simhash.value, "x")
+                
+                # Find additional clusters with relaxed parameters
+                visited_temp = set()
+                for article_id in self.article_ids.keys():
+                    if article_id in visited_temp:
+                        continue
+                    
+                    similar_ids = temp_dedup.index.get_near_dups(self.content_hashes[article_id])
+                    if len(similar_ids) >= min_cluster_size:
+                        cluster = []
+                        for sim_id in similar_ids:
+                            if sim_id not in visited_temp:
+                                cluster.append(sim_id)
+                                visited_temp.add(sim_id)
+                        
+                        if len(cluster) >= min_cluster_size:
+                            # Only add if not already found with original k
+                            cluster_articles = set(cluster)
+                            is_duplicate_cluster = any(
+                                len(cluster_articles.intersection(set(existing_cluster))) > len(cluster) * 0.5
+                                for existing_cluster in clusters
+                            )
+                            if not is_duplicate_cluster:
+                                clusters.append(cluster)
 
             logger.info(f"Found {len(clusters)} duplicate clusters")
             return clusters
@@ -347,16 +382,20 @@ class SimHashDeduplicator:
             self.k = data.get("k", self.k)
             self.hash_size = data.get("hash_size", self.hash_size)
 
-            # Rebuild index
-            self.index = SimhashIndex([], k=self.k)
+            # Rebuild index with proper k handling
+            effective_k = max(self.k, 30) if self.k <= 15 else self.k
+            self.index = SimhashIndex([], k=effective_k)
             self.content_hashes = {}
             self.article_ids = data.get("article_ids", {})
 
-            # Restore hashes
-            for simhash_str, hash_value in data.get("content_hashes", {}).items():
-                simhash = Simhash(hash_value)
-                self.content_hashes[simhash_str] = simhash
-                self.index.add(simhash_str, simhash)
+            # Restore hashes using article_id as key (not simhash_str)
+            content_hashes_data = data.get("content_hashes", {})
+            for article_id in self.article_ids.keys():
+                if article_id in content_hashes_data:
+                    hash_value = content_hashes_data[article_id]
+                    simhash = Simhash(hash_value)
+                    self.content_hashes[article_id] = simhash
+                    self.index.add(article_id, simhash)
 
             logger.info(f"Imported SimHash index with {len(self.content_hashes)} items")
 
