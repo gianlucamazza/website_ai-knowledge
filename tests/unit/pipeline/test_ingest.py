@@ -46,7 +46,11 @@ class TestRSSParser:
             feed_url = "https://example.com/feed.xml"
             m.get(feed_url, status=200, body=sample_rss_feed, headers={'content-type': 'application/rss+xml'})
             
-            with patch.object(rss_parser, '_fetch_full_content', return_value="Full article content here"):
+            # Mock the fetch_full_content method to return a proper coroutine
+            async def mock_fetch_full_content(url):
+                return "Full article content here"
+            
+            with patch.object(rss_parser, '_fetch_full_content', side_effect=mock_fetch_full_content):
                 articles = await rss_parser.parse_feed(feed_url, sample_source_config)
                 
                 assert len(articles) == 2
@@ -239,7 +243,10 @@ class TestEthicalScraper:
             m.get(url, status=200, body=sample_html_content, headers={'content-type': 'text/html'})
             m.get(robots_url, status=200, body="User-agent: *\nAllow: /", headers={'content-type': 'text/plain'})
             
-            async with EthicalScraper() as scraper:
+            # Create scraper and use proper async context handling
+            scraper = EthicalScraper()
+            try:
+                await scraper.__aenter__()
                 result = await scraper.fetch_url(url)
                 
                 assert result is not None
@@ -247,6 +254,8 @@ class TestEthicalScraper:
                 assert result['url'] == url
                 assert 'AI Ethics' in result['content']
                 assert result['headers']['content-type'] == 'text/html'
+            finally:
+                await scraper.__aexit__(None, None, None)
     
     @pytest.mark.unit
     @pytest.mark.asyncio
@@ -273,9 +282,13 @@ class TestEthicalScraper:
             m.get(robots_url, status=200, body="User-agent: *\nAllow: /")
             m.get(url, exception=asyncio.TimeoutError())
             
-            async with EthicalScraper() as scraper:
+            scraper = EthicalScraper()
+            try:
+                await scraper.__aenter__()
                 result = await scraper.fetch_url(url)
                 assert result is None
+            finally:
+                await scraper.__aexit__(None, None, None)
     
     @pytest.mark.unit
     @pytest.mark.asyncio
@@ -297,7 +310,9 @@ class TestEthicalScraper:
             allowed_url = f"{base_url}/public/article"
             m.get(allowed_url, status=200, body="<html>Content</html>")
             
-            async with EthicalScraper() as scraper:
+            scraper = EthicalScraper()
+            try:
+                await scraper.__aenter__()
                 result = await scraper.fetch_url(allowed_url)
                 assert result is not None
                 
@@ -305,6 +320,8 @@ class TestEthicalScraper:
                 disallowed_url = f"{base_url}/private/secret"
                 result = await scraper.fetch_url(disallowed_url)
                 assert result is None
+            finally:
+                await scraper.__aexit__(None, None, None)
     
     @pytest.mark.unit
     @pytest.mark.asyncio
@@ -325,7 +342,9 @@ class TestEthicalScraper:
             
             start_time = datetime.now()
             
-            async with EthicalScraper() as scraper:
+            scraper = EthicalScraper()
+            try:
+                await scraper.__aenter__()
                 # Fetch multiple URLs
                 results = []
                 for url in urls:
@@ -338,6 +357,8 @@ class TestEthicalScraper:
                 # Should have waited between requests (default delay is 1 second)
                 assert duration >= 1.0
                 assert all(result is not None for result in results)
+            finally:
+                await scraper.__aexit__(None, None, None)
 
 
 class TestSourceManager:
