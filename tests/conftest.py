@@ -274,6 +274,56 @@ def performance_benchmarks() -> Dict[str, float]:
     }
 
 
+# Ingest Module Fixtures
+@pytest.fixture
+def rss_parser():
+    """Create RSSParser instance for testing."""
+    from pipelines.ingest.rss_parser import RSSParser
+    return RSSParser()
+
+
+@pytest.fixture
+def scraper():
+    """Create EthicalScraper instance for testing."""
+    from pipelines.ingest.scraper import EthicalScraper
+    return EthicalScraper()
+
+
+@pytest.fixture
+def source_manager(temp_directory):
+    """Create SourceManager instance with test configuration."""
+    from pipelines.ingest.source_manager import SourceManager
+    
+    # Create test sources file
+    sources_content = """
+sources:
+  ai_blog:
+    name: "AI Research Blog"
+    type: "rss"
+    url: "https://ai-blog.com/feed.xml"
+    enabled: true
+    categories: ["ai", "research"]
+    tags: ["academic", "ai"]
+    max_articles_per_run: 50
+    language: "en"
+  
+  tech_news:
+    name: "Tech News"
+    type: "rss"
+    url: "https://tech-news.com/rss"
+    enabled: false
+    categories: ["technology", "news"]
+    tags: ["news", "tech"]
+    max_articles_per_run: 100
+    language: "en"
+"""
+    
+    sources_file = temp_directory / "sources.yaml"
+    sources_file.write_text(sources_content)
+    
+    return SourceManager(str(sources_file))
+
+
 # Test Markers and Configuration
 pytest_plugins = ["pytest_asyncio"]
 

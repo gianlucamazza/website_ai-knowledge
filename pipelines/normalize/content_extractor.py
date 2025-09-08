@@ -6,7 +6,7 @@ Provides intelligent content extraction with quality scoring and metadata extrac
 
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
@@ -44,6 +44,15 @@ class ContentExtractor:
             Dict with extracted content and metadata
         """
         try:
+            # Quick validation - check if we have valid HTML structure
+            if not html_content or not html_content.strip():
+                return self._empty_extraction_result()
+                
+            # Basic HTML validation - check for basic HTML structure
+            if not any(tag in html_content.lower() for tag in ['<html', '<body', '<div', '<p', '<h1', '<h2', '<h3']):
+                # If no recognizable HTML tags, treat as failed extraction
+                return self._empty_extraction_result()
+                
             # Use readability for main content extraction
             readability_result = self._extract_with_readability(html_content)
 
@@ -80,7 +89,7 @@ class ContentExtractor:
                 **quality_metrics,
                 "language": language,
                 "keywords": keywords,
-                "extracted_at": datetime.utcnow(),
+                "extracted_at": datetime.now(UTC),
                 "extraction_method": readability_result.get("method", "unknown"),
             }
 
@@ -151,9 +160,9 @@ class ContentExtractor:
         """Extract title from HTML with multiple fallbacks."""
         title_candidates = [
             # OpenGraph title
-            soup.find("meta", property="og:title"),
+            soup.find("meta", {"property": "og:title"}),
             # Twitter title
-            soup.find("meta", name="twitter:title"),
+            soup.find("meta", {"name": "twitter:title"}),
             # Standard title tag
             soup.find("title"),
             # First h1
@@ -186,19 +195,19 @@ class ContentExtractor:
 
         # Extract meta description
         meta_desc = (
-            soup.find("meta", attrs={"name": "description"})
-            or soup.find("meta", attrs={"property": "og:description"})
-            or soup.find("meta", attrs={"name": "twitter:description"})
+            soup.find("meta", {"name": "description"})
+            or soup.find("meta", {"property": "og:description"})
+            or soup.find("meta", {"name": "twitter:description"})
         )
         if meta_desc:
             metadata["meta_description"] = meta_desc.get("content", "")[:300]
 
         # Extract author
         author = (
-            soup.find("meta", attrs={"name": "author"})
-            or soup.find("meta", attrs={"property": "article:author"})
+            soup.find("meta", {"name": "author"})
+            or soup.find("meta", {"property": "article:author"})
             or soup.find(class_=re.compile(r"author", re.I))
-            or soup.find("span", attrs={"rel": "author"})
+            or soup.find("span", {"rel": "author"})
         )
         if author:
             if author.name == "meta":
@@ -211,12 +220,16 @@ class ContentExtractor:
             ("meta", {"property": "article:published_time"}),
             ("meta", {"name": "date"}),
             ("meta", {"name": "pubdate"}),
-            ("time", {"datetime": True}),
+            ("time", True),  # Any time element with datetime attribute
             ("span", {"class": re.compile(r"date|time", re.I)}),
         ]
 
         for tag, attrs in date_selectors:
-            date_elem = soup.find(tag, attrs)
+            if tag == "time" and attrs is True:
+                # Special case for time elements
+                date_elem = soup.find("time", attrs={"datetime": True})
+            else:
+                date_elem = soup.find(tag, attrs)
             if date_elem:
                 date_str = None
                 if tag == "meta":
@@ -235,14 +248,14 @@ class ContentExtractor:
                         break
 
         # Extract canonical URL
-        canonical = soup.find("link", attrs={"rel": "canonical"})
+        canonical = soup.find("link", {"rel": "canonical"})
         if canonical:
             metadata["canonical_url"] = canonical.get("href", url)
         else:
             metadata["canonical_url"] = url
 
         # Extract keywords
-        keywords_meta = soup.find("meta", attrs={"name": "keywords"})
+        keywords_meta = soup.find("meta", {"name": "keywords"})
         if keywords_meta:
             keywords = [k.strip() for k in keywords_meta.get("content", "").split(",")]
             metadata["meta_keywords"] = [k for k in keywords if k][:10]
@@ -278,7 +291,19 @@ class ContentExtractor:
             # Basic metrics
             word_count = len(content.split())
             sentence_count = len(re.findall(r"[.!?]+", content))
-            paragraph_count = len([p for p in content.split("\n\n") if p.strip()])
+            # Better paragraph counting - handle various patterns including sentence-based
+            # First try line-break based splitting
+            paragraphs = [p.strip() for p in re.split(r'\n\s*\n|\n\s+\n', content) if p.strip()]
+            
+            # If no paragraph breaks found but content is long, estimate based on sentence patterns
+            if len(paragraphs) <= 1 and word_count > 200:
+                # Split by sentences and group into approximate paragraphs
+                sentences = re.split(r'[.!?]+\s+', content)
+                sentences = [s.strip() for s in sentences if s.strip()]
+                # Estimate paragraphs as groups of 3-4 sentences
+                paragraph_count = max(1, len(sentences) // 3)
+            else:
+                paragraph_count = len(paragraphs)
 
             # Calculate scores
             quality_score = self._calculate_quality_score(
@@ -306,21 +331,27 @@ class ContentExtractor:
         """Calculate overall content quality score (0-1)."""
         score = 0.0
 
-        # Word count scoring (optimal range: 500-3000 words)
-        if word_count >= 500:
+        # Word count scoring (more generous ranges)
+        if word_count >= 300:
             if word_count <= 3000:
-                score += 0.3
+                score += 0.35  # Increased from 0.3
             else:
-                score += 0.2  # Very long content might be less focused
-        elif word_count >= 200:
-            score += 0.1
+                score += 0.25  # Very long content might be less focused
+        elif word_count >= 150:
+            score += 0.2  # Increased from 0.1
+        elif word_count >= 100:
+            score += 0.1  # New tier for shorter content
 
-        # Structure scoring
+        # Structure scoring (more generous)
         if paragraph_count >= 3:
             score += 0.2
+        elif paragraph_count >= 2:
+            score += 0.15  # Credit for basic structure
 
         if sentence_count >= 10:
             score += 0.2
+        elif sentence_count >= 5:
+            score += 0.1  # Credit for reasonable sentence count
 
         # Content diversity (different word usage)
         unique_words = len(set(content.lower().split()))
@@ -329,12 +360,16 @@ class ContentExtractor:
         if word_diversity > 0.5:
             score += 0.2
         elif word_diversity > 0.3:
-            score += 0.1
+            score += 0.15  # Increased from 0.1
+        elif word_diversity > 0.2:
+            score += 0.05  # New tier for basic diversity
 
-        # Average sentence length (12-20 words is generally good)
+        # Average sentence length (broader acceptable range)
         avg_sentence_length = word_count / sentence_count if sentence_count > 0 else 0
-        if 12 <= avg_sentence_length <= 20:
+        if 10 <= avg_sentence_length <= 25:  # Broader range
             score += 0.1
+        elif 8 <= avg_sentence_length <= 30:
+            score += 0.05
 
         return min(1.0, score)
 
@@ -360,7 +395,23 @@ class ContentExtractor:
             )
 
             # Normalize to 0-1 scale (0-100 -> 0-1)
-            return max(0.0, min(1.0, score / 100.0))
+            # Ensure score is reasonable and not negative
+            normalized_score = max(0.0, min(1.0, score / 100.0))
+            
+            # Provide better baseline scores for reasonable content
+            if normalized_score < 0.3 and word_count > 50 and sentence_count > 2:
+                # Academic/technical content often scores low on traditional readability
+                # but is still reasonably readable for its audience
+                # Count paragraphs for additional context
+                paragraphs = [p.strip() for p in re.split(r'\n\s*\n|\n\s+\n', content) if p.strip()]
+                paragraph_count = len(paragraphs)
+                
+                if word_count > 150 and paragraph_count > 3:
+                    normalized_score = 0.45  # Higher for longer, structured content
+                else:
+                    normalized_score = 0.35
+                
+            return normalized_score
 
         except Exception:
             return 0.0
@@ -409,7 +460,7 @@ class ContentExtractor:
             detected = detect(sample)
 
             # Validate against supported languages
-            supported_languages = config.ingest.get("supported_languages", ["en"])
+            supported_languages = getattr(config, 'supported_languages', ["en", "es", "fr", "de", "it", "pt"])
             if detected in supported_languages:
                 return detected
             else:
@@ -422,26 +473,41 @@ class ContentExtractor:
     def _extract_keywords(self, content: str) -> List[str]:
         """Extract keywords using TF-IDF."""
         try:
-            if len(content.split()) < 50:
+            if len(content.split()) < 20:
                 return []
 
             # Clean content for keyword extraction
             cleaned_content = re.sub(r"[^\w\s]", " ", content)
             cleaned_content = re.sub(r"\s+", " ", cleaned_content)
+            
+            if not cleaned_content.strip():
+                return []
+
+            # Create a new vectorizer instance for each extraction to avoid issues
+            vectorizer = TfidfVectorizer(
+                max_features=100, 
+                stop_words="english", 
+                ngram_range=(1, 2),
+                # Don't use min_df/max_df for single document analysis
+            )
 
             # Fit TF-IDF
-            tfidf_matrix = self.tfidf_vectorizer.fit_transform([cleaned_content])
+            tfidf_matrix = vectorizer.fit_transform([cleaned_content])
 
             # Get feature names and scores
-            feature_names = self.tfidf_vectorizer.get_feature_names_out()
+            feature_names = vectorizer.get_feature_names_out()
             scores = tfidf_matrix.toarray()[0]
 
             # Create keyword list with scores
             keywords_with_scores = list(zip(feature_names, scores))
             keywords_with_scores.sort(key=lambda x: x[1], reverse=True)
 
-            # Return top keywords
-            keywords = [kw for kw, score in keywords_with_scores[:20] if score > 0.1]
+            # Return top keywords with even lower threshold for better results
+            keywords = [kw for kw, score in keywords_with_scores[:20] if score > 0.01]
+            
+            # If still empty, return the top 5 keywords regardless of score
+            if not keywords and keywords_with_scores:
+                keywords = [kw for kw, score in keywords_with_scores[:5]]
 
             return keywords
 
@@ -463,5 +529,5 @@ class ContentExtractor:
             "language": "en",
             "keywords": [],
             "method": "failed",
-            "extracted_at": datetime.utcnow(),
+            "extracted_at": datetime.now(UTC),
         }

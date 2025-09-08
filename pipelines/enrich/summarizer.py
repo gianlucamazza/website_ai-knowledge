@@ -8,8 +8,9 @@ import logging
 import re
 from typing import Dict, List
 
-import openai
-from anthropic import Anthropic
+import numpy as np
+from openai import AsyncOpenAI
+from anthropic import AsyncAnthropic
 
 from ..config import config
 
@@ -26,13 +27,18 @@ class ContentSummarizer:
 
         # Initialize clients if API keys are available
         if self.enrichment_config.openai_api_key:
-            openai.api_key = self.enrichment_config.openai_api_key
-            self.openai_client = openai
+            self.openai_client = AsyncOpenAI(
+                api_key=self.enrichment_config.openai_api_key
+            )
+        else:
+            self.openai_client = None
 
         if self.enrichment_config.anthropic_api_key:
-            self.anthropic_client = Anthropic(
+            self.anthropic_client = AsyncAnthropic(
                 api_key=self.enrichment_config.anthropic_api_key
             )
+        else:
+            self.anthropic_client = None
 
     async def generate_summary(
         self, content: str, title: str = "", summary_type: str = "executive", 
@@ -52,9 +58,20 @@ class ContentSummarizer:
             Summary text string
         """
         try:
-            # Call the main summarization method
-            result = await self.summarize_content(content, title, summary_type)
-            return result.get("summary", "")
+            # Handle provider selection
+            if provider == 'extractive':
+                result = await self._extractive_summarization(content, title, max_length)
+            else:
+                # Call the main summarization method
+                result = await self.summarize_content(content, title, summary_type)
+            
+            summary = result.get("summary", "")
+            
+            # Apply length limit if specified
+            if max_length and len(summary) > max_length:
+                summary = summary[:max_length].rsplit(' ', 1)[0] + "..."
+            
+            return summary
         except Exception as e:
             logger.error(f"Error in generate_summary: {e}")
             return ""
@@ -74,10 +91,22 @@ class ContentSummarizer:
             Dict with summary text and metadata
         """
         try:
-            # Validate input
-            if not content or len(content.split()) < 50:
-                logger.warning("Content too short for summarization")
+            # Validate input - for very short content, return it as-is
+            if not content:
                 return self._empty_summary_result()
+            
+            word_count = len(content.split())
+            if word_count < 50:
+                logger.warning("Content too short for summarization, returning as-is")
+                # Return the content itself as the summary for very short content
+                return {
+                    "summary": content,
+                    "provider": "passthrough",
+                    "model": "none",
+                    "tokens_used": 0,
+                    "summary_type": summary_type,
+                    "method": "passthrough",
+                }
 
             # Choose summarization approach based on content length
             word_count = len(content.split())
@@ -112,7 +141,7 @@ class ContentSummarizer:
                     return result
 
             # Fallback to extractive summarization
-            return await self._extractive_summarization(content, title)
+            return await self._extractive_summarization(content, title, max_length=None)
 
         except Exception as e:
             logger.error(f"Error in direct summarization: {e}")
@@ -168,10 +197,13 @@ class ContentSummarizer:
     ) -> Dict:
         """Summarize content using OpenAI API."""
         try:
+            if not self.openai_client:
+                return self._empty_summary_result()
+                
             system_prompt = self._get_system_prompt(summary_type)
             user_prompt = self._get_user_prompt(content, title, summary_type)
 
-            response = await openai.ChatCompletion.acreate(
+            response = await self.openai_client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -188,7 +220,7 @@ class ContentSummarizer:
                 "summary": summary,
                 "provider": "openai",
                 "model": "gpt-3.5-turbo",
-                "tokens_used": response.usage.total_tokens,
+                "tokens_used": response.usage.total_tokens if response.usage else 0,
                 "summary_type": summary_type,
                 "method": "direct",
             }
@@ -228,7 +260,7 @@ class ContentSummarizer:
             logger.error(f"Anthropic summarization failed: {e}")
             return self._empty_summary_result()
 
-    async def _extractive_summarization(self, content: str, title: str) -> Dict:
+    async def _extractive_summarization(self, content: str, title: str, max_length: int = None) -> Dict:
         """Fallback extractive summarization using TF-IDF."""
         try:
             import numpy as np
@@ -247,8 +279,12 @@ class ContentSummarizer:
             # Calculate sentence scores based on TF-IDF
             sentence_scores = np.sum(tfidf_matrix.toarray(), axis=1)
 
-            # Get top sentences (aim for ~150 words)
-            target_words = 150
+            # Get top sentences (aim for max_length characters or ~150 words)
+            if max_length:
+                # Convert character limit to approximate word count (avg 5 chars per word)
+                target_words = max_length // 5
+            else:
+                target_words = 150
             selected_sentences = []
             current_words = 0
 
@@ -259,14 +295,27 @@ class ContentSummarizer:
             ]
             scored_sentences.sort(key=lambda x: x[0], reverse=True)
 
-            for score, orig_idx, sentence in scored_sentences:
-                sentence_words = len(sentence.split())
-                if current_words + sentence_words <= target_words:
-                    selected_sentences.append((orig_idx, sentence))
-                    current_words += sentence_words
+            if max_length:
+                # Use character limit directly
+                current_chars = 0
+                for score, orig_idx, sentence in scored_sentences:
+                    sentence_chars = len(sentence)
+                    if current_chars + sentence_chars <= max_length:
+                        selected_sentences.append((orig_idx, sentence))
+                        current_chars += sentence_chars
+                    
+                    if current_chars >= max_length * 0.9:  # Stop at 90% to leave some margin
+                        break
+            else:
+                # Use word count
+                for score, orig_idx, sentence in scored_sentences:
+                    sentence_words = len(sentence.split())
+                    if current_words + sentence_words <= target_words:
+                        selected_sentences.append((orig_idx, sentence))
+                        current_words += sentence_words
 
-                if current_words >= target_words:
-                    break
+                    if current_words >= target_words:
+                        break
 
             # Sort selected sentences by original order
             selected_sentences.sort(key=lambda x: x[0])
@@ -312,6 +361,48 @@ class ContentSummarizer:
         sentences = re.split(r"[.!?]+", content)
         sentences = [s.strip() for s in sentences if s.strip() and len(s.strip()) > 10]
         return sentences
+    
+    def _score_sentences(self, sentences: List[str]) -> List[float]:
+        """
+        Score sentences for extractive summarization.
+        
+        Args:
+            sentences: List of sentences to score
+            
+        Returns:
+            List of scores for each sentence
+        """
+        try:
+            if not sentences:
+                return []
+            
+            from sklearn.feature_extraction.text import TfidfVectorizer
+            
+            # Calculate TF-IDF for sentences
+            vectorizer = TfidfVectorizer(stop_words="english", lowercase=True)
+            tfidf_matrix = vectorizer.fit_transform(sentences)
+            
+            # Calculate sentence scores based on TF-IDF
+            scores = np.sum(tfidf_matrix.toarray(), axis=1)
+            
+            # Boost scores for sentences with important terms
+            important_terms = [
+                'artificial intelligence', 'machine learning', 'deep learning',
+                'neural network', 'algorithm', 'model', 'system', 'technology'
+            ]
+            
+            for i, sentence in enumerate(sentences):
+                sentence_lower = sentence.lower()
+                for term in important_terms:
+                    if term in sentence_lower:
+                        scores[i] *= 1.2  # Boost by 20% for each important term
+            
+            return scores.tolist()
+            
+        except Exception as e:
+            logger.warning(f"Error scoring sentences: {e}")
+            # Return equal scores as fallback
+            return [1.0] * len(sentences)
 
     def _get_system_prompt(self, summary_type: str) -> str:
         """Get system prompt based on summary type."""
@@ -353,6 +444,112 @@ class ContentSummarizer:
 
         return prompt
 
+    async def enhance_metadata(
+        self, content: str, original_metadata: Dict
+    ) -> Dict:
+        """
+        Enhance article metadata using AI analysis.
+        
+        Args:
+            content: Article content to analyze
+            original_metadata: Original metadata dict with title, tags, etc.
+            
+        Returns:
+            Enhanced metadata dict with additional/improved fields
+        """
+        try:
+            # Preserve original metadata
+            enhanced = original_metadata.copy()
+            
+            # If no AI clients available, return original
+            if not self.openai_client and not self.anthropic_client:
+                return enhanced
+            
+            # Extract content insights for metadata enhancement
+            content_preview = content[:2000] if len(content) > 2000 else content
+            
+            prompt = f"""Analyze this content and enhance its metadata:
+Title: {original_metadata.get('title', 'Unknown')}
+Current Tags: {original_metadata.get('tags', [])}
+Content Preview: {content_preview}
+
+Provide enhanced metadata in JSON format with:
+- suggested_tags: 5-10 relevant tags
+- category: primary category
+- complexity_level: beginner/intermediate/advanced
+- target_audience: general/technical/academic
+- key_topics: main topics covered
+"""
+            
+            try:
+                if self.openai_client:
+                    # Use structured output for metadata
+                    response = await self._generate_metadata_with_ai(prompt, "openai")
+                elif self.anthropic_client:
+                    response = await self._generate_metadata_with_ai(prompt, "anthropic")
+                else:
+                    response = {}
+                
+                # Merge enhanced metadata
+                if response:
+                    enhanced.update(response)
+                    
+                    # Combine original and suggested tags
+                    original_tags = set(original_metadata.get('tags', []))
+                    suggested_tags = set(response.get('suggested_tags', []))
+                    enhanced['tags'] = list(original_tags | suggested_tags)[:10]
+                    
+                return enhanced
+                
+            except Exception as e:
+                logger.warning(f"AI metadata enhancement failed: {e}")
+                return enhanced
+                
+        except Exception as e:
+            logger.error(f"Error enhancing metadata: {e}")
+            return original_metadata
+    
+    async def _generate_metadata_with_ai(self, prompt: str, provider: str) -> Dict:
+        """Generate metadata using AI provider."""
+        try:
+            import json
+            
+            if provider == "openai" and self.openai_client:
+                # Use new OpenAI API v1.0+
+                response = await self.openai_client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {
+                            "role": "system", 
+                            "content": "You are a metadata extraction assistant. Always respond with valid JSON."
+                        },
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=500,
+                    temperature=0.3
+                )
+                
+                content = response.choices[0].message.content.strip()
+                return json.loads(content)
+                
+            elif provider == "anthropic" and self.anthropic_client:
+                response = await self.anthropic_client.messages.create(
+                    model="claude-3-haiku-20240307",
+                    max_tokens=500,
+                    temperature=0.3,
+                    system="You are a metadata extraction assistant. Always respond with valid JSON.",
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                
+                content = response.content[0].text.strip()
+                return json.loads(content)
+                
+            return {}
+            
+        except (json.JSONDecodeError, Exception) as e:
+            logger.warning(f"Failed to parse AI metadata response: {e}")
+            return {}
+
     async def generate_key_points(self, content: str, max_points: int = 5) -> List[str]:
         """Extract key points from content."""
         try:
@@ -366,7 +563,7 @@ class ContentSummarizer:
             )
 
             if self.openai_client:
-                response = await openai.ChatCompletion.acreate(
+                response = await self.openai_client.chat.completions.create(
                     model="gpt-3.5-turbo",
                     messages=[
                         {

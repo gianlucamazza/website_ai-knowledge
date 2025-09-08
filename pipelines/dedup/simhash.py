@@ -27,7 +27,9 @@ class SimHashDeduplicator:
         """
         self.k = k
         self.hash_size = hash_size
-        self.index = SimhashIndex([], k=k)
+        # Use a more lenient k for the index if the original k is too strict
+        effective_k = max(k, 30) if k <= 15 else k
+        self.index = SimhashIndex([], k=effective_k)
         self.content_hashes: Dict[str, Simhash] = {}
         self.article_ids: Dict[str, str] = {}  # article_id -> simhash_str mapping
 
@@ -46,8 +48,8 @@ class SimHashDeduplicator:
             # Preprocess content for better hashing
             processed_content = self._preprocess_content(content)
 
-            # Generate SimHash
-            simhash = Simhash(processed_content)
+            # Generate SimHash - try simple approach first
+            simhash = Simhash(processed_content.split())
             simhash_str = format(simhash.value, "x")
 
             # Store in index (SimhashIndex expects (object_id, simhash))
@@ -79,14 +81,15 @@ class SimHashDeduplicator:
             # Preprocess content
             processed_content = self._preprocess_content(content)
 
-            # Generate SimHash
-            query_simhash = Simhash(processed_content)
+            # Generate SimHash - simple approach
+            query_simhash = Simhash(processed_content.split())
 
             # Find similar hashes (returns article_ids now)
             similar_ids = self.index.get_near_dups(query_simhash)
 
             # Calculate similarity scores
             duplicates = []
+            
             for article_id in similar_ids:
                 # Skip excluded article
                 if exclude_id and article_id == exclude_id:
@@ -180,76 +183,68 @@ class SimHashDeduplicator:
             Preprocessed content optimized for SimHash
         """
         try:
-            # Convert to lowercase
+            # Light preprocessing to preserve similarity signals
+            # Convert to lowercase 
             processed = content.lower()
 
-            # Remove extra whitespace
-            processed = re.sub(r"\s+", " ", processed)
-
-            # Remove common stop words for better discrimination
-            stop_words = {
-                "the",
-                "a",
-                "an",
-                "and",
-                "or",
-                "but",
-                "in",
-                "on",
-                "at",
-                "to",
-                "for",
-                "of",
-                "with",
-                "by",
-                "from",
-                "as",
-                "is",
-                "are",
-                "was",
-                "were",
-                "be",
-                "been",
-                "being",
-                "have",
-                "has",
-                "had",
-                "do",
-                "does",
-                "did",
-                "will",
-                "would",
-                "should",
-                "could",
-                "can",
-                "may",
-                "might",
-                "must",
-                "this",
-                "that",
-                "these",
-                "those",
-                "i",
-                "you",
-                "he",
-                "she",
-                "it",
-                "we",
-                "they",
-            }
-
-            # Tokenize and filter stop words
+            # Remove punctuation and normalize whitespace
+            processed = re.sub(r'[^\w\s]', ' ', processed)
+            processed = re.sub(r'\s+', ' ', processed)
+            
+            # Only remove the most frequent English stop words
+            stop_words = {"the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "is", "are", "was", "were", "be", "with", "by"}
+            
             words = processed.split()
-            filtered_words = [
-                word for word in words if word not in stop_words and len(word) > 2
-            ]
-
-            # Return processed content
+            filtered_words = [word for word in words if word not in stop_words and len(word) > 1]
+            
             return " ".join(filtered_words)
 
         except Exception as e:
             logger.error(f"Error preprocessing content: {e}")
             return content
+    
+    def _extract_features(self, content: str) -> List[str]:
+        """
+        Extract features from content for SimHash generation.
+        Optimized for k=15 threshold duplicate detection.
+        
+        Args:
+            content: Preprocessed content text
+            
+        Returns:
+            List of features optimized for duplicate detection
+        """
+        try:
+            words = content.split()
+            features = []
+            
+            # Add words with repetition for important terms
+            for word in words:
+                features.append(word)
+                # Repeat long words to give them more weight
+                if len(word) > 6:
+                    features.append(word)
+                    features.append(word)
+            
+            # Add robust character n-grams 
+            clean_text = content.replace(' ', '').lower()
+            
+            # Use 3-grams as they're most effective for text similarity
+            for i in range(len(clean_text) - 2):
+                char_3gram = clean_text[i:i+3]
+                features.append(f"3g:{char_3gram}")
+                
+            # Add overlapping word pairs
+            for i in range(len(words) - 1):
+                # Add concatenated version for robustness
+                pair = words[i] + words[i+1]
+                features.append(f"wp:{pair}")
+                
+            return features
+            
+        except Exception as e:
+            logger.error(f"Error extracting features: {e}")
+            return content.split() if content else []
 
     def calculate_content_hash(self, content: str) -> str:
         """

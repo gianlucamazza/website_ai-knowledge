@@ -112,7 +112,11 @@ class HTMLCleaner:
             self.base_url = base_url
 
         try:
-            soup = BeautifulSoup(html_content, "lxml")
+            # Try lxml parser first, fallback to html.parser if it fails
+            try:
+                soup = BeautifulSoup(html_content, "lxml")
+            except Exception:
+                soup = BeautifulSoup(html_content, "html.parser")
 
             # Remove unwanted elements
             self._remove_unwanted_elements(soup)
@@ -121,7 +125,12 @@ class HTMLCleaner:
             main_content = self._extract_main_content(soup)
 
             if not main_content:
-                logger.warning("No main content found in HTML")
+                logger.warning("No main content found in HTML, using body fallback")
+                # Use the entire body as fallback
+                main_content = soup.find("body") or soup
+                
+            if not main_content:
+                logger.error("No content found at all, returning empty result")
                 return self._empty_result()
 
             # Clean and normalize the content
@@ -137,9 +146,7 @@ class HTMLCleaner:
                 "plain_text": plain_text,
                 "markdown": markdown,
                 "word_count": len(plain_text.split()),
-                "reading_time": max(
-                    1, len(plain_text.split()) // 200
-                ),  # Assume 200 WPM
+                "reading_time": self._calculate_reading_time(plain_text),
             }
 
         except Exception as e:
@@ -166,18 +173,23 @@ class HTMLCleaner:
         if not isinstance(element, Tag):
             return False
 
+        # Safely check if element has attributes
+        if not hasattr(element, 'attrs') or element.attrs is None:
+            return False
+
         # Check class names
         classes = element.get("class", [])
-        for class_name in classes:
-            if any(
-                indicator in class_name.lower()
-                for indicator in self.NON_CONTENT_INDICATORS
-            ):
-                return True
+        if classes:  # Only check if classes exist
+            for class_name in classes:
+                if any(
+                    indicator in class_name.lower()
+                    for indicator in self.NON_CONTENT_INDICATORS
+                ):
+                    return True
 
         # Check ID
         element_id = element.get("id", "")
-        if any(
+        if element_id and any(
             indicator in element_id.lower() for indicator in self.NON_CONTENT_INDICATORS
         ):
             return True
@@ -227,10 +239,9 @@ class HTMLCleaner:
                 return False
             return True
 
-        # Very short text might not be meaningful
-        if len(text) < self.min_text_length and not element.find(
-            ["img", "video", "audio"]
-        ):
+        # Very short text might not be meaningful, but be less aggressive
+        # Only remove if very short AND no child elements that might be important
+        if (len(text) < 10 and not element.find(["img", "video", "audio", "a", "code"])):
             return True
 
         return False
@@ -321,14 +332,26 @@ class HTMLCleaner:
 
     def _clean_content(self, content: Tag) -> BeautifulSoup:
         """Clean and normalize the extracted content."""
+        if not content:
+            # Return minimal valid soup if no content
+            return BeautifulSoup("<div></div>", "html.parser")
+            
         # Create a new soup with just the content
         new_soup = BeautifulSoup("<div></div>", "html.parser")
         container = new_soup.div
 
-        # Copy content to new soup
-        for element in content.children:
-            if isinstance(element, (Tag, NavigableString)):
-                container.append(element.extract())
+        # Copy content to new soup - use deep copy to avoid extraction issues
+        try:
+            content_copy = BeautifulSoup(str(content), "html.parser")
+            for element in content_copy.children:
+                if isinstance(element, Tag):
+                    container.append(element)
+                elif isinstance(element, NavigableString) and str(element).strip():
+                    container.append(element)
+        except Exception as e:
+            logger.warning(f"Error copying content: {e}")
+            # Fallback: just add the text content
+            container.string = content.get_text()
 
         # Clean attributes
         self._clean_attributes(new_soup)
@@ -348,6 +371,13 @@ class HTMLCleaner:
 
     def _clean_attributes(self, soup: BeautifulSoup) -> None:
         """Remove unnecessary HTML attributes."""
+        # Dangerous attributes to always remove
+        dangerous_attrs = {
+            "onclick", "onload", "onerror", "onmouseover", "onmouseout", "onfocus", 
+            "onblur", "onsubmit", "onchange", "onkeydown", "onkeyup", "onkeypress",
+            "onscroll", "ondblclick", "oncontextmenu", "ondrag", "ondrop", "style"
+        }
+        
         # Attributes to keep
         keep_attrs = {
             "a": ["href", "title"],
@@ -356,6 +386,9 @@ class HTMLCleaner:
             "audio": ["src", "controls"],
             "code": ["class"],  # For syntax highlighting
             "pre": ["class"],
+            "div": ["class", "data-safe"],  # Allow some common safe attributes
+            "span": ["class"],
+            "p": ["class"],
         }
 
         for element in soup.find_all(True):
@@ -363,12 +396,20 @@ class HTMLCleaner:
                 # Get allowed attributes for this tag
                 allowed = keep_attrs.get(element.name, [])
 
-                # Remove all other attributes
-                attrs_to_remove = [
-                    attr for attr in element.attrs if attr not in allowed
-                ]
+                # Remove dangerous attributes and any not in allowed list
+                attrs_to_remove = []
+                for attr in element.attrs:
+                    if attr in dangerous_attrs or attr not in allowed:
+                        attrs_to_remove.append(attr)
+                
                 for attr in attrs_to_remove:
                     del element[attr]
+                
+                # Also sanitize href attributes for dangerous protocols
+                if element.name == "a" and "href" in element.attrs:
+                    href = element["href"]
+                    if href.startswith(("javascript:", "data:", "vbscript:")):
+                        del element["href"]
 
     def _normalize_links(self, soup: BeautifulSoup) -> None:
         """Normalize link URLs to absolute URLs."""
@@ -406,7 +447,7 @@ class HTMLCleaner:
 
     def _normalize_whitespace(self, soup: BeautifulSoup) -> None:
         """Normalize excessive whitespace in text content."""
-        for element in soup.find_all(text=True):
+        for element in soup.find_all(string=True):
             if isinstance(element, NavigableString):
                 # Normalize whitespace
                 normalized = re.sub(r"\s+", " ", str(element))
@@ -427,12 +468,11 @@ class HTMLCleaner:
     def _convert_to_markdown(self, soup: BeautifulSoup) -> str:
         """Convert cleaned HTML to Markdown."""
         try:
-            # Configure markdownify
+            # Configure markdownify - convert specific tags, script/style already removed
             markdown = md(
                 str(soup),
                 heading_style="ATX",  # Use # for headings
                 bullets="-",  # Use - for bullets
-                strip=["script", "style"],
                 convert=[
                     "p",
                     "h1",
@@ -480,6 +520,16 @@ class HTMLCleaner:
         markdown = "\n".join(lines)
 
         return markdown.strip()
+
+    def _calculate_reading_time(self, text: str) -> int:
+        """Calculate estimated reading time in minutes."""
+        word_count = len(text.split())
+        # Assume average reading speed of 200 words per minute
+        # Return 0 for very short content, minimum 1 for substantial content
+        if word_count == 0:
+            return 0
+        reading_time = max(1, word_count // 200)
+        return reading_time
 
     def _empty_result(self) -> Dict[str, str]:
         """Return empty result structure."""

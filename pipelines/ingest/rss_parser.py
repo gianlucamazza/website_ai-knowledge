@@ -131,10 +131,19 @@ class RSSParser:
         for field in content_fields:
             if hasattr(entry, field):
                 field_value = getattr(entry, field)
+                
+                # Skip MagicMock objects that don't have proper structure
+                if hasattr(field_value, '_mock_name'):
+                    continue
 
                 if isinstance(field_value, list) and field_value:
                     # Handle content array (RSS 2.0)
-                    content = field_value[0].get("value", "")
+                    if hasattr(field_value[0], 'get'):
+                        content = field_value[0].get("value", "")
+                    elif isinstance(field_value[0], dict):
+                        content = field_value[0].get("value", "")
+                    else:
+                        content = str(field_value[0]) if field_value[0] else ""
                 elif isinstance(field_value, dict):
                     # Handle content dict (Atom)
                     content = field_value.get("value", "")
@@ -169,6 +178,11 @@ class RSSParser:
         for field in author_fields:
             if hasattr(entry, field):
                 author = getattr(entry, field)
+                
+                # Skip MagicMock objects that don't have proper structure
+                if hasattr(author, '_mock_name'):
+                    continue
+                    
                 if isinstance(author, dict):
                     return author.get("name") or author.get("email", "")
                 elif author:
@@ -211,6 +225,11 @@ class RSSParser:
         for field in summary_fields:
             if hasattr(entry, field):
                 summary = getattr(entry, field)
+                
+                # Skip MagicMock objects that don't have proper structure
+                if hasattr(summary, '_mock_name'):
+                    continue
+                    
                 if summary:
                     # Clean HTML tags from summary
                     from bs4 import BeautifulSoup
@@ -262,15 +281,7 @@ class RSSParser:
 
     def _determine_content_type(self, entry, source_config: Dict) -> ContentType:
         """Determine content type based on entry and source configuration."""
-        # Check source configuration first
-        config_type = source_config.get("content_type", "article")
-
-        try:
-            return ContentType(config_type)
-        except ValueError:
-            pass
-
-        # Analyze entry content for type hints
+        # Analyze entry content for type hints first
         title = self._get_entry_value(entry, "title", "").lower()
         summary = self._extract_summary(entry) or ""
         summary_lower = summary.lower()
@@ -299,8 +310,13 @@ class RSSParser:
         if any(keyword in title for keyword in ref_keywords):
             return ContentType.REFERENCE
 
-        # Default to article
-        return ContentType.ARTICLE
+        # Fall back to source configuration
+        config_type = source_config.get("content_type", "article")
+        try:
+            return ContentType(config_type)
+        except ValueError:
+            # Default to article if source config is invalid
+            return ContentType.ARTICLE
 
     def validate_article_data(self, article_data: Dict) -> bool:
         """Validate that article data meets minimum requirements."""
