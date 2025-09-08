@@ -24,6 +24,7 @@ from .workflow import PipelineState
 
 logger = logging.getLogger(__name__)
 
+
 class PipelineNodes:
     """Implementation of all pipeline processing nodes."""
 
@@ -94,7 +95,9 @@ class PipelineNodes:
                 await self.source_manager.sync_sources_to_database(session)
 
                 # Run scheduled ingestion
-                ingest_stats = await self.source_manager.run_scheduled_ingestion(session)
+                ingest_stats = await self.source_manager.run_scheduled_ingestion(
+                    session
+                )
 
                 # Get newly ingested articles
                 query = select(Article).where(
@@ -168,8 +171,10 @@ class PipelineNodes:
 
                             # Validate and sanitize inputs before processing
                             try:
-                                sanitized_html = default_validator.validate_html_content(
-                                    article.raw_html, f"article_{article_id}_html"
+                                sanitized_html = (
+                                    default_validator.validate_html_content(
+                                        article.raw_html, f"article_{article_id}_html"
+                                    )
                                 )
                                 sanitized_url = default_validator.validate_url(
                                     article.url, f"article_{article_id}_url"
@@ -182,17 +187,23 @@ class PipelineNodes:
                                 continue
 
                             # Extract and normalize content with sanitized inputs
-                            extraction_result = await self.content_extractor.extract_content(
-                                sanitized_html, sanitized_url
+                            extraction_result = (
+                                await self.content_extractor.extract_content(
+                                    sanitized_html, sanitized_url
+                                )
                             )
 
                             # Update article with normalized content
                             article.cleaned_content = extraction_result["content"]
-                            article.markdown_content = extraction_result["markdown_content"]
+                            article.markdown_content = extraction_result[
+                                "markdown_content"
+                            ]
                             article.word_count = extraction_result["word_count"]
                             article.reading_time = extraction_result["reading_time"]
                             article.quality_score = extraction_result["quality_score"]
-                            article.readability_score = extraction_result["readability_score"]
+                            article.readability_score = extraction_result[
+                                "readability_score"
+                            ]
                             article.language = extraction_result["language"]
 
                             # Update processing status
@@ -204,7 +215,9 @@ class PipelineNodes:
                             state["processed_articles"].append(article_id)
 
                         except Exception as e:
-                            logger.error(f"Failed to normalize article {article_id}: {e}")
+                            logger.error(
+                                f"Failed to normalize article {article_id}: {e}"
+                            )
                             state["failed_articles"].append(article_id)
                             state["errors"].append(
                                 {
@@ -223,7 +236,9 @@ class PipelineNodes:
 
                 # Calculate statistics
                 avg_quality_score = (
-                    total_quality_score / processed_count if processed_count > 0 else 0.0
+                    total_quality_score / processed_count
+                    if processed_count > 0
+                    else 0.0
                 )
 
                 state["normalize_results"] = {
@@ -236,7 +251,9 @@ class PipelineNodes:
                 state["success_count"] += processed_count
                 state["failure_count"] += len(state["failed_articles"])
 
-            logger.info(f"Normalization completed: {processed_count} articles processed")
+            logger.info(
+                f"Normalization completed: {processed_count} articles processed"
+            )
             state["status"] = "completed"
             return state
 
@@ -294,14 +311,20 @@ class PipelineNodes:
                         # Combine and dedupe results
                         all_duplicates = {}
                         for dup_id, similarity in simhash_duplicates:
-                            all_duplicates[dup_id] = {"similarity": similarity, "method": "simhash"}
+                            all_duplicates[dup_id] = {
+                                "similarity": similarity,
+                                "method": "simhash",
+                            }
 
                         for dup_id, similarity in lsh_duplicates:
                             if (
                                 dup_id not in all_duplicates
                                 or similarity > all_duplicates[dup_id]["similarity"]
                             ):
-                                all_duplicates[dup_id] = {"similarity": similarity, "method": "lsh"}
+                                all_duplicates[dup_id] = {
+                                    "similarity": similarity,
+                                    "method": "lsh",
+                                }
 
                         # Store duplicate relationships if found
                         if all_duplicates:
@@ -315,7 +338,9 @@ class PipelineNodes:
                             )
 
                         # Add to dedup index for future comparisons
-                        self.simhash_deduplicator.add_content(article_id, article.cleaned_content)
+                        self.simhash_deduplicator.add_content(
+                            article_id, article.cleaned_content
+                        )
                         self.lsh_index.add_content(article_id, article.cleaned_content)
 
                         # Update article status
@@ -384,8 +409,12 @@ class PipelineNodes:
 
                         # Generate summary
                         if not article.summary:
-                            summary_result = await self.content_summarizer.summarize_content(
-                                article.cleaned_content, article.title or "", "executive"
+                            summary_result = (
+                                await self.content_summarizer.summarize_content(
+                                    article.cleaned_content,
+                                    article.title or "",
+                                    "executive",
+                                )
                             )
 
                             if summary_result["summary"]:
@@ -411,7 +440,9 @@ class PipelineNodes:
 
                 await session.commit()
 
-                avg_confidence = total_confidence / enriched_count if enriched_count > 0 else 0.0
+                avg_confidence = (
+                    total_confidence / enriched_count if enriched_count > 0 else 0.0
+                )
 
                 state["enrich_results"] = {
                     "processed": enriched_count,
@@ -461,7 +492,9 @@ class PipelineNodes:
                 state["success_count"] = publish_stats["published"]
                 state["failure_count"] += publish_stats["failed"]
 
-            logger.info(f"Publishing completed: {publish_stats['published']} articles published")
+            logger.info(
+                f"Publishing completed: {publish_stats['published']} articles published"
+            )
             state["status"] = "completed"
             return state
 
@@ -489,7 +522,9 @@ class PipelineNodes:
             # Update pipeline run record
             if state["session_id"]:
                 async with get_db_session() as session:
-                    query = select(PipelineRun).where(PipelineRun.id == state["session_id"])
+                    query = select(PipelineRun).where(
+                        PipelineRun.id == state["session_id"]
+                    )
                     result = await session.execute(query)
                     pipeline_run = result.scalar_one_or_none()
 
@@ -617,7 +652,9 @@ class PipelineNodes:
                         self.simhash_deduplicator.add_content(
                             str(article.id), article.cleaned_content
                         )
-                        self.lsh_index.add_content(str(article.id), article.cleaned_content)
+                        self.lsh_index.add_content(
+                            str(article.id), article.cleaned_content
+                        )
 
                 logger.info("Deduplication indices built successfully")
 

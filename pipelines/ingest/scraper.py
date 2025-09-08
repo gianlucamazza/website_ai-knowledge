@@ -86,7 +86,9 @@ class RobotsChecker:
                         return rp.can_fetch(self.user_agent, url)
                     else:
                         # If robots.txt not found, assume allowed
-                        logger.info(f"No robots.txt found for {domain}, assuming allowed")
+                        logger.info(
+                            f"No robots.txt found for {domain}, assuming allowed"
+                        )
                         return True
 
             except Exception as e:
@@ -172,7 +174,8 @@ class EthicalScraper:
                             content_length = response.headers.get("content-length")
                             if (
                                 content_length
-                                and int(content_length) > self.scraping_config.max_content_size
+                                and int(content_length)
+                                > self.scraping_config.max_content_size
                             ):
                                 logger.warning(
                                     f"Content too large for {url}: {content_length} bytes"
@@ -183,7 +186,10 @@ class EthicalScraper:
                             content = await response.text()
 
                             # Check actual content size
-                            if len(content.encode("utf-8")) > self.scraping_config.max_content_size:
+                            if (
+                                len(content.encode("utf-8"))
+                                > self.scraping_config.max_content_size
+                            ):
                                 logger.warning(f"Content too large for {url}")
                                 return None
 
@@ -192,17 +198,23 @@ class EthicalScraper:
                                 "status_code": response.status,
                                 "headers": dict(response.headers),
                                 "url": str(response.url),  # Final URL after redirects
-                                "content_type": response.headers.get("content-type", ""),
+                                "content_type": response.headers.get(
+                                    "content-type", ""
+                                ),
                             }
 
                     except asyncio.TimeoutError:
-                        logger.warning(f"Timeout fetching {url} (attempt {attempt + 1})")
+                        logger.warning(
+                            f"Timeout fetching {url} (attempt {attempt + 1})"
+                        )
                         if attempt < self.scraping_config.max_retries - 1:
                             await asyncio.sleep(2**attempt)  # Exponential backoff
                         continue
 
                     except Exception as e:
-                        logger.error(f"Error fetching {url} (attempt {attempt + 1}): {e}")
+                        logger.error(
+                            f"Error fetching {url} (attempt {attempt + 1}): {e}"
+                        )
                         if attempt < self.scraping_config.max_retries - 1:
                             await asyncio.sleep(2**attempt)
                         continue
@@ -304,7 +316,9 @@ class EthicalScraper:
             logger.error(f"Error crawling sitemap {sitemap_url}: {e}")
             return []
 
-    async def discover_content_urls(self, base_url: str, max_depth: int = 2) -> Set[str]:
+    async def discover_content_urls(
+        self, base_url: str, max_depth: int = 2
+    ) -> Set[str]:
         """
         Discover content URLs through crawling with depth limit.
 
@@ -323,7 +337,9 @@ class EthicalScraper:
             if not current_level:
                 break
 
-            logger.info(f"Discovering URLs at depth {depth + 1}: {len(current_level)} URLs")
+            logger.info(
+                f"Discovering URLs at depth {depth + 1}: {len(current_level)} URLs"
+            )
 
             # Fetch all URLs at current level
             results = await self.fetch_multiple(list(current_level))

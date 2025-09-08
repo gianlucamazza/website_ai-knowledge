@@ -22,6 +22,7 @@ from .database.models import Article, ContentStatus, PipelineRun, PipelineStage,
 
 logger = logging.getLogger(__name__)
 
+
 class PipelineMetrics:
     """Prometheus metrics for pipeline monitoring."""
 
@@ -34,11 +35,15 @@ class PipelineMetrics:
         )
 
         self.errors_total = Counter(
-            "pipeline_errors_total", "Total number of pipeline errors", ["stage", "error_type"]
+            "pipeline_errors_total",
+            "Total number of pipeline errors",
+            ["stage", "error_type"],
         )
 
         self.pipeline_runs = Counter(
-            "pipeline_runs_total", "Total number of pipeline runs", ["status", "trigger"]
+            "pipeline_runs_total",
+            "Total number of pipeline runs",
+            ["status", "trigger"],
         )
 
         # Histograms for timing
@@ -49,7 +54,9 @@ class PipelineMetrics:
         )
 
         self.article_processing_time = Histogram(
-            "pipeline_article_processing_seconds", "Time to process individual articles", ["stage"]
+            "pipeline_article_processing_seconds",
+            "Time to process individual articles",
+            ["stage"],
         )
 
         self.pipeline_run_duration = Histogram(
@@ -57,14 +64,20 @@ class PipelineMetrics:
         )
 
         # Gauges for current state
-        self.active_runs = Gauge("pipeline_active_runs", "Number of currently active pipeline runs")
+        self.active_runs = Gauge(
+            "pipeline_active_runs", "Number of currently active pipeline runs"
+        )
 
         self.articles_by_stage = Gauge(
-            "pipeline_articles_by_stage", "Number of articles in each stage", ["stage", "status"]
+            "pipeline_articles_by_stage",
+            "Number of articles in each stage",
+            ["stage", "status"],
         )
 
         self.queue_size = Gauge(
-            "pipeline_queue_size", "Number of articles waiting to be processed", ["stage"]
+            "pipeline_queue_size",
+            "Number of articles waiting to be processed",
+            ["stage"],
         )
 
         self.duplicate_rate = Gauge(
@@ -72,8 +85,10 @@ class PipelineMetrics:
         )
 
         self.quality_score_avg = Gauge(
-            "pipeline_quality_score_average", "Average quality score of processed articles"
+            "pipeline_quality_score_average",
+            "Average quality score of processed articles",
         )
+
 
 class PerformanceMonitor:
     """Performance monitoring for pipeline operations."""
@@ -85,7 +100,9 @@ class PerformanceMonitor:
         self.last_health_check = None
 
     @asynccontextmanager
-    async def time_operation(self, operation: str, stage: Optional[str] = None, **labels):
+    async def time_operation(
+        self, operation: str, stage: Optional[str] = None, **labels
+    ):
         """Context manager for timing operations."""
         start_time = time.time()
 
@@ -95,7 +112,9 @@ class PerformanceMonitor:
 
             # Record metrics
             if stage:
-                self.metrics.stage_duration.labels(stage=stage, status="success").observe(duration)
+                self.metrics.stage_duration.labels(
+                    stage=stage, status="success"
+                ).observe(duration)
 
             # Store timing data for analysis
             self.timing_data[operation].append(
@@ -115,15 +134,23 @@ class PerformanceMonitor:
             duration = time.time() - start_time
 
             if stage:
-                self.metrics.stage_duration.labels(stage=stage, status="error").observe(duration)
-                self.metrics.errors_total.labels(stage=stage, error_type=type(e).__name__).inc()
+                self.metrics.stage_duration.labels(stage=stage, status="error").observe(
+                    duration
+                )
+                self.metrics.errors_total.labels(
+                    stage=stage, error_type=type(e).__name__
+                ).inc()
 
             self.error_counts[f"{stage or 'unknown'}_{type(e).__name__}"] += 1
             raise
 
-    def record_article_processed(self, stage: str, status: str, source: str = "unknown"):
+    def record_article_processed(
+        self, stage: str, status: str, source: str = "unknown"
+    ):
         """Record article processing metric."""
-        self.metrics.articles_processed.labels(stage=stage, status=status, source=source).inc()
+        self.metrics.articles_processed.labels(
+            stage=stage, status=status, source=source
+        ).inc()
 
     def record_pipeline_run(
         self, status: str, trigger: str = "manual", duration: Optional[float] = None
@@ -195,6 +222,7 @@ class PerformanceMonitor:
 
         return summary
 
+
 class HealthChecker:
     """Health checking for pipeline components."""
 
@@ -228,7 +256,9 @@ class HealthChecker:
         health_status["components"]["pipeline"] = pipeline_status
 
         # Determine overall health
-        component_statuses = [status["status"] for status in health_status["components"].values()]
+        component_statuses = [
+            status["status"] for status in health_status["components"].values()
+        ]
 
         if "critical" in component_statuses:
             health_status["overall"] = "critical"
@@ -288,7 +318,9 @@ class HealthChecker:
                 # Check for stale sources (not crawled recently)
                 stale_threshold = datetime.utcnow() - timedelta(hours=24)
                 stale_sources = [
-                    s for s in sources if not s.last_crawl or s.last_crawl < stale_threshold
+                    s
+                    for s in sources
+                    if not s.last_crawl or s.last_crawl < stale_threshold
                 ]
 
                 status = "healthy"
@@ -307,7 +339,11 @@ class HealthChecker:
                 }
 
         except Exception as e:
-            return {"status": "warning", "error": str(e), "message": "Could not check sources"}
+            return {
+                "status": "warning",
+                "error": str(e),
+                "message": "Could not check sources",
+            }
 
     def _check_disk_space(self) -> Dict[str, Any]:
         """Check available disk space."""
@@ -337,7 +373,11 @@ class HealthChecker:
             }
 
         except Exception as e:
-            return {"status": "warning", "error": str(e), "message": "Could not check disk space"}
+            return {
+                "status": "warning",
+                "error": str(e),
+                "message": "Could not check disk space",
+            }
 
     async def _check_pipeline_health(self) -> Dict[str, Any]:
         """Check recent pipeline performance."""
@@ -346,7 +386,9 @@ class HealthChecker:
                 # Check recent pipeline runs
                 recent_runs = await session.execute(
                     select(PipelineRun)
-                    .where(PipelineRun.started_at > datetime.utcnow() - timedelta(hours=24))
+                    .where(
+                        PipelineRun.started_at > datetime.utcnow() - timedelta(hours=24)
+                    )
                     .order_by(PipelineRun.started_at.desc())
                     .limit(10)
                 )
@@ -372,16 +414,18 @@ class HealthChecker:
                 avg_duration = None
                 completed_runs = [r for r in runs if r.duration_seconds]
                 if completed_runs:
-                    avg_duration = sum(r.duration_seconds for r in completed_runs) / len(
-                        completed_runs
-                    )
+                    avg_duration = sum(
+                        r.duration_seconds for r in completed_runs
+                    ) / len(completed_runs)
 
                 return {
                     "status": status,
                     "recent_runs": len(runs),
                     "success_rate": round(success_rate, 1),
                     "failed_runs": len(failed_runs),
-                    "avg_duration_seconds": round(avg_duration, 1) if avg_duration else None,
+                    "avg_duration_seconds": (
+                        round(avg_duration, 1) if avg_duration else None
+                    ),
                     "message": f"Success rate: {success_rate:.1f}%",
                 }
 
@@ -391,6 +435,7 @@ class HealthChecker:
                 "error": str(e),
                 "message": "Could not check pipeline health",
             }
+
 
 class AlertManager:
     """Alert management for pipeline issues."""
@@ -421,8 +466,12 @@ class AlertManager:
             )
 
         # Check error rates
-        total_ops = sum(op["count"] for op in performance_summary["operations"].values())
-        error_count = sum(count for error, count in performance_summary["error_counts"].items())
+        total_ops = sum(
+            op["count"] for op in performance_summary["operations"].values()
+        )
+        error_count = sum(
+            count for error, count in performance_summary["error_counts"].items()
+        )
 
         if total_ops > 0:
             error_rate = error_count / total_ops
@@ -448,13 +497,17 @@ class AlertManager:
         cutoff = datetime.utcnow() - timedelta(hours=hours)
 
         return [
-            alert for alert in self.alerts if datetime.fromisoformat(alert["timestamp"]) > cutoff
+            alert
+            for alert in self.alerts
+            if datetime.fromisoformat(alert["timestamp"]) > cutoff
         ]
+
 
 # Global monitoring instances
 performance_monitor = PerformanceMonitor()
 health_checker = HealthChecker()
 alert_manager = AlertManager()
+
 
 async def start_monitoring():
     """Start background monitoring tasks."""
@@ -485,6 +538,7 @@ async def start_monitoring():
     task = asyncio.create_task(monitoring_loop())
     logger.info("Started pipeline monitoring")
     return task
+
 
 def get_metrics_endpoint() -> str:
     """Get Prometheus metrics in text format."""

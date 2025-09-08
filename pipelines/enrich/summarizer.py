@@ -15,6 +15,7 @@ from ..config import config
 
 logger = logging.getLogger(__name__)
 
+
 class ContentSummarizer:
     """AI-powered content summarization with multiple provider support."""
 
@@ -29,7 +30,9 @@ class ContentSummarizer:
             self.openai_client = openai
 
         if self.enrichment_config.anthropic_api_key:
-            self.anthropic_client = Anthropic(api_key=self.enrichment_config.anthropic_api_key)
+            self.anthropic_client = Anthropic(
+                api_key=self.enrichment_config.anthropic_api_key
+            )
 
     async def summarize_content(
         self, content: str, title: str = "", summary_type: str = "executive"
@@ -65,7 +68,9 @@ class ContentSummarizer:
             logger.error(f"Error summarizing content: {e}")
             return self._empty_summary_result()
 
-    async def _direct_summarization(self, content: str, title: str, summary_type: str) -> Dict:
+    async def _direct_summarization(
+        self, content: str, title: str, summary_type: str
+    ) -> Dict:
         """Direct summarization for shorter content."""
         try:
             # Try OpenAI first, then Anthropic as fallback
@@ -75,7 +80,9 @@ class ContentSummarizer:
                     return result
 
             if self.anthropic_client:
-                result = await self._summarize_with_anthropic(content, title, summary_type)
+                result = await self._summarize_with_anthropic(
+                    content, title, summary_type
+                )
                 if result["summary"]:
                     return result
 
@@ -86,7 +93,9 @@ class ContentSummarizer:
             logger.error(f"Error in direct summarization: {e}")
             return self._empty_summary_result()
 
-    async def _chunked_summarization(self, content: str, title: str, summary_type: str) -> Dict:
+    async def _chunked_summarization(
+        self, content: str, title: str, summary_type: str
+    ) -> Dict:
         """Chunked summarization for longer content."""
         try:
             # Split content into chunks
@@ -115,7 +124,9 @@ class ContentSummarizer:
 
             # Combine chunk summaries into final summary
             combined_content = "\n\n".join(chunk_summaries)
-            final_result = await self._direct_summarization(combined_content, title, summary_type)
+            final_result = await self._direct_summarization(
+                combined_content, title, summary_type
+            )
 
             # Add metadata about chunked processing
             final_result["chunks_processed"] = len(chunks)
@@ -127,7 +138,9 @@ class ContentSummarizer:
             logger.error(f"Error in chunked summarization: {e}")
             return self._empty_summary_result()
 
-    async def _summarize_with_openai(self, content: str, title: str, summary_type: str) -> Dict:
+    async def _summarize_with_openai(
+        self, content: str, title: str, summary_type: str
+    ) -> Dict:
         """Summarize content using OpenAI API."""
         try:
             system_prompt = self._get_system_prompt(summary_type)
@@ -159,7 +172,9 @@ class ContentSummarizer:
             logger.error(f"OpenAI summarization failed: {e}")
             return self._empty_summary_result()
 
-    async def _summarize_with_anthropic(self, content: str, title: str, summary_type: str) -> Dict:
+    async def _summarize_with_anthropic(
+        self, content: str, title: str, summary_type: str
+    ) -> Dict:
         """Summarize content using Anthropic Claude API."""
         try:
             system_prompt = self._get_system_prompt(summary_type)
@@ -178,7 +193,8 @@ class ContentSummarizer:
                 "summary": summary,
                 "provider": "anthropic",
                 "model": "claude-3-haiku",
-                "tokens_used": response.usage.input_tokens + response.usage.output_tokens,
+                "tokens_used": response.usage.input_tokens
+                + response.usage.output_tokens,
                 "summary_type": summary_type,
                 "method": "direct",
             }
@@ -213,7 +229,8 @@ class ContentSummarizer:
 
             # Sort sentences by score, then by original order
             scored_sentences = [
-                (score, i, sent) for i, (score, sent) in enumerate(zip(sentence_scores, sentences))
+                (score, i, sent)
+                for i, (score, sent) in enumerate(zip(sentence_scores, sentences))
             ]
             scored_sentences.sort(key=lambda x: x[0], reverse=True)
 
@@ -327,7 +344,10 @@ class ContentSummarizer:
                 response = await openai.ChatCompletion.acreate(
                     model="gpt-3.5-turbo",
                     messages=[
-                        {"role": "system", "content": "You extract key points from content."},
+                        {
+                            "role": "system",
+                            "content": "You extract key points from content.",
+                        },
                         {"role": "user", "content": prompt},
                     ],
                     max_tokens=300,
@@ -340,7 +360,11 @@ class ContentSummarizer:
                 points = []
                 for line in points_text.split("\n"):
                     line = line.strip()
-                    if line and (line[0].isdigit() or line.startswith("-") or line.startswith("•")):
+                    if line and (
+                        line[0].isdigit()
+                        or line.startswith("-")
+                        or line.startswith("•")
+                    ):
                         # Remove numbering/bullets
                         point = re.sub(r"^\d+\.?\s*|^[-•]\s*", "", line).strip()
                         if point:

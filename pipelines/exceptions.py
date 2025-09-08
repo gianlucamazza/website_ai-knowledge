@@ -12,7 +12,10 @@ class PipelineException(Exception):
     """Base exception for all pipeline-related errors."""
 
     def __init__(
-        self, message: str, stage: Optional[str] = None, context: Optional[Dict[str, Any]] = None
+        self,
+        message: str,
+        stage: Optional[str] = None,
+        context: Optional[Dict[str, Any]] = None,
     ):
         super().__init__(message)
         self.stage = stage
@@ -49,7 +52,11 @@ class IngestionError(PipelineException):
     """Raised during content ingestion failures."""
 
     def __init__(
-        self, message: str, source: Optional[str] = None, url: Optional[str] = None, **kwargs
+        self,
+        message: str,
+        source: Optional[str] = None,
+        url: Optional[str] = None,
+        **kwargs,
     ):
         super().__init__(message, stage="ingest", **kwargs)
         self.source = source
@@ -136,7 +143,11 @@ class NetworkError(PipelineException):
     """Raised for network-related errors."""
 
     def __init__(
-        self, message: str, url: Optional[str] = None, status_code: Optional[int] = None, **kwargs
+        self,
+        message: str,
+        url: Optional[str] = None,
+        status_code: Optional[int] = None,
+        **kwargs,
     ):
         super().__init__(message, **kwargs)
         self.url = url
@@ -176,7 +187,9 @@ class WorkflowError(PipelineException):
 class RetryableError(PipelineException):
     """Base class for errors that can be retried."""
 
-    def __init__(self, message: str, max_retries: int = 3, backoff_factor: float = 1.0, **kwargs):
+    def __init__(
+        self, message: str, max_retries: int = 3, backoff_factor: float = 1.0, **kwargs
+    ):
         super().__init__(message, **kwargs)
         self.max_retries = max_retries
         self.backoff_factor = backoff_factor
@@ -233,7 +246,9 @@ class AuthenticationError(NonRetryableError):
 # Helper functions for error handling
 def is_retryable(error: Exception) -> bool:
     """Check if an error is retryable."""
-    return isinstance(error, RetryableError) and not isinstance(error, NonRetryableError)
+    return isinstance(error, RetryableError) and not isinstance(
+        error, NonRetryableError
+    )
 
 
 def get_retry_delay(error: RetryableError, attempt: int) -> float:

@@ -16,7 +16,13 @@ import typer
 from rich import print as rprint
 from rich.console import Console
 from rich.panel import Panel
-from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
+from rich.progress import (
+    BarColumn,
+    Progress,
+    SpinnerColumn,
+    TaskProgressColumn,
+    TextColumn,
+)
 from rich.table import Table
 
 from .database import close_database, get_db_session, init_database
@@ -35,10 +41,13 @@ console = Console()
 # Global workflow instance
 workflow = PipelineWorkflow()
 
+
 @app.callback()
 def main(
     ctx: typer.Context,
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging"),
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Enable verbose logging"
+    ),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable debug logging"),
     config_file: Optional[Path] = typer.Option(
         None, "--config", "-c", help="Configuration file path"
@@ -56,13 +65,22 @@ def main(
         # TODO: Load configuration from file
         rprint(f"[yellow]Loading configuration from: {config_file}[/yellow]")
 
+
 @app.command()
 def run(
-    sources: List[str] = typer.Option([], "--source", "-s", help="Filter by source names"),
+    sources: List[str] = typer.Option(
+        [], "--source", "-s", help="Filter by source names"
+    ),
     stages: List[str] = typer.Option([], "--stage", help="Run specific stages only"),
-    batch_size: int = typer.Option(10, "--batch-size", "-b", help="Processing batch size"),
-    max_retries: int = typer.Option(3, "--max-retries", "-r", help="Maximum retry attempts"),
-    run_name: Optional[str] = typer.Option(None, "--name", "-n", help="Run name for tracking"),
+    batch_size: int = typer.Option(
+        10, "--batch-size", "-b", help="Processing batch size"
+    ),
+    max_retries: int = typer.Option(
+        3, "--max-retries", "-r", help="Maximum retry attempts"
+    ),
+    run_name: Optional[str] = typer.Option(
+        None, "--name", "-n", help="Run name for tracking"
+    ),
 ):
     """Run the complete content pipeline."""
 
@@ -124,9 +142,12 @@ def run(
 
     asyncio.run(_run_pipeline())
 
+
 @app.command()
 def ingest(
-    sources: List[str] = typer.Option([], "--source", "-s", help="Filter by source names"),
+    sources: List[str] = typer.Option(
+        [], "--source", "-s", help="Filter by source names"
+    ),
 ):
     """Run only the content ingestion stage."""
 
@@ -142,9 +163,13 @@ def ingest(
                 await source_manager.sync_sources_to_database(session)
 
                 if sources:
-                    rprint(f"[cyan]Running ingestion for sources: {', '.join(sources)}[/cyan]")
+                    rprint(
+                        f"[cyan]Running ingestion for sources: {', '.join(sources)}[/cyan]"
+                    )
                 else:
-                    rprint("[cyan]Running scheduled ingestion for all active sources[/cyan]")
+                    rprint(
+                        "[cyan]Running scheduled ingestion for all active sources[/cyan]"
+                    )
 
                 results = await source_manager.run_scheduled_ingestion(session)
 
@@ -153,12 +178,18 @@ def ingest(
                 results_table.add_column("Metric", style="cyan")
                 results_table.add_column("Value", style="green")
 
-                results_table.add_row("Sources Processed", str(results["sources_processed"]))
+                results_table.add_row(
+                    "Sources Processed", str(results["sources_processed"])
+                )
                 results_table.add_row(
                     "Articles Discovered", str(results["total_articles_discovered"])
                 )
-                results_table.add_row("Articles Ingested", str(results["total_articles_ingested"]))
-                results_table.add_row("Articles Skipped", str(results["total_articles_skipped"]))
+                results_table.add_row(
+                    "Articles Ingested", str(results["total_articles_ingested"])
+                )
+                results_table.add_row(
+                    "Articles Skipped", str(results["total_articles_skipped"])
+                )
                 results_table.add_row("Errors", str(results["total_errors"]))
 
                 console.print(results_table)
@@ -190,6 +221,7 @@ def ingest(
 
     asyncio.run(_run_ingest())
 
+
 @app.command()
 def publish(
     article_ids: List[str] = typer.Option(
@@ -216,7 +248,9 @@ def publish(
                 if article_ids:
                     # Publish specific articles
                     articles_to_publish = article_ids
-                    rprint(f"[cyan]Publishing {len(article_ids)} specific articles[/cyan]")
+                    rprint(
+                        f"[cyan]Publishing {len(article_ids)} specific articles[/cyan]"
+                    )
 
                 elif all_ready:
                     # Find all articles ready for publishing
@@ -227,10 +261,14 @@ def publish(
                     )
                     result = await session.execute(query)
                     articles_to_publish = [str(row[0]) for row in result.fetchall()]
-                    rprint(f"[cyan]Publishing {len(articles_to_publish)} ready articles[/cyan]")
+                    rprint(
+                        f"[cyan]Publishing {len(articles_to_publish)} ready articles[/cyan]"
+                    )
 
                 else:
-                    rprint("[red]Please specify either --article IDs or --all flag[/red]")
+                    rprint(
+                        "[red]Please specify either --article IDs or --all flag[/red]"
+                    )
                     raise typer.Exit(1)
 
                 if not articles_to_publish:
@@ -243,7 +281,9 @@ def publish(
                         "Publishing articles...", total=len(articles_to_publish)
                     )
 
-                    results = await markdown_generator.publish_batch(articles_to_publish, session)
+                    results = await markdown_generator.publish_batch(
+                        articles_to_publish, session
+                    )
                     progress.update(task, completed=len(articles_to_publish))
 
                 # Update taxonomies
@@ -276,6 +316,7 @@ def publish(
 
     asyncio.run(_run_publish())
 
+
 @app.command()
 def status(
     run_id: Optional[str] = typer.Option(
@@ -291,7 +332,12 @@ def status(
 
             from sqlalchemy import desc, func, select
 
-            from .database.models import Article, ContentStatus, PipelineRun, PipelineStage
+            from .database.models import (
+                Article,
+                ContentStatus,
+                PipelineRun,
+                PipelineStage,
+            )
 
             async with get_db_session() as session:
                 if run_id:
@@ -310,12 +356,18 @@ def status(
                     # Show recent runs and overall statistics
 
                     # Recent runs
-                    query = select(PipelineRun).order_by(desc(PipelineRun.started_at)).limit(recent)
+                    query = (
+                        select(PipelineRun)
+                        .order_by(desc(PipelineRun.started_at))
+                        .limit(recent)
+                    )
                     result = await session.execute(query)
                     recent_runs = result.scalars().all()
 
                     if recent_runs:
-                        runs_table = Table(title=f"Recent Pipeline Runs (Last {recent})")
+                        runs_table = Table(
+                            title=f"Recent Pipeline Runs (Last {recent})"
+                        )
                         runs_table.add_column("ID", style="cyan")
                         runs_table.add_column("Name")
                         runs_table.add_column("Status", style="magenta")
@@ -350,7 +402,9 @@ def status(
                         func.count()
                         .filter(Article.status == ContentStatus.PROCESSING)
                         .label("processing"),
-                        func.count().filter(Article.status == ContentStatus.FAILED).label("failed"),
+                        func.count()
+                        .filter(Article.status == ContentStatus.FAILED)
+                        .label("failed"),
                         func.count()
                         .filter(Article.current_stage == PipelineStage.INGEST)
                         .label("ingest"),
@@ -397,10 +451,15 @@ def status(
 
     asyncio.run(_show_status())
 
+
 @app.command()
 def sources(
-    list_all: bool = typer.Option(False, "--list", "-l", help="List all configured sources"),
-    sync: bool = typer.Option(False, "--sync", help="Sync source configuration to database"),
+    list_all: bool = typer.Option(
+        False, "--list", "-l", help="List all configured sources"
+    ),
+    sync: bool = typer.Option(
+        False, "--sync", help="Sync source configuration to database"
+    ),
 ):
     """Manage content sources."""
 
@@ -444,7 +503,9 @@ def sources(
                                 else "Never"
                             )
                             frequency = (
-                                f"{source.crawl_frequency}s" if source.crawl_frequency else "N/A"
+                                f"{source.crawl_frequency}s"
+                                if source.crawl_frequency
+                                else "N/A"
                             )
 
                             sources_table.add_row(
@@ -469,6 +530,7 @@ def sources(
 
     asyncio.run(_manage_sources())
 
+
 @app.command()
 def workflow():
     """Show workflow visualization."""
@@ -481,6 +543,7 @@ def workflow():
     )
 
     console.print(panel)
+
 
 def display_pipeline_results(results: dict):
     """Display formatted pipeline results."""
@@ -523,10 +586,16 @@ def display_pipeline_results(results: dict):
         for stage, stage_data in stage_results.items():
             if stage_data:
                 details = ", ".join(
-                    [f"{k}: {v}" for k, v in stage_data.items() if isinstance(v, (int, float, str))]
+                    [
+                        f"{k}: {v}"
+                        for k, v in stage_data.items()
+                        if isinstance(v, (int, float, str))
+                    ]
                 )
                 stage_table.add_row(
-                    stage.title(), "✓", details[:50] + "..." if len(details) > 50 else details
+                    stage.title(),
+                    "✓",
+                    details[:50] + "..." if len(details) > 50 else details,
                 )
 
         console.print(stage_table)
@@ -541,10 +610,13 @@ def display_pipeline_results(results: dict):
                 f"  - [{error.get('stage', 'unknown')}] {error.get('message', 'Unknown error')}"
             )
 
+
 def display_run_status(pipeline_run):
     """Display detailed status for a pipeline run."""
 
-    status_color = "green" if pipeline_run.status == ContentStatus.COMPLETED else "yellow"
+    status_color = (
+        "green" if pipeline_run.status == ContentStatus.COMPLETED else "yellow"
+    )
 
     panel = Panel(
         (
@@ -561,6 +633,7 @@ def display_run_status(pipeline_run):
     )
 
     console.print(panel)
+
 
 def calculate_duration(start_time: Optional[str], end_time: Optional[str]) -> str:
     """Calculate and format duration."""
@@ -584,6 +657,7 @@ def calculate_duration(start_time: Optional[str], end_time: Optional[str]) -> st
 
     except Exception:
         return "Unknown"
+
 
 if __name__ == "__main__":
     app()

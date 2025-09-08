@@ -17,6 +17,7 @@ from .nodes import PipelineNodes
 
 logger = logging.getLogger(__name__)
 
+
 class PipelineState(TypedDict):
     """State model for the pipeline workflow."""
 
@@ -64,6 +65,7 @@ class PipelineState(TypedDict):
 
     # Database session info
     session_id: Optional[str]
+
 
 class PipelineWorkflow:
     """LangGraph workflow for content pipeline orchestration."""
@@ -122,17 +124,27 @@ class PipelineWorkflow:
         workflow.add_conditional_edges(
             "dedup",
             self._route_after_dedup,
-            {"enrich": "enrich", "error": "handle_error", "review": "human_review_check"},
+            {
+                "enrich": "enrich",
+                "error": "handle_error",
+                "review": "human_review_check",
+            },
         )
 
         workflow.add_conditional_edges(
             "enrich",
             self._route_after_enrich,
-            {"publish": "publish", "error": "handle_error", "review": "human_review_check"},
+            {
+                "publish": "publish",
+                "error": "handle_error",
+                "review": "human_review_check",
+            },
         )
 
         workflow.add_conditional_edges(
-            "publish", self._route_after_publish, {"finalize": "finalize", "error": "handle_error"}
+            "publish",
+            self._route_after_publish,
+            {"finalize": "finalize", "error": "handle_error"},
         )
 
         # Human review flow
@@ -207,7 +219,10 @@ class PipelineWorkflow:
 
         # Check if duplicates found require review
         dedup_results = state.get("dedup_results", {})
-        if dedup_results.get("duplicates_found", 0) > 0 and config.enrichment.enable_human_review:
+        if (
+            dedup_results.get("duplicates_found", 0) > 0
+            and config.enrichment.enable_human_review
+        ):
             return "review"
 
         # Skip to next enabled stage
@@ -248,7 +263,9 @@ class PipelineWorkflow:
         review_items = state.get("review_items", [])
 
         # Auto-approve low-risk items
-        auto_approve = all(item.get("risk_level", "high") == "low" for item in review_items)
+        auto_approve = all(
+            item.get("risk_level", "high") == "low" for item in review_items
+        )
 
         if auto_approve:
             return "continue"
@@ -378,7 +395,9 @@ class PipelineWorkflow:
     def _create_initial_state(self, config_dict: Dict) -> PipelineState:
         """Create initial state for pipeline execution."""
         return PipelineState(
-            run_id=config_dict.get("run_id", f"run_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"),
+            run_id=config_dict.get(
+                "run_id", f"run_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+            ),
             pipeline_name=config_dict.get("pipeline_name", "content_pipeline"),
             current_stage="initialize",
             status="pending",
@@ -440,7 +459,9 @@ class PipelineWorkflow:
             state["status"] = "resuming"
 
             # Resume execution
-            final_state = await self.graph.ainvoke(state, config=RunnableConfig(recursion_limit=50))
+            final_state = await self.graph.ainvoke(
+                state, config=RunnableConfig(recursion_limit=50)
+            )
 
             return self._format_pipeline_results(final_state)
 

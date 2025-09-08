@@ -13,6 +13,7 @@ from simhash import Simhash, SimhashIndex
 
 logger = logging.getLogger(__name__)
 
+
 class SimHashDeduplicator:
     """SimHash-based deduplication with efficient similarity search."""
 
@@ -110,7 +111,9 @@ class SimHashDeduplicator:
             logger.error(f"Error finding duplicates: {e}")
             return []
 
-    def check_duplicate(self, content: str, threshold: float = 0.9) -> Optional[Tuple[str, float]]:
+    def check_duplicate(
+        self, content: str, threshold: float = 0.9
+    ) -> Optional[Tuple[str, float]]:
         """
         Check if content is a duplicate of existing content.
 
@@ -245,7 +248,9 @@ class SimHashDeduplicator:
 
             # Tokenize and filter stop words
             words = processed.split()
-            filtered_words = [word for word in words if word not in stop_words and len(word) > 2]
+            filtered_words = [
+                word for word in words if word not in stop_words and len(word) > 2
+            ]
 
             # Return processed content
             return " ".join(filtered_words)

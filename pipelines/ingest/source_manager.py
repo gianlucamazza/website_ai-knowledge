@@ -21,6 +21,7 @@ from .scraper import EthicalScraper
 
 logger = logging.getLogger(__name__)
 
+
 class SourceManager:
     """Manages content sources and coordinates ingestion tasks."""
 
@@ -32,7 +33,9 @@ class SourceManager:
     def load_sources_config(self) -> None:
         """Load source configuration from YAML file."""
         try:
-            sources_path = Path(config.project_root) / "pipelines" / config.sources_config_path
+            sources_path = (
+                Path(config.project_root) / "pipelines" / config.sources_config_path
+            )
 
             if not sources_path.exists():
                 logger.error(f"Sources configuration file not found: {sources_path}")
@@ -54,7 +57,9 @@ class SourceManager:
         try:
             # Get existing sources from database
             result = await session.execute(select(Source))
-            existing_sources = {source.name: source for source in result.scalars().all()}
+            existing_sources = {
+                source.name: source for source in result.scalars().all()
+            }
 
             # Process configured sources
             for source_config in self.sources_config.get("sources", []):
@@ -181,7 +186,9 @@ class SourceManager:
             await session.commit()
 
             stats["end_time"] = datetime.utcnow()
-            stats["duration"] = (stats["end_time"] - stats["start_time"]).total_seconds()
+            stats["duration"] = (
+                stats["end_time"] - stats["start_time"]
+            ).total_seconds()
 
             logger.info(
                 f"Completed ingestion from {source.name}: "
@@ -201,7 +208,9 @@ class SourceManager:
     async def _ingest_from_rss(self, source: Source) -> List[Dict]:
         """Ingest content from RSS/Atom feed."""
         try:
-            return await self.rss_parser.parse_feed(source.base_url, source.config or {})
+            return await self.rss_parser.parse_feed(
+                source.base_url, source.config or {}
+            )
         except Exception as e:
             logger.error(f"Error ingesting from RSS source {source.name}: {e}")
             return []
@@ -209,7 +218,9 @@ class SourceManager:
     async def _ingest_from_sitemap(self, source: Source) -> List[Dict]:
         """Ingest content from sitemap."""
         try:
-            sitemap_url = source.config.get("sitemap_url", f"{source.base_url}/sitemap.xml")
+            sitemap_url = source.config.get(
+                "sitemap_url", f"{source.base_url}/sitemap.xml"
+            )
 
             async with EthicalScraper() as scraper:
                 # Get URLs from sitemap
@@ -229,7 +240,9 @@ class SourceManager:
                             "url": url,
                             "title": self._extract_title_from_html(result["content"]),
                             "raw_html": result["content"],
-                            "content_type": source.config.get("content_type", "article"),
+                            "content_type": source.config.get(
+                                "content_type", "article"
+                            ),
                             "categories": source.config.get("categories", []),
                             "language": source.config.get("language", "en"),
                             "discovered_at": datetime.utcnow(),
@@ -297,11 +310,17 @@ class SourceManager:
                 return False
 
             # Check content length requirements
-            content = article_data.get("raw_html", "") or article_data.get("summary", "")
-            min_length = self.sources_config.get("global_config", {}).get("min_content_length", 500)
+            content = article_data.get("raw_html", "") or article_data.get(
+                "summary", ""
+            )
+            min_length = self.sources_config.get("global_config", {}).get(
+                "min_content_length", 500
+            )
 
             if len(content) < min_length:
-                logger.debug(f"Article content too short: {article_data.get('title', 'unknown')}")
+                logger.debug(
+                    f"Article content too short: {article_data.get('title', 'unknown')}"
+                )
                 return False
 
             return True
@@ -378,9 +397,15 @@ class SourceManager:
                     logger.error(f"Source processing failed: {result}")
                     total_stats["total_errors"] += 1
                 else:
-                    total_stats["total_articles_discovered"] += result.get("articles_discovered", 0)
-                    total_stats["total_articles_ingested"] += result.get("articles_ingested", 0)
-                    total_stats["total_articles_skipped"] += result.get("articles_skipped", 0)
+                    total_stats["total_articles_discovered"] += result.get(
+                        "articles_discovered", 0
+                    )
+                    total_stats["total_articles_ingested"] += result.get(
+                        "articles_ingested", 0
+                    )
+                    total_stats["total_articles_skipped"] += result.get(
+                        "articles_skipped", 0
+                    )
                     total_stats["total_errors"] += result.get("errors", 0)
                     total_stats["source_results"].append(result)
 

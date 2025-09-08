@@ -20,6 +20,7 @@ from ..database.models import Article, ContentStatus, ContentType
 
 logger = logging.getLogger(__name__)
 
+
 class MarkdownGenerator:
     """Generates markdown files with proper frontmatter for Astro content collections."""
 
@@ -93,7 +94,9 @@ class MarkdownGenerator:
             logger.error(f"Error publishing article {article_id}: {e}")
             return False
 
-    async def publish_batch(self, article_ids: List[str], session: AsyncSession) -> Dict:
+    async def publish_batch(
+        self, article_ids: List[str], session: AsyncSession
+    ) -> Dict:
         """
         Publish multiple articles in batch.
 
@@ -144,14 +147,18 @@ class MarkdownGenerator:
             processed_content = self._process_content(content, article)
 
             # Combine frontmatter and content
-            frontmatter_yaml = yaml.dump(frontmatter, default_flow_style=False, allow_unicode=True)
+            frontmatter_yaml = yaml.dump(
+                frontmatter, default_flow_style=False, allow_unicode=True
+            )
 
             markdown_content = f"---\n{frontmatter_yaml}---\n\n{processed_content}"
 
             # Validate against schema if enabled
             if self.config.validate_frontmatter:
                 if not self._validate_frontmatter(frontmatter, article.content_type):
-                    logger.warning(f"Frontmatter validation failed for article: {article.id}")
+                    logger.warning(
+                        f"Frontmatter validation failed for article: {article.id}"
+                    )
 
             return markdown_content
 
@@ -223,7 +230,9 @@ class MarkdownGenerator:
             }
 
         # Clean up None values
-        frontmatter = {k: v for k, v in frontmatter.items() if v is not None and v != ""}
+        frontmatter = {
+            k: v for k, v in frontmatter.items() if v is not None and v != ""
+        }
 
         return frontmatter
 
@@ -294,7 +303,9 @@ class MarkdownGenerator:
             for heading in headings:
                 if heading["level"] <= 3:  # Only include h1-h3 in TOC
                     indent = "  " * (heading["level"] - 1)
-                    toc_lines.append(f"{indent}- [{heading['title']}](#{heading['slug']})")
+                    toc_lines.append(
+                        f"{indent}- [{heading['title']}](#{heading['slug']})"
+                    )
 
             return "\n".join(toc_lines)
 
@@ -415,7 +426,9 @@ class MarkdownGenerator:
 
         return True
 
-    def _validate_frontmatter(self, frontmatter: Dict, content_type: ContentType) -> bool:
+    def _validate_frontmatter(
+        self, frontmatter: Dict, content_type: ContentType
+    ) -> bool:
         """Validate frontmatter against schema."""
         try:
             # Basic validation - check required fields
@@ -437,7 +450,9 @@ class MarkdownGenerator:
                 logger.warning("Tags field must be a list")
                 return False
 
-            if "categories" in frontmatter and not isinstance(frontmatter["categories"], list):
+            if "categories" in frontmatter and not isinstance(
+                frontmatter["categories"], list
+            ):
                 logger.warning("Categories field must be a list")
                 return False
 
@@ -452,7 +467,8 @@ class MarkdownGenerator:
         try:
             # Get all unique tags and categories from published articles
             query = select(Article).where(
-                Article.status == ContentStatus.COMPLETED, Article.published_at.is_not(None)
+                Article.status == ContentStatus.COMPLETED,
+                Article.published_at.is_not(None),
             )
             result = await session.execute(query)
             articles = result.scalars().all()
@@ -481,7 +497,11 @@ class MarkdownGenerator:
             ]
 
             categories_data = [
-                {"name": category, "count": category_counts[category], "slug": slugify(category)}
+                {
+                    "name": category,
+                    "count": category_counts[category],
+                    "slug": slugify(category),
+                }
                 for category in sorted(all_categories)
             ]
 
@@ -508,7 +528,8 @@ class MarkdownGenerator:
         try:
             # Get all published article IDs
             query = select(Article.id).where(
-                Article.status == ContentStatus.COMPLETED, Article.published_at.is_not(None)
+                Article.status == ContentStatus.COMPLETED,
+                Article.published_at.is_not(None),
             )
             result = await session.execute(query)
             published_ids = set(str(row[0]) for row in result.fetchall())

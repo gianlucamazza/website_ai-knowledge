@@ -14,6 +14,7 @@ from markdownify import markdownify as md
 
 logger = logging.getLogger(__name__)
 
+
 class HTMLCleaner:
     """HTML content cleaner with configurable rules."""
 
@@ -94,7 +95,9 @@ class HTMLCleaner:
         self.preserve_images = self.config.get("preserve_images", True)
         self.min_text_length = self.config.get("min_text_length", 50)
 
-    def clean(self, html_content: str, base_url: Optional[str] = None) -> Dict[str, str]:
+    def clean(
+        self, html_content: str, base_url: Optional[str] = None
+    ) -> Dict[str, str]:
         """
         Clean HTML content and extract structured information.
 
@@ -134,7 +137,9 @@ class HTMLCleaner:
                 "plain_text": plain_text,
                 "markdown": markdown,
                 "word_count": len(plain_text.split()),
-                "reading_time": max(1, len(plain_text.split()) // 200),  # Assume 200 WPM
+                "reading_time": max(
+                    1, len(plain_text.split()) // 200
+                ),  # Assume 200 WPM
             }
 
         except Exception as e:
@@ -164,12 +169,17 @@ class HTMLCleaner:
         # Check class names
         classes = element.get("class", [])
         for class_name in classes:
-            if any(indicator in class_name.lower() for indicator in self.NON_CONTENT_INDICATORS):
+            if any(
+                indicator in class_name.lower()
+                for indicator in self.NON_CONTENT_INDICATORS
+            ):
                 return True
 
         # Check ID
         element_id = element.get("id", "")
-        if any(indicator in element_id.lower() for indicator in self.NON_CONTENT_INDICATORS):
+        if any(
+            indicator in element_id.lower() for indicator in self.NON_CONTENT_INDICATORS
+        ):
             return True
 
         # Check role attribute
@@ -182,7 +192,16 @@ class HTMLCleaner:
     def _remove_empty_elements(self, soup: BeautifulSoup) -> None:
         """Remove elements that are empty or contain only whitespace."""
         # Elements that should be removed if empty
-        empty_removable = {"p", "div", "span", "section", "article", "aside", "header", "footer"}
+        empty_removable = {
+            "p",
+            "div",
+            "span",
+            "section",
+            "article",
+            "aside",
+            "header",
+            "footer",
+        }
 
         # Keep removing empty elements until no more are found
         changed = True
@@ -209,7 +228,9 @@ class HTMLCleaner:
             return True
 
         # Very short text might not be meaningful
-        if len(text) < self.min_text_length and not element.find(["img", "video", "audio"]):
+        if len(text) < self.min_text_length and not element.find(
+            ["img", "video", "audio"]
+        ):
             return True
 
         return False
@@ -343,7 +364,9 @@ class HTMLCleaner:
                 allowed = keep_attrs.get(element.name, [])
 
                 # Remove all other attributes
-                attrs_to_remove = [attr for attr in element.attrs if attr not in allowed]
+                attrs_to_remove = [
+                    attr for attr in element.attrs if attr not in allowed
+                ]
                 for attr in attrs_to_remove:
                     del element[attr]
 

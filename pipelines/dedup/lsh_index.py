@@ -14,6 +14,7 @@ from datasketch import MinHash, MinHashLSH
 
 logger = logging.getLogger(__name__)
 
+
 class LSHIndex:
     """MinHash LSH index for efficient similarity search."""
 
@@ -281,7 +282,10 @@ class LSHIndex:
                     candidates = self.lsh.query(query_minhash)
 
                     for candidate_id in candidates:
-                        if candidate_id != article_id and candidate_id in self.minhashes:
+                        if (
+                            candidate_id != article_id
+                            and candidate_id in self.minhashes
+                        ):
                             candidate_minhash = self.minhashes[candidate_id]
                             similarity = query_minhash.jaccard(candidate_minhash)
 
@@ -307,7 +311,9 @@ class LSHIndex:
             logger.error(f"Error finding similarity clusters: {e}")
             return []
 
-    def _find_connected_components(self, graph: Dict[str, List[str]]) -> List[List[str]]:
+    def _find_connected_components(
+        self, graph: Dict[str, List[str]]
+    ) -> List[List[str]]:
         """Find connected components in similarity graph."""
         visited = set()
         components = []
@@ -379,7 +385,9 @@ class LSHIndex:
                 return False
 
             with open(filepath, "rb") as f:
-                index_data = pickle.load(f)  # nosec B301 - Loading from trusted cache file
+                index_data = pickle.load(
+                    f
+                )  # nosec B301 - Loading from trusted cache file
 
             # Restore index configuration
             self.threshold = index_data["threshold"]
@@ -395,14 +403,18 @@ class LSHIndex:
             for article_id, minhash in self.minhashes.items():
                 self.lsh.insert(article_id, minhash)
 
-            logger.info(f"LSH index loaded from {filepath} with {len(self.minhashes)} items")
+            logger.info(
+                f"LSH index loaded from {filepath} with {len(self.minhashes)} items"
+            )
             return True
 
         except Exception as e:
             logger.error(f"Error loading LSH index: {e}")
             return False
 
-    def optimize_threshold(self, articles: List[Dict], target_precision: float = 0.98) -> float:
+    def optimize_threshold(
+        self, articles: List[Dict], target_precision: float = 0.98
+    ) -> float:
         """
         Optimize similarity threshold for target precision.
 
@@ -438,14 +450,18 @@ class LSHIndex:
                     best_precision = precision
                     best_threshold = threshold
 
-            logger.info(f"Optimized threshold: {best_threshold} (precision: {best_precision:.3f})")
+            logger.info(
+                f"Optimized threshold: {best_threshold} (precision: {best_precision:.3f})"
+            )
             return best_threshold
 
         except Exception as e:
             logger.error(f"Error optimizing threshold: {e}")
             return self.threshold
 
-    def _calculate_precision(self, index: "LSHIndex", test_articles: List[Dict]) -> float:
+    def _calculate_precision(
+        self, index: "LSHIndex", test_articles: List[Dict]
+    ) -> float:
         """Calculate precision for duplicate detection."""
         try:
             true_positives = 0
@@ -456,7 +472,9 @@ class LSHIndex:
                 if not content:
                     continue
 
-                duplicates = index.find_duplicates(content, exclude_id=article.get("id"))
+                duplicates = index.find_duplicates(
+                    content, exclude_id=article.get("id")
+                )
 
                 for dup_id, similarity in duplicates:
                     # Simple heuristic: consider it a true positive if similarity > 0.9
@@ -475,6 +493,7 @@ class LSHIndex:
         except Exception as e:
             logger.error(f"Error calculating precision: {e}")
             return 0.0
+
 
 class LSHDeduplicator:
     """Wrapper class for LSH-based deduplication to match test interface."""
@@ -509,7 +528,9 @@ class LSHDeduplicator:
             logger.error(f"Error adding document {doc_id}: {e}")
             return False
 
-    def query_similar(self, doc_id: str, min_similarity: float = 0.8) -> List[Tuple[str, float]]:
+    def query_similar(
+        self, doc_id: str, min_similarity: float = 0.8
+    ) -> List[Tuple[str, float]]:
         """
         Query for similar documents.
 
@@ -530,7 +551,9 @@ class LSHDeduplicator:
 
             # Filter by minimum similarity
             filtered_results = [
-                (dup_id, score) for dup_id, score in duplicates if score >= min_similarity
+                (dup_id, score)
+                for dup_id, score in duplicates
+                if score >= min_similarity
             ]
 
             return filtered_results

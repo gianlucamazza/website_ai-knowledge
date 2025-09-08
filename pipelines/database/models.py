@@ -30,6 +30,7 @@ from sqlalchemy.sql import func
 
 Base = declarative_base()
 
+
 class PipelineStage(str, Enum):
     """Pipeline processing stages."""
 
@@ -38,6 +39,7 @@ class PipelineStage(str, Enum):
     DEDUP = "dedup"
     ENRICH = "enrich"
     PUBLISH = "publish"
+
 
 class ContentStatus(str, Enum):
     """Content processing status."""
@@ -48,6 +50,7 @@ class ContentStatus(str, Enum):
     FAILED = "failed"
     SKIPPED = "skipped"
 
+
 class ContentType(str, Enum):
     """Content type classification."""
 
@@ -56,6 +59,7 @@ class ContentType(str, Enum):
     TUTORIAL = "tutorial"
     REFERENCE = "reference"
     NEWS = "news"
+
 
 class Source(Base):
     """Content source configuration and metadata."""
@@ -82,6 +86,7 @@ class Source(Base):
 
     # Relationships
     articles = relationship("Article", back_populates="source")
+
 
 class Article(Base):
     """Article content and processing metadata."""
@@ -145,7 +150,9 @@ class Article(Base):
 
     # Relationships
     source = relationship("Source", back_populates="articles")
-    duplicates = relationship("ContentDuplicate", foreign_keys="[ContentDuplicate.article_id]")
+    duplicates = relationship(
+        "ContentDuplicate", foreign_keys="[ContentDuplicate.article_id]"
+    )
 
     # Constraints and Indexes
     __table_args__ = (
@@ -168,6 +175,7 @@ class Article(Base):
         ),
     )
 
+
 class ContentDuplicate(Base):
     """Duplicate content relationships and similarity scores."""
 
@@ -175,7 +183,9 @@ class ContentDuplicate(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     article_id = Column(UUID(as_uuid=True), ForeignKey("articles.id"), nullable=False)
-    duplicate_article_id = Column(UUID(as_uuid=True), ForeignKey("articles.id"), nullable=False)
+    duplicate_article_id = Column(
+        UUID(as_uuid=True), ForeignKey("articles.id"), nullable=False
+    )
 
     # Similarity metrics
     similarity_score = Column(Float, nullable=False)
@@ -183,7 +193,9 @@ class ContentDuplicate(Base):
     minhash_jaccard = Column(Float, nullable=True)
 
     # Detection method
-    detection_method = Column(String(50), nullable=False)  # 'simhash', 'minhash', 'exact'
+    detection_method = Column(
+        String(50), nullable=False
+    )  # 'simhash', 'minhash', 'exact'
     confidence_score = Column(Float, nullable=True)
 
     # Resolution
@@ -199,8 +211,11 @@ class ContentDuplicate(Base):
 
     # Constraints
     __table_args__ = (
-        UniqueConstraint("article_id", "duplicate_article_id", name="uq_duplicate_pair"),
+        UniqueConstraint(
+            "article_id", "duplicate_article_id", name="uq_duplicate_pair"
+        ),
     )
+
 
 class PipelineRun(Base):
     """Pipeline execution runs and their status."""
@@ -242,6 +257,7 @@ class PipelineRun(Base):
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
+
 class EnrichmentTask(Base):
     """Content enrichment tasks and their results."""
 
@@ -251,7 +267,9 @@ class EnrichmentTask(Base):
     article_id = Column(UUID(as_uuid=True), ForeignKey("articles.id"), nullable=False)
 
     # Task details
-    task_type = Column(String(50), nullable=False)  # 'summarize', 'cross_link', 'classify'
+    task_type = Column(
+        String(50), nullable=False
+    )  # 'summarize', 'cross_link', 'classify'
     priority = Column(Integer, default=100)
 
     # Input/Output

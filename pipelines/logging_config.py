@@ -16,6 +16,7 @@ from structlog.processors import JSONRenderer, TimeStamper, add_log_level
 
 from .config import config
 
+
 class PipelineLoggerSetup:
     """Centralized logging configuration for the pipeline."""
 
@@ -47,7 +48,9 @@ class PipelineLoggerSetup:
                 '"module": "%(module)s", "function": "%(funcName)s", "line": %(lineno)d}'
             )
         else:
-            formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+            formatter = logging.Formatter(
+                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+            )
 
         # Console handler
         console_handler = logging.StreamHandler(sys.stdout)
@@ -105,7 +108,9 @@ class PipelineLoggerSetup:
 
         # Error handler - separate file for errors only
         error_handler = logging.handlers.RotatingFileHandler(
-            self.log_dir / "errors.log", maxBytes=50 * 1024 * 1024, backupCount=10  # 50MB
+            self.log_dir / "errors.log",
+            maxBytes=50 * 1024 * 1024,
+            backupCount=10,  # 50MB
         )
         error_handler.setLevel(logging.ERROR)
         error_handler.setFormatter(
@@ -116,7 +121,9 @@ class PipelineLoggerSetup:
 
         # Performance handler - for timing and metrics
         perf_handler = logging.handlers.RotatingFileHandler(
-            self.log_dir / "performance.log", maxBytes=100 * 1024 * 1024, backupCount=5  # 100MB
+            self.log_dir / "performance.log",
+            maxBytes=100 * 1024 * 1024,
+            backupCount=5,  # 100MB
         )
         perf_handler.setLevel(logging.INFO)
         perf_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
@@ -128,6 +135,7 @@ class PipelineLoggerSetup:
     def get_logger(self, name: str) -> structlog.BoundLogger:
         """Get a structured logger for the given name."""
         return get_logger(name)
+
 
 class PerformanceLogger:
     """Performance monitoring and logging."""
@@ -160,8 +168,10 @@ class PerformanceLogger:
     def log_metrics(self, **metrics) -> None:
         """Log performance metrics."""
         self.logger.info(
-            f"Metrics for {self.name}: " f"{' '.join(f'{k}={v}' for k, v in metrics.items())}"
+            f"Metrics for {self.name}: "
+            f"{' '.join(f'{k}={v}' for k, v in metrics.items())}"
         )
+
 
 class ErrorTracker:
     """Error tracking and reporting."""
@@ -211,25 +221,31 @@ class ErrorTracker:
             "total_errors": sum(self.error_counts.values()),
         }
 
+
 # Global instances
 logger_setup = PipelineLoggerSetup()
 error_tracker = ErrorTracker()
+
 
 def setup_pipeline_logging() -> None:
     """Setup logging for the entire pipeline."""
     logger_setup.setup_logging()
 
+
 def get_pipeline_logger(name: str) -> structlog.BoundLogger:
     """Get a pipeline logger with the given name."""
     return logger_setup.get_logger(name)
+
 
 def get_performance_logger(name: str) -> PerformanceLogger:
     """Get a performance logger for the given component."""
     return PerformanceLogger(name)
 
+
 def track_pipeline_error(error: Exception, context: dict = None) -> None:
     """Track a pipeline error."""
     error_tracker.track_error(error, context)
+
 
 def get_error_summary() -> dict:
     """Get error summary for reporting."""

@@ -22,6 +22,7 @@ DetectorFactory.seed = 0
 
 logger = logging.getLogger(__name__)
 
+
 class ContentExtractor:
     """Advanced content extraction with quality assessment and metadata extraction."""
 
@@ -47,15 +48,24 @@ class ContentExtractor:
             readability_result = self._extract_with_readability(html_content)
 
             # Fallback to manual cleaning if readability fails
-            if not readability_result or len(readability_result.get("content", "")) < 200:
-                logger.info("Readability extraction insufficient, using manual cleaning")
-                readability_result = self._extract_with_manual_cleaning(html_content, url)
+            if (
+                not readability_result
+                or len(readability_result.get("content", "")) < 200
+            ):
+                logger.info(
+                    "Readability extraction insufficient, using manual cleaning"
+                )
+                readability_result = self._extract_with_manual_cleaning(
+                    html_content, url
+                )
 
             # Extract additional metadata
             metadata = self._extract_metadata(html_content, url)
 
             # Analyze content quality
-            quality_metrics = self._analyze_content_quality(readability_result["content"])
+            quality_metrics = self._analyze_content_quality(
+                readability_result["content"]
+            )
 
             # Detect language
             language = self._detect_language(readability_result["content"])
@@ -212,7 +222,9 @@ class ContentExtractor:
                 if tag == "meta":
                     date_str = date_elem.get("content")
                 elif tag == "time":
-                    date_str = date_elem.get("datetime") or date_elem.get_text(strip=True)
+                    date_str = date_elem.get("datetime") or date_elem.get_text(
+                        strip=True
+                    )
                 else:
                     date_str = date_elem.get_text(strip=True)
 

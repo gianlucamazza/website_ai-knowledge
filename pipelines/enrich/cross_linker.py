@@ -18,13 +18,18 @@ from ..database.models import Article, ContentType
 
 logger = logging.getLogger(__name__)
 
+
 class CrossLinker:
     """Cross-linking system for building connections between articles."""
 
     def __init__(self):
         self.enrichment_config = config.enrichment
         self.tfidf_vectorizer = TfidfVectorizer(
-            max_features=1000, stop_words="english", ngram_range=(1, 2), min_df=2, max_df=0.8
+            max_features=1000,
+            stop_words="english",
+            ngram_range=(1, 2),
+            min_df=2,
+            max_df=0.8,
         )
         self.article_vectors = None
         self.article_index = {}  # Map from index to article_id
@@ -57,8 +62,12 @@ class CrossLinker:
 
             # Build TF-IDF vectors
             if article_contents:
-                self.article_vectors = self.tfidf_vectorizer.fit_transform(article_contents)
-                logger.info(f"Similarity index built with {self.article_vectors.shape[0]} articles")
+                self.article_vectors = self.tfidf_vectorizer.fit_transform(
+                    article_contents
+                )
+                logger.info(
+                    f"Similarity index built with {self.article_vectors.shape[0]} articles"
+                )
 
         except Exception as e:
             logger.error(f"Error building similarity index: {e}")
@@ -103,7 +112,9 @@ class CrossLinker:
             target_vector = self.tfidf_vectorizer.transform([target_content])
 
             # Calculate similarities
-            similarities = cosine_similarity(target_vector, self.article_vectors).flatten()
+            similarities = cosine_similarity(
+                target_vector, self.article_vectors
+            ).flatten()
 
             # Get top similar articles (excluding the target article itself)
             similar_indices = []
@@ -119,11 +130,15 @@ class CrossLinker:
             # Get article details for similar articles
             related_articles = []
             if similar_indices:
-                similar_article_ids = [self.article_index[idx] for idx, _ in similar_indices]
+                similar_article_ids = [
+                    self.article_index[idx] for idx, _ in similar_indices
+                ]
 
                 query = select(Article).where(Article.id.in_(similar_article_ids))
                 result = await session.execute(query)
-                articles_by_id = {str(article.id): article for article in result.scalars()}
+                articles_by_id = {
+                    str(article.id): article for article in result.scalars()
+                }
 
                 for idx, similarity_score in similar_indices:
                     article_id_key = self.article_index[idx]
@@ -142,14 +157,18 @@ class CrossLinker:
                             }
                         )
 
-            logger.debug(f"Found {len(related_articles)} related articles for {article_id}")
+            logger.debug(
+                f"Found {len(related_articles)} related articles for {article_id}"
+            )
             return related_articles
 
         except Exception as e:
             logger.error(f"Error finding related articles for {article_id}: {e}")
             return []
 
-    async def generate_cross_links(self, article_id: str, session: AsyncSession) -> List[Dict]:
+    async def generate_cross_links(
+        self, article_id: str, session: AsyncSession
+    ) -> List[Dict]:
         """
         Generate cross-links for an article based on content analysis.
 
@@ -163,7 +182,9 @@ class CrossLinker:
         try:
             # Get related articles
             related_articles = await self.find_related_articles(
-                article_id, session, max_related=self.enrichment_config.max_related_articles
+                article_id,
+                session,
+                max_related=self.enrichment_config.max_related_articles,
             )
 
             if not related_articles:
@@ -197,7 +218,9 @@ class CrossLinker:
                             "anchor_text": context["anchor_text"],
                             "position": context["position"],
                             "relevance_score": context["relevance_score"],
-                            "link_type": self._determine_link_type(related, source_article),
+                            "link_type": self._determine_link_type(
+                                related, source_article
+                            ),
                         }
                     )
 
@@ -282,9 +305,13 @@ class CrossLinker:
         unique_contexts = []
         seen_positions = set()
 
-        for context in sorted(contexts, key=lambda x: x["relevance_score"], reverse=True):
+        for context in sorted(
+            contexts, key=lambda x: x["relevance_score"], reverse=True
+        ):
             # Avoid overlapping contexts
-            too_close = any(abs(context["position"] - pos) < 50 for pos in seen_positions)
+            too_close = any(
+                abs(context["position"] - pos) < 50 for pos in seen_positions
+            )
             if not too_close:
                 unique_contexts.append(context)
                 seen_positions.add(context["position"])
@@ -418,7 +445,9 @@ class CrossLinker:
 
         return max(0.0, min(1.0, relevance))
 
-    def _determine_link_type(self, target_article: Dict, source_article: Article) -> str:
+    def _determine_link_type(
+        self, target_article: Dict, source_article: Article
+    ) -> str:
         """Determine the type of cross-link relationship."""
         target_type = target_article.get("content_type", ContentType.ARTICLE)
         source_type = source_article.content_type
@@ -443,7 +472,9 @@ class CrossLinker:
         # Default relationship
         return "see_also"
 
-    async def update_article_cross_links(self, article_id: str, session: AsyncSession) -> bool:
+    async def update_article_cross_links(
+        self, article_id: str, session: AsyncSession
+    ) -> bool:
         """Update cross-links for a specific article."""
         try:
             # Generate cross-links
@@ -452,7 +483,9 @@ class CrossLinker:
             # TODO: Store cross-links in database or update article content
             # This would depend on how you want to store/display the cross-links
 
-            logger.info(f"Updated {len(cross_links)} cross-links for article {article_id}")
+            logger.info(
+                f"Updated {len(cross_links)} cross-links for article {article_id}"
+            )
             return True
 
         except Exception as e:
@@ -474,7 +507,9 @@ class CrossLinker:
 
             for article in articles:
                 try:
-                    cross_links = await self.generate_cross_links(str(article.id), session)
+                    cross_links = await self.generate_cross_links(
+                        str(article.id), session
+                    )
                     stats["articles_processed"] += 1
                     stats["total_cross_links"] += len(cross_links)
 

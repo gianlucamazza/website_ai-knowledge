@@ -17,6 +17,7 @@ from .scraper import EthicalScraper
 
 logger = logging.getLogger(__name__)
 
+
 class RSSParser:
     """RSS/Atom feed parser with content extraction capabilities."""
 
@@ -48,13 +49,17 @@ class RSSParser:
                 feed = feedparser.parse(feed_result["content"])
 
                 if feed.bozo and feed.bozo_exception:
-                    logger.warning(f"Feed parsing warning for {feed_url}: {feed.bozo_exception}")
+                    logger.warning(
+                        f"Feed parsing warning for {feed_url}: {feed.bozo_exception}"
+                    )
 
                 articles = []
                 max_articles = source_config.get("max_articles_per_run", 100)
 
                 for entry in feed.entries[:max_articles]:
-                    article_data = await self._extract_article_data(entry, feed, source_config)
+                    article_data = await self._extract_article_data(
+                        entry, feed, source_config
+                    )
                     if article_data:
                         articles.append(article_data)
 
@@ -65,7 +70,9 @@ class RSSParser:
             logger.error(f"Error parsing feed {feed_url}: {e}")
             return []
 
-    async def _extract_article_data(self, entry, feed, source_config: Dict) -> Optional[Dict]:
+    async def _extract_article_data(
+        self, entry, feed, source_config: Dict
+    ) -> Optional[Dict]:
         """Extract article data from a feed entry."""
         try:
             # Extract basic information
@@ -171,7 +178,13 @@ class RSSParser:
 
     def _extract_publish_date(self, entry) -> Optional[datetime]:
         """Extract publish date from feed entry."""
-        date_fields = ["published_parsed", "updated_parsed", "published", "updated", "dc_date"]
+        date_fields = [
+            "published_parsed",
+            "updated_parsed",
+            "published",
+            "updated",
+            "dc_date",
+        ]
 
         for field in date_fields:
             if hasattr(entry, field):
@@ -263,8 +276,17 @@ class RSSParser:
         summary_lower = summary.lower()
 
         # Tutorial indicators
-        tutorial_keywords = ["tutorial", "how to", "guide", "walkthrough", "step by step"]
-        if any(keyword in title or keyword in summary_lower for keyword in tutorial_keywords):
+        tutorial_keywords = [
+            "tutorial",
+            "how to",
+            "guide",
+            "walkthrough",
+            "step by step",
+        ]
+        if any(
+            keyword in title or keyword in summary_lower
+            for keyword in tutorial_keywords
+        ):
             return ContentType.TUTORIAL
 
         # News indicators

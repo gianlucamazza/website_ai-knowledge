@@ -14,10 +14,12 @@ from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
+
 class InputValidationError(Exception):
     """Input validation error."""
 
     pass
+
 
 class InputValidator:
     """Validates and sanitizes input data for pipeline processing."""
@@ -71,7 +73,9 @@ class InputValidator:
             re.compile(p, re.IGNORECASE) for p in self.PATH_TRAVERSAL_PATTERNS
         ]
 
-    def validate_string(self, value: str, field_name: str, max_length: Optional[int] = None) -> str:
+    def validate_string(
+        self, value: str, field_name: str, max_length: Optional[int] = None
+    ) -> str:
         """
         Validate and sanitize a string input.
 
@@ -94,7 +98,9 @@ class InputValidator:
             max_length = self.MAX_FIELD_LENGTH
 
         if len(value) > max_length:
-            raise InputValidationError(f"{field_name} exceeds maximum length of {max_length}")
+            raise InputValidationError(
+                f"{field_name} exceeds maximum length of {max_length}"
+            )
 
         # Check for SQL injection patterns
         for pattern in self.compiled_sql_patterns:
@@ -153,7 +159,11 @@ class InputValidator:
         # Check for localhost/private IPs (prevent SSRF)
         hostname = parsed.hostname
         if hostname:
-            if hostname in ["localhost", "127.0.0.1", "0.0.0.0"]:  # nosec B104 - Intentional localhost check
+            if hostname in [
+                "localhost",
+                "127.0.0.1",
+                "0.0.0.0",
+            ]:  # nosec B104 - Intentional localhost check
                 raise InputValidationError("URLs to localhost are not allowed")
 
             # Check for private IP ranges
@@ -162,7 +172,9 @@ class InputValidator:
                 or hostname.startswith("10.")
                 or hostname.startswith("172.")
             ):
-                raise InputValidationError("URLs to private IP addresses are not allowed")
+                raise InputValidationError(
+                    "URLs to private IP addresses are not allowed"
+                )
 
         # Check for path traversal
         for pattern in self.compiled_path_patterns:
@@ -201,13 +213,19 @@ class InputValidator:
 
         # Remove dangerous tags and attributes
         # Remove script tags
-        content = re.sub(r"<script[^>]*>.*?</script>", "", content, flags=re.DOTALL | re.IGNORECASE)
+        content = re.sub(
+            r"<script[^>]*>.*?</script>", "", content, flags=re.DOTALL | re.IGNORECASE
+        )
 
         # Remove style tags with potentially dangerous content
-        content = re.sub(r"<style[^>]*>.*?</style>", "", content, flags=re.DOTALL | re.IGNORECASE)
+        content = re.sub(
+            r"<style[^>]*>.*?</style>", "", content, flags=re.DOTALL | re.IGNORECASE
+        )
 
         # Remove event handlers
-        content = re.sub(r'\bon\w+\s*=\s*["\'][^"\']*["\']', "", content, flags=re.IGNORECASE)
+        content = re.sub(
+            r'\bon\w+\s*=\s*["\'][^"\']*["\']', "", content, flags=re.IGNORECASE
+        )
         content = re.sub(r"\bon\w+\s*=\s*[^\s>]+", "", content, flags=re.IGNORECASE)
 
         # Remove javascript: protocol
@@ -219,11 +237,16 @@ class InputValidator:
 
         # Remove iframe, embed, object tags
         content = re.sub(
-            r"<(iframe|embed|object)[^>]*>.*?</\1>", "", content, flags=re.DOTALL | re.IGNORECASE
+            r"<(iframe|embed|object)[^>]*>.*?</\1>",
+            "",
+            content,
+            flags=re.DOTALL | re.IGNORECASE,
         )
 
         # Remove form tags to prevent CSRF
-        content = re.sub(r"<form[^>]*>.*?</form>", "", content, flags=re.DOTALL | re.IGNORECASE)
+        content = re.sub(
+            r"<form[^>]*>.*?</form>", "", content, flags=re.DOTALL | re.IGNORECASE
+        )
 
         # Remove meta refresh
         content = re.sub(
@@ -371,32 +394,42 @@ class InputValidator:
                             item[field_name], f"item[{i}].{field_name}"
                         )
                     except InputValidationError as e:
-                        logger.error(f"Validation failed for item {i}, field {field_name}: {e}")
+                        logger.error(
+                            f"Validation failed for item {i}, field {field_name}: {e}"
+                        )
                         raise
 
             validated_items.append(validated_item)
 
         return validated_items
 
+
 # Global validator instance
 default_validator = InputValidator()
 
+
 # Convenience functions
-def validate_string(value: str, field_name: str, max_length: Optional[int] = None) -> str:
+def validate_string(
+    value: str, field_name: str, max_length: Optional[int] = None
+) -> str:
     """Validate and sanitize a string input."""
     return default_validator.validate_string(value, field_name, max_length)
+
 
 def validate_url(url: str, field_name: str = "URL") -> str:
     """Validate and sanitize a URL."""
     return default_validator.validate_url(url, field_name)
 
+
 def validate_html_content(content: str, field_name: str = "content") -> str:
     """Validate and sanitize HTML content."""
     return default_validator.validate_html_content(content, field_name)
 
+
 def validate_json(data: Union[str, dict], field_name: str = "data") -> dict:
     """Validate JSON data."""
     return default_validator.validate_json(data, field_name)
+
 
 def validate_file_path(path: str, field_name: str = "path") -> Path:
     """Validate a file path."""

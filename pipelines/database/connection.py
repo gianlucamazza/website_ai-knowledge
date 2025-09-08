@@ -82,7 +82,10 @@ class DatabaseManager:
                     "prepared_statement_cache_size": 100,
                 },
                 # Enable statement caching
-                execution_options={"compiled_cache": {}, "isolation_level": "READ_COMMITTED"},
+                execution_options={
+                    "compiled_cache": {},
+                    "isolation_level": "READ_COMMITTED",
+                },
             )
 
             self._session_factory = async_sessionmaker(
@@ -153,8 +156,7 @@ class DatabaseManager:
 
         if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", db_config.database):
             raise ValueError(
-
-                        f"Invalid database name: {db_config.database}. Must contain only alphanumeric characters and underscores, starting with a letter."
+                f"Invalid database name: {db_config.database}. Must contain only alphanumeric characters and underscores, starting with a letter."
             )
 
         # Get the actual password value from SecretStr
@@ -181,7 +183,9 @@ class DatabaseManager:
             if not exists:
                 # Use safe database identifier escaping - PostgreSQL doesn't support parameteri  # ...
                 # but we validate the name above to ensure it's safe
-                safe_db_name = db_config.database.replace('"', '""')  # Escape any quotes
+                safe_db_name = db_config.database.replace(
+                    '"', '""'
+                )  # Escape any quotes
                 await conn.execute(f'CREATE DATABASE "{safe_db_name}"')
                 logger.info(f"Created database: {db_config.database}")
             else:
