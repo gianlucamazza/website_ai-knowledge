@@ -34,6 +34,31 @@ class ContentSummarizer:
                 api_key=self.enrichment_config.anthropic_api_key
             )
 
+    async def generate_summary(
+        self, content: str, title: str = "", summary_type: str = "executive", 
+        provider: str = None, max_length: int = None
+    ) -> str:
+        """
+        Generate a summary of the content using AI (test-compatible API).
+        
+        Args:
+            content: Full text content to summarize
+            title: Optional title for context
+            summary_type: Type of summary ('executive', 'technical', 'brief')
+            provider: AI provider to use ('openai', 'anthropic', or None for auto)
+            max_length: Maximum length of summary
+            
+        Returns:
+            Summary text string
+        """
+        try:
+            # Call the main summarization method
+            result = await self.summarize_content(content, title, summary_type)
+            return result.get("summary", "")
+        except Exception as e:
+            logger.error(f"Error in generate_summary: {e}")
+            return ""
+
     async def summarize_content(
         self, content: str, title: str = "", summary_type: str = "executive"
     ) -> Dict:

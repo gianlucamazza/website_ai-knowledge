@@ -29,7 +29,7 @@ class SimHashDeduplicator:
         self.hash_size = hash_size
         self.index = SimhashIndex([], k=k)
         self.content_hashes: Dict[str, Simhash] = {}
-        self.article_ids: Dict[str, str] = {}  # simhash -> article_id mapping
+        self.article_ids: Dict[str, str] = {}  # article_id -> simhash_str mapping
 
     def add_content(self, article_id: str, content: str) -> str:
         """
@@ -50,10 +50,10 @@ class SimHashDeduplicator:
             simhash = Simhash(processed_content)
             simhash_str = format(simhash.value, "x")
 
-            # Store in index
-            self.index.add(simhash_str, simhash)
-            self.content_hashes[simhash_str] = simhash
-            self.article_ids[simhash_str] = article_id
+            # Store in index (SimhashIndex expects (object_id, simhash))
+            self.index.add(article_id, simhash)
+            self.content_hashes[article_id] = simhash
+            self.article_ids[article_id] = simhash_str
 
             logger.debug(f"Added content to SimHash index: {article_id}")
             return simhash_str
@@ -82,21 +82,19 @@ class SimHashDeduplicator:
             # Generate SimHash
             query_simhash = Simhash(processed_content)
 
-            # Find similar hashes
-            similar_hashes = self.index.get_near_dups(query_simhash)
+            # Find similar hashes (returns article_ids now)
+            similar_ids = self.index.get_near_dups(query_simhash)
 
             # Calculate similarity scores
             duplicates = []
-            for simhash_str in similar_hashes:
-                if simhash_str in self.article_ids:
-                    article_id = self.article_ids[simhash_str]
+            for article_id in similar_ids:
+                # Skip excluded article
+                if exclude_id and article_id == exclude_id:
+                    continue
 
-                    # Skip excluded article
-                    if exclude_id and article_id == exclude_id:
-                        continue
-
+                if article_id in self.content_hashes:
                     # Calculate similarity score
-                    stored_simhash = self.content_hashes[simhash_str]
+                    stored_simhash = self.content_hashes[article_id]
                     hamming_distance = query_simhash.distance(stored_simhash)
                     similarity = 1.0 - (hamming_distance / self.hash_size)
 
@@ -143,24 +141,18 @@ class SimHashDeduplicator:
             True if content was removed, False if not found
         """
         try:
-            # Find simhash for article ID
-            simhash_str = None
-            for hash_str, stored_id in self.article_ids.items():
-                if stored_id == article_id:
-                    simhash_str = hash_str
-                    break
-
-            if not simhash_str:
+            # Check if article exists
+            if article_id not in self.content_hashes:
                 logger.warning(f"Article ID not found in index: {article_id}")
                 return False
 
             # Remove from index
-            simhash = self.content_hashes[simhash_str]
-            self.index.delete(simhash_str, simhash)
+            simhash = self.content_hashes[article_id]
+            self.index.delete(article_id, simhash)
 
             # Clean up mappings
-            del self.content_hashes[simhash_str]
-            del self.article_ids[simhash_str]
+            del self.content_hashes[article_id]
+            del self.article_ids[article_id]
 
             logger.debug(f"Removed content from SimHash index: {article_id}")
             return True
@@ -319,22 +311,20 @@ class SimHashDeduplicator:
             visited = set()
             clusters = []
 
-            for simhash_str, article_id in self.article_ids.items():
+            for article_id, simhash_str in self.article_ids.items():
                 if article_id in visited:
                     continue
 
                 # Find all articles similar to this one
-                simhash = self.content_hashes[simhash_str]
-                similar_hashes = self.index.get_near_dups(simhash)
+                simhash = self.content_hashes[article_id]
+                similar_ids = self.index.get_near_dups(simhash)
 
                 # Build cluster
                 cluster = []
-                for similar_hash in similar_hashes:
-                    if similar_hash in self.article_ids:
-                        similar_id = self.article_ids[similar_hash]
-                        if similar_id not in visited:
-                            cluster.append(similar_id)
-                            visited.add(similar_id)
+                for similar_id in similar_ids:
+                    if similar_id not in visited:
+                        cluster.append(similar_id)
+                        visited.add(similar_id)
 
                 # Add cluster if it meets minimum size
                 if len(cluster) >= min_cluster_size:

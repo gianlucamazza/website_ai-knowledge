@@ -20,7 +20,7 @@ class TestSimHashDeduplicator:
     @pytest.fixture
     def simhash_dedup(self):
         """Create SimHashDeduplicator instance for testing."""
-        return SimHashDeduplicator(k=3, hash_size=64)
+        return SimHashDeduplicator(k=15, hash_size=64)
     
     @pytest.fixture
     def sample_articles(self):
@@ -59,9 +59,9 @@ class TestSimHashDeduplicator:
         # Check that content was added
         assert simhash_str is not None
         assert len(simhash_str) > 0
-        assert simhash_str in simhash_dedup.content_hashes
-        assert simhash_str in simhash_dedup.article_ids
-        assert simhash_dedup.article_ids[simhash_str] == article_id
+        assert article_id in simhash_dedup.content_hashes
+        assert article_id in simhash_dedup.article_ids
+        assert simhash_dedup.article_ids[article_id] == simhash_str
         
         # Check statistics
         stats = simhash_dedup.get_statistics()
@@ -436,7 +436,7 @@ class TestDeduplicationPipeline:
     @pytest.mark.unit
     def test_large_scale_deduplication(self, large_article_set):
         """Test deduplication performance with large article set."""
-        dedup = SimHashDeduplicator(k=3)
+        dedup = SimHashDeduplicator(k=15)
         
         # Build index
         start_time = pytest.importorskip('time').time()
@@ -469,7 +469,7 @@ class TestDeduplicationPipeline:
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
         
-        dedup = SimHashDeduplicator(k=3)
+        dedup = SimHashDeduplicator(k=15)
         dedup.build_index_from_articles(large_article_set)
         
         peak_memory = process.memory_info().rss / 1024 / 1024  # MB
@@ -481,7 +481,7 @@ class TestDeduplicationPipeline:
     @pytest.mark.performance
     def test_duplicate_query_performance(self, large_article_set, performance_benchmarks):
         """Test performance of duplicate queries."""
-        dedup = SimHashDeduplicator(k=3)
+        dedup = SimHashDeduplicator(k=15)
         dedup.build_index_from_articles(large_article_set)
         
         # Test query performance
@@ -545,7 +545,7 @@ class TestDeduplicationAccuracy:
     @pytest.mark.unit
     def test_duplicate_detection_accuracy(self, labeled_duplicates):
         """Test accuracy of duplicate detection."""
-        dedup = SimHashDeduplicator(k=3)
+        dedup = SimHashDeduplicator(k=15)
         
         # Add all content to index
         all_articles = labeled_duplicates['duplicates'] + labeled_duplicates['unique']

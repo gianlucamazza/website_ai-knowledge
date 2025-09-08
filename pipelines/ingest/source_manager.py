@@ -25,32 +25,120 @@ logger = logging.getLogger(__name__)
 class SourceManager:
     """Manages content sources and coordinates ingestion tasks."""
 
-    def __init__(self):
+    def __init__(self, sources_config_path: str = None):
         self.sources_config: Dict = {}
+        self.sources_config_path = sources_config_path
         self.rss_parser = RSSParser()
         self.load_sources_config()
 
     def load_sources_config(self) -> None:
         """Load source configuration from YAML file."""
         try:
-            sources_path = (
-                Path(config.project_root) / "pipelines" / config.sources_config_path
-            )
+            # Use provided path or default
+            if self.sources_config_path:
+                sources_path = Path(self.sources_config_path)
+            else:
+                sources_path = (
+                    Path(config.project_root) / "pipelines" / config.sources_config_path
+                )
 
             if not sources_path.exists():
                 logger.error(f"Sources configuration file not found: {sources_path}")
+                self.sources_config = {}
                 return
 
             with open(sources_path, "r") as f:
-                self.sources_config = yaml.safe_load(f)
+                self.sources_config = yaml.safe_load(f) or {}
 
-            logger.info(
-                f"Loaded {len(self.sources_config.get('sources', []))} source configurations"
-            )
+            # Handle different YAML structures for compatibility
+            if "sources" in self.sources_config:
+                logger.info(
+                    f"Loaded {len(self.sources_config.get('sources', []))} source configurations"
+                )
+            else:
+                # Handle flat structure like tests expect
+                source_count = len([k for k, v in self.sources_config.items() 
+                                   if isinstance(v, dict) and 'name' in v])
+                logger.info(f"Loaded {source_count} source configurations")
 
         except Exception as e:
             logger.error(f"Error loading sources configuration: {e}")
-            self.sources_config = {"sources": [], "global_config": {}}
+            self.sources_config = {}
+
+    async def get_enabled_sources(self) -> Dict:
+        """Get only enabled sources from configuration."""
+        try:
+            enabled_sources = {}
+            
+            # Handle nested structure (sources -> key -> config)
+            sources_dict = self.sources_config.get('sources', self.sources_config)
+            
+            for source_id, source_config in sources_dict.items():
+                if isinstance(source_config, dict) and source_config.get('enabled', True):
+                    enabled_sources[source_id] = source_config
+            return enabled_sources
+        except Exception as e:
+            logger.error(f"Error getting enabled sources: {e}")
+            return {}
+
+    async def get_all_sources(self) -> Dict:
+        """Get all sources from configuration."""
+        try:
+            # Handle nested structure (sources -> key -> config)
+            sources_dict = self.sources_config.get('sources', self.sources_config)
+            
+            return {k: v for k, v in sources_dict.items() 
+                    if isinstance(v, dict) and 'name' in v}
+        except Exception as e:
+            logger.error(f"Error getting all sources: {e}")
+            return {}
+
+    def validate_source_config(self, source_config: Dict) -> bool:
+        """Validate a source configuration."""
+        try:
+            required_fields = ['name', 'type', 'url']
+            for field in required_fields:
+                if field not in source_config:
+                    return False
+            
+            # Check valid source types
+            valid_types = ['rss', 'sitemap', 'manual']
+            if source_config.get('type') not in valid_types:
+                return False
+                
+            return True
+        except Exception as e:
+            logger.error(f"Error validating source config: {e}")
+            return False
+
+    async def add_source(self, source_id: str, source_config: Dict) -> bool:
+        """Add a new source to configuration."""
+        try:
+            # Validate the source configuration first
+            if not self.validate_source_config(source_config):
+                logger.error(f"Invalid source configuration for {source_id}")
+                return False
+
+            # Handle nested structure (sources -> key -> config)
+            if 'sources' in self.sources_config:
+                self.sources_config['sources'][source_id] = source_config
+            else:
+                self.sources_config[source_id] = source_config
+            
+            # If we have a config file path, save back to file
+            if self.sources_config_path:
+                try:
+                    with open(self.sources_config_path, 'w') as f:
+                        yaml.safe_dump(self.sources_config, f, default_flow_style=False)
+                except Exception as e:
+                    logger.error(f"Error saving sources configuration: {e}")
+                    return False
+
+            logger.info(f"Successfully added source: {source_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Error adding source {source_id}: {e}")
+            return False
 
     async def sync_sources_to_database(self, session: AsyncSession) -> None:
         """Synchronize source configurations to database."""

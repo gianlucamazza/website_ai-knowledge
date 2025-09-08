@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import yaml
-from slugify import slugify
+from slugify import slugify as slugify
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
