@@ -403,7 +403,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install safety bandit[toml]
           cd pipelines
-          timeout 180 safety check --json --output safety-report.json || echo "Safety check completed with warnings"
+          timeout 180 safety check --json > safety-report.json || echo "Safety check completed with warnings"
           timeout 180 bandit -r . -f json -o bandit-report.json -ll || echo "Bandit scan completed with warnings"
         continue-on-error: true
 

@@ -72,7 +72,7 @@ jobs:
         run: |
           cd pipelines
           echo "Running Python Safety check..."
-          safety check --json --output ../safety-report.json || true
+          safety check --json > ../safety-report.json || true
           safety check
 
       - name: Run Python dependency security check (pip-audit)
