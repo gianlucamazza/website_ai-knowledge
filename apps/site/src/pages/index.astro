@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { getUrl } from '../utils/paths';
 
 // Get featured content
 const glossaryEntries = await getCollection('glossary');
@@ -22,8 +23,8 @@ const featuredEntries = glossaryEntries
     </p>
     
     <div class="cta-buttons">
-      <a href={`${import.meta.env.BASE_URL}glossary`} class="cta-primary">Browse Glossary</a>
-      <a href={`${import.meta.env.BASE_URL}articles`} class="cta-secondary">Read Articles</a>
+      <a href={getUrl('/glossary')} class="cta-primary">Browse Glossary</a>
+      <a href={getUrl('/articles')} class="cta-secondary">Read Articles</a>
     </div>
   </div>
   
@@ -51,7 +52,7 @@ const featuredEntries = glossaryEntries
         {featuredEntries.map(entry => (
           <article class="entry-card">
             <h3>
-              <a href={`${import.meta.env.BASE_URL}glossary/${entry.id}`}>{entry.data.title}</a>
+              <a href={getUrl(`/glossary/${entry.id}`)}>{entry.data.title}</a>
             </h3>
             <p class="entry-summary">{entry.data.summary}</p>
             <div class="entry-meta">
@@ -68,7 +69,7 @@ const featuredEntries = glossaryEntries
         ))}
       </div>
       <div class="view-all">
-        <a href={`${import.meta.env.BASE_URL}glossary`} class="view-all-link">View All Terms →</a>
+        <a href={getUrl('/glossary')} class="view-all-link">View All Terms →</a>
       </div>
     </section>
   )}

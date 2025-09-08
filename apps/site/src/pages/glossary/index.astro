@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { getUrl } from '../../utils/paths';
 
 // Get all glossary entries
 const allEntries = await getCollection('glossary');
@@ -88,7 +89,7 @@ const formatLabel = (str: string) => {
             >
               <header class="card-header">
                 <h3>
-                  <a href={`${import.meta.env.BASE_URL}glossary/${entry.id}`}>{entry.data.title}</a>
+                  <a href={getUrl(`/glossary/${entry.id}`)}>{entry.data.title}</a>
                 </h3>
                 {entry.data.aliases && entry.data.aliases.length > 0 && (
                   <div class="aliases">
