@@ -280,9 +280,11 @@ jobs:
           cache-dependency-path: apps/site/package-lock.json
 
       - name: Allocate dynamic ports to avoid conflicts
+        id: port-allocation
         run: |
           chmod +x scripts/port-allocator.js
           node scripts/port-allocator.js allocate node-${{ matrix.node-version }}-${{ github.run_id }}
+          echo "Port allocation completed for job: node-${{ matrix.node-version }}-${{ github.run_id }}"
 
       - name: Install dependencies
         working-directory: apps/site
@@ -314,22 +316,41 @@ jobs:
 
       - name: Run E2E tests with dynamic ports
         working-directory: apps/site
-        env:
-          BASE_URL: http://localhost:${{ env.DEV_SERVER_PORT || '4321' }}
         run: |
+          # Debug: Show allocated ports
+          echo "🔍 Debugging port allocation:"
+          echo "DEV_SERVER_PORT: ${DEV_SERVER_PORT:-not set}"
+          echo "PREVIEW_SERVER_PORT: ${PREVIEW_SERVER_PORT:-not set}"
+          echo "TEST_SERVER_PORT: ${TEST_SERVER_PORT:-not set}"
+          
+          # Read port allocation from file as fallback
+          if [ -z "${DEV_SERVER_PORT}" ] && [ -f "../.port-allocation.json" ]; then
+            echo "📖 Reading port allocation from file..."
+            DEV_SERVER_PORT=$(node -e "console.log(require('../.port-allocation.json').dev)")
+            echo "Port from file: ${DEV_SERVER_PORT}"
+          fi
+          
+          # Use allocated port or default
+          ACTUAL_PORT=${DEV_SERVER_PORT:-4321}
+          echo "🚀 Starting dev server on port: ${ACTUAL_PORT}"
+          
           # Start dev server in background with allocated port
-          PORT=${DEV_SERVER_PORT:-4321} npm run dev &
+          PORT=${ACTUAL_PORT} npm run dev &
           DEV_PID=$!
           
           # Wait for server with timeout
-          timeout 60 bash -c "until curl -s http://localhost:${DEV_SERVER_PORT:-4321} > /dev/null; do sleep 2; done" || {
-            echo "❌ Dev server failed to start on port ${DEV_SERVER_PORT:-4321}"
+          timeout 60 bash -c "until curl -s http://localhost:${ACTUAL_PORT} > /dev/null; do sleep 2; done" || {
+            echo "❌ Dev server failed to start on port ${ACTUAL_PORT}"
+            echo "📊 Port status check:"
+            ss -tlnp | grep ":${ACTUAL_PORT}" || echo "No process found on port ${ACTUAL_PORT}"
             kill $DEV_PID 2>/dev/null || true
             exit 1
           }
           
-          # Run E2E tests
-          npm run test:e2e || E2E_RESULT=$?
+          echo "✅ Dev server started successfully on port ${ACTUAL_PORT}"
+          
+          # Run E2E tests with correct base URL
+          BASE_URL=http://localhost:${ACTUAL_PORT} npm run test:e2e || E2E_RESULT=$?
           
           # Stop dev server
           kill $DEV_PID 2>/dev/null || true
