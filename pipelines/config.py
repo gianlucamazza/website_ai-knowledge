@@ -15,11 +15,11 @@ from pydantic_settings import BaseSettings
 class DatabaseConfig(BaseModel):
     """Database connection configuration."""
 
-    host: str = "localhost"
-    port: int = 5432
-    database: str = "ai_knowledge"
-    username: str = "postgres"
-    password: SecretStr = Field(..., min_length=12)
+    host: str = Field(default="localhost", env="DATABASE_HOST")
+    port: int = Field(default=5432, env="DATABASE_PORT")
+    database: str = Field(default="ai_knowledge", env="DATABASE_NAME")
+    username: str = Field(default="postgres", env="DATABASE_USERNAME")
+    password: Optional[SecretStr] = Field(default=None, env="DATABASE_PASSWORD")
     # Conservative pool settings to prevent resource exhaustion
     pool_size: int = 10  # Reduced from 50
     max_overflow: int = 20  # Reduced from 100
@@ -34,12 +34,13 @@ class DatabaseConfig(BaseModel):
 
     @validator("password")
     def validate_password(cls, v):
-        if not v:
-            raise ValueError("Database password is required and cannot be empty")
-        # Ensure password is strong enough
+        if v is None:
+            # Password is optional for local development
+            return None
+        # Ensure password is strong enough when provided
         password_str = v.get_secret_value() if hasattr(v, "get_secret_value") else str(v)
-        if len(password_str) < 12:
-            raise ValueError("Database password must be at least 12 characters long")
+        if password_str and len(password_str) < 12:
+            raise ValueError("Database password must be at least 12 characters long when provided")
         return v
 
 class ScrapingConfig(BaseModel):
