@@ -30,16 +30,51 @@ class PortAllocator {
     return new Promise((resolve) => {
       const server = net.createServer();
       
-      server.listen(port, () => {
+      server.listen(port, '127.0.0.1', () => {
         server.once('close', () => {
           resolve(true);
         });
         server.close();
       });
       
-      server.on('error', () => {
+      server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+          console.log(`  Port ${port} is already in use`);
+        } else {
+          console.log(`  Port ${port} check failed: ${err.message}`);
+        }
         resolve(false);
       });
+    });
+  }
+
+  /**
+   * Check if a port is actively serving HTTP content
+   */
+  async isPortServing(port, timeout = 5000) {
+    return new Promise((resolve) => {
+      const http = require('http');
+      
+      const req = http.request({
+        hostname: '127.0.0.1',
+        port: port,
+        path: '/',
+        method: 'GET',
+        timeout: timeout
+      }, (res) => {
+        resolve(res.statusCode >= 200 && res.statusCode < 500);
+      });
+      
+      req.on('error', () => {
+        resolve(false);
+      });
+      
+      req.on('timeout', () => {
+        req.destroy();
+        resolve(false);
+      });
+      
+      req.end();
     });
   }
 
@@ -179,6 +214,24 @@ async function main() {
         return { port, available };
       }
       
+      case 'verify': {
+        const port = parseInt(args[1]);
+        if (!port) {
+          console.error('❌ Port number required for verify command');
+          process.exit(1);
+        }
+        
+        console.log(`🔍 Verifying server is running on port ${port}...`);
+        const serving = await allocator.isPortServing(port);
+        console.log(`Server on port ${port}: ${serving ? '✅ Active and serving' : '❌ Not responding'}`);
+        
+        if (!serving) {
+          process.exit(1);
+        }
+        
+        return { port, serving };
+      }
+      
       case 'load': {
         const allocation = allocator.loadPortAllocation();
         if (allocation) {
@@ -195,6 +248,7 @@ async function main() {
         console.log('📚 Available commands:');
         console.log('  • allocate [jobId] - Allocate ports for CI job');
         console.log('  • check <port>     - Check if port is available');
+        console.log('  • verify <port>    - Verify server is responding on port');
         console.log('  • load             - Load existing allocation');
         process.exit(1);
     }

@@ -1,0 +1,20 @@
+# AI/ML dependencies (isolated to prevent conflicts)
+# These packages have complex dependency trees and should be installed separately
+
+# AI API clients (pinned versions for stability)
+openai==1.6.1
+anthropic==0.8.1
+
+# Workflow orchestration (flexible versions)
+langgraph>=0.2.0,<0.3.0
+langchain-core>=0.2.0,<0.3.0
+
+# Pydantic (compatible with AI packages)
+pydantic>=2.5.0,<3.0.0
+
+# ML libraries (careful version management)
+sentence-transformers==2.2.2
+scikit-learn==1.3.2
+
+# Schema validation (lightweight alternative to full pydantic)
+zod==0.1.0

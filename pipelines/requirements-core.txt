@@ -1,0 +1,40 @@
+# Core production dependencies (minimal, stable)
+# Infrastructure
+asyncio-pool==0.6.0
+asyncpg==0.29.0
+SQLAlchemy==2.0.23
+alembic==1.13.1
+
+# Web scraping (stable versions)
+aiohttp==3.9.1
+beautifulsoup4==4.12.2
+lxml==4.9.3
+feedparser==6.0.10
+ultimate-sitemap-parser==1.5.0
+robotexclusionrulesparser==1.7.1
+
+# Content processing (minimal)
+markdown==3.5.1
+markdownify==0.11.6
+readability-lxml==0.8.1
+html2text==2024.2.26
+langdetect==1.0.9
+
+# Deduplication (lightweight)
+simhash==2.1.2
+datasketch==1.6.4
+xxhash==3.4.1
+
+# CLI utilities
+typer==0.9.0
+rich==13.7.0
+tqdm==4.66.1
+click==8.1.7
+
+# Configuration
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# Logging
+structlog==23.2.0
+prometheus-client==0.19.0

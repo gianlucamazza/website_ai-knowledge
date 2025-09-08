@@ -90,15 +90,28 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: process.env.CI ? 'npm run build && npm run preview' : 'npm run dev',
-    port: 4321,
-    reuseExistingServer: !process.env.CI,
+  webServer: process.env.CI ? {
+    // In CI, use preview mode for more reliable startup
+    command: `PORT=${process.env.DEV_SERVER_PORT || 4321} npm run preview`,
+    port: parseInt(process.env.DEV_SERVER_PORT || '4321'),
+    reuseExistingServer: false,  // Never reuse in CI
     timeout: 120000,
     stdout: 'pipe',
     stderr: 'pipe',
     env: {
-      NODE_ENV: process.env.CI ? 'production' : 'development'
+      NODE_ENV: 'production',
+      PORT: process.env.DEV_SERVER_PORT || '4321'
+    }
+  } : {
+    // Local development - use default port
+    command: 'npm run dev',
+    port: 4321,
+    reuseExistingServer: true,
+    timeout: 120000,
+    stdout: 'pipe',
+    stderr: 'pipe',
+    env: {
+      NODE_ENV: 'development'
     }
   },
 

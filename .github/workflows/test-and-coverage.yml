@@ -299,7 +299,7 @@ jobs:
       working-directory: apps/site
       run: npm run build
 
-    - name: Start dev server and run E2E tests
+    - name: Run E2E tests with Playwright managed server
       working-directory: apps/site
       run: |
         # Debug: Show environment variables
@@ -310,46 +310,18 @@ jobs:
         
         # Use allocated port or default
         ACTUAL_PORT=${DEV_SERVER_PORT:-4321}
-        echo "🚀 Starting dev server on port: ${ACTUAL_PORT}"
+        echo "🎯 Using allocated port: ${ACTUAL_PORT}"
         
-        # Start dev server in background with allocated port
-        PORT=${ACTUAL_PORT} npm run dev &
-        DEV_PID=$!
-        
-        # Wait for server to be ready with allocated port
-        echo "⏳ Waiting for server to be ready on port ${ACTUAL_PORT}..."
-        timeout 60 bash -c "until curl -s http://localhost:${ACTUAL_PORT} > /dev/null; do 
-          echo '  Checking server availability...'
-          sleep 3
-        done" || {
-          echo "❌ Dev server failed to start on port ${ACTUAL_PORT}"
-          echo "📋 Server logs (last 20 lines):"
-          jobs -p | xargs -r ps -p || true
-          kill $DEV_PID 2>/dev/null || true
-          exit 1
-        }
-        
-        echo "✅ Dev server is ready on port ${ACTUAL_PORT}"
-        
-        # Set BASE_URL for E2E tests
+        # Set environment variables for Playwright
         export BASE_URL="http://localhost:${ACTUAL_PORT}"
-        echo "🎯 Running E2E tests with BASE_URL: ${BASE_URL}"
+        export DEV_SERVER_PORT="${ACTUAL_PORT}"
         
-        # Run E2E tests
-        npm run test:e2e || E2E_RESULT=$?
+        echo "🎯 Running E2E tests with Playwright managing server startup"
+        echo "   BASE_URL: ${BASE_URL}"
+        echo "   DEV_SERVER_PORT: ${DEV_SERVER_PORT}"
         
-        # Stop dev server
-        echo "🛑 Stopping dev server..."
-        kill $DEV_PID 2>/dev/null || true
-        wait $DEV_PID 2>/dev/null || true
-        
-        # Check E2E results
-        if [ "${E2E_RESULT:-0}" -ne 0 ]; then
-          echo "❌ E2E tests failed with exit code ${E2E_RESULT}"
-          exit ${E2E_RESULT}
-        fi
-        
-        echo "✅ E2E tests completed successfully"
+        # Let Playwright handle server startup and shutdown
+        npm run test:e2e
 
     - name: Upload frontend coverage
       uses: codecov/codecov-action@v3
