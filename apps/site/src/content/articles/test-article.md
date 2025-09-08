@@ -1,12 +1,9 @@
 ---
-featured: false
+title: "Test Article"
+summary: "This is a test article to verify the article collection is working properly. It contains minimal content to validate the schema and build process."
+tags: ["test", "fundamentals"]
 readingTime: 1
-summary: This is a test article to verify the article collection is working properly.
-  It contains minimal content to validate the schema and build process.
-tags:
-- test
-- fundamentals
-title: Test Article
+featured: false
 updated: '2025-09-08'
 ---
 

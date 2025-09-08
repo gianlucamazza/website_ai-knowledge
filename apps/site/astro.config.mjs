@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   // For GitHub Pages deployment
   site: 'https://gianlucamazza.github.io',
-  base: '/website_ai-knowledge',
+  base: process.env.NODE_ENV === 'production' ? '/website_ai-knowledge' : '/',
   integrations: [
     mdx(),
     sitemap()

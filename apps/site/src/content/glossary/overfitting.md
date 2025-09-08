@@ -60,7 +60,8 @@ validation or test data, indicating it has learned the "wrong" patterns.
 
 ### Visual Analogy
 
-**Polynomial Fitting Example**:
+#### Polynomial Fitting Example*
+
 Consider fitting a polynomial to data points:
 
 **Underfitting** (Degree 1):

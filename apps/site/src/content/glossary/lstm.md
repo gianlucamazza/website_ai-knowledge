@@ -178,19 +178,19 @@ o_t = σ(W_o · [h_{t-1}, x_t] + b_o)
    C_t = f_t ⊙ C_{t-1}
 
    ```text
-2. **Add**: Include new relevant information
+1. **Add**: Include new relevant information
 
    ```text
    C_t = C_t + i_t ⊙ C̃_t
 
    ```text
-3. **Combined**:
+1. **Combined**:
 
    ```text
    C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t
 
    ```text
-4. **Output**: Generate hidden state
+1. **Output**: Generate hidden state
 
    ```text
    h_t = o_t ⊙ tanh(C_t)

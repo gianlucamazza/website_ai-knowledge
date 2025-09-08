@@ -71,6 +71,7 @@ class TraditionalSeq2Seq(nn.Module):
         return self.output_layer(decoder_output)
 
 ```text
+
 ### Problems with this approach
 
 - **Information Loss**: Long sequences compressed into fixed-size vectors
@@ -152,7 +153,7 @@ Attention Process:
    - "the": 0.02 (not relevant)
    - "mat": 0.05 (somewhat relevant)
 
-3. Weighted combination focuses on "cat"
+1. Weighted combination focuses on "cat"
 
 ```text
 

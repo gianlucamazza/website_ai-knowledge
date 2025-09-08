@@ -69,6 +69,7 @@ The simplest neural network unit:
 Inputs (x₁, x₂, ..., xₙ) → Weights (w₁, w₂, ..., wₙ) → Σ → Activation Function → Output
 
 ```text
+
 ### Mathematical Formula
 
 ```text
@@ -169,6 +170,7 @@ Measure difference between predicted and actual outputs:
 MSE = (1/n) Σ(yᵢ - ŷᵢ)²
 
 ```text
+
 ### Cross-Entropy (Classification)
 
 ```text
@@ -207,7 +209,7 @@ CE = -Σ yᵢ log(ŷᵢ)
    c. Backpropagation
    d. Update weights and biases
 
-3. Repeat until convergence or maximum iterations
+1. Repeat until convergence or maximum iterations
 
 ```text
 

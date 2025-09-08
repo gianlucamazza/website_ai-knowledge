@@ -118,6 +118,7 @@ tokens = simple_word_tokenize(text)
 ## Result: ["hello", "world", "how", "are", "you"]
 
 ```text
+
 ### Advantages
 
 - Simple and interpretable
@@ -146,6 +147,7 @@ tokens = char_tokenize(text)
 ## Result: ["h", "e", "l", "l", "o"]
 
 ```text
+
 ### Advantages
 
 - Small, fixed vocabulary size

@@ -91,12 +91,15 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run build && npm run preview',
+    command: process.env.CI ? 'npm run build && npm run preview' : 'npm run dev',
     port: 4321,
     reuseExistingServer: !process.env.CI,
-    timeout: 180000,
+    timeout: 120000,
     stdout: 'pipe',
     stderr: 'pipe',
+    env: {
+      NODE_ENV: process.env.CI ? 'production' : 'development'
+    }
   },
 
   /* Global setup and teardown */

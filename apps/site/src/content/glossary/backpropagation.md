@@ -76,7 +76,8 @@ optimization algorithms to make precise adjustments that reduce prediction error
 
 ### Gradient Computation Challenge
 
-**The Question**:
+#### The Question*
+
 Given a neural network with loss function L and parameters θ, how do we compute ∂L/∂θ for every parameter efficiently?
 
 **Naive Approach Problems**:
@@ -95,17 +96,21 @@ Given a neural network with loss function L and parameters θ, how do we compute
 
 ### Chain Rule of Calculus
 
-**Single Variable**:
+#### Single Variable*
+
 If y = f(g(x)), then dy/dx = (dy/dg) × (dg/dx)
 
-**Multiple Variables**:
+#### Multiple Variables*
+
 If z = f(x, y) and both x = g(t), y = h(t), then:
 
 ```text
 dz/dt = (∂z/∂x)(dx/dt) + (∂z/∂y)(dy/dt)
 
 ```text
-**Neural Network Context**:
+
+#### Neural Network Context*
+
 For a network with layers f₁, f₂, ..., fₙ:
 
 ```text
@@ -393,7 +398,8 @@ def backprop(network, x, y):
 
 ### Gradient Checking
 
-**Numerical Verification**:
+#### Numerical Verification*
+
 Compare analytical gradients with numerical approximation:
 
 ```text

@@ -311,7 +311,7 @@ def multi_step_analysis(topic):
         Please provide:
 
         1. Current market size and trends
-        2. Major players and competitors  
+        2. Major players and competitors
         3. Key challenges and opportunities
         4. Recent developments or news
         
@@ -407,17 +407,17 @@ Structure your analysis using:
    - Target customer demographics and pain points
    - Competitive landscape analysis
 
-2. BUSINESS MODEL EVALUATION  
+1. BUSINESS MODEL EVALUATION
    - Revenue streams and pricing strategy
    - Unit economics and profitability pathways
    - Operational requirements and challenges
 
-3. STRATEGIC RECOMMENDATIONS
+1. STRATEGIC RECOMMENDATIONS
    - Go-to-market strategy
    - Key success factors and metrics
    - Risk mitigation strategies
 
-4. IMPLEMENTATION ROADMAP
+1. IMPLEMENTATION ROADMAP
    - 12-month launch timeline
    - Resource requirements
    - Milestone tracking
@@ -714,7 +714,7 @@ def create_research_chain():
         
         Provide:
 
-        1. Key facts and statistics  
+        1. Key facts and statistics
         2. Current trends and developments
         3. Major stakeholders or players
         4. Challenges and opportunities

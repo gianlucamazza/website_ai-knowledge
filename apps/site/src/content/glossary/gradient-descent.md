@@ -109,7 +109,7 @@ Where:
 **When to Stop**:
 
 1. **Gradient magnitude**: |∇f(θ)| < ε
-2. **Parameter change**: |θ_{t+1} - θ_t| < ε  
+2. **Parameter change**: |θ_{t+1} - θ_t| < ε
 3. **Function value change**: |f(θ_{t+1}) - f(θ_t)| < ε
 4. **Maximum iterations**: Prevent infinite loops
 

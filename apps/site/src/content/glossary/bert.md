@@ -57,6 +57,7 @@ Context available: "The cat sat on the"
 Missing context: What comes after [MASK]
 
 ```text
+
 ### BERT's Bidirectional Processing
 
 ```text
@@ -93,6 +94,7 @@ targets = ["quick", "jumps"]
 ## BERT learns to predict masked tokens using bidirectional context
 
 ```text
+
 ### Masking Strategy
 
 - 15% of tokens are selected for masking
