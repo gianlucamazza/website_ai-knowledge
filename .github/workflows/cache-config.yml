@@ -1,0 +1,75 @@
+# Enhanced Caching Configuration Template
+# This file provides reusable cache configurations for GitHub Actions workflows
+
+# Usage: Include this as a template in other workflows
+# Example:
+#   - uses: ./.github/workflows/cache-config.yml
+#     with:
+#       cache-type: python
+
+name: Enhanced Cache Configuration
+
+# This is a reusable workflow that can be called from other workflows
+on:
+  workflow_call:
+    inputs:
+      cache-type:
+        description: 'Type of cache to configure (python, node, mixed)'
+        required: true
+        type: string
+      cache-key-prefix:
+        description: 'Prefix for cache keys'
+        required: false
+        type: string
+        default: 'default'
+      enable-fallback:
+        description: 'Enable fallback cache restoration'
+        required: false
+        type: boolean
+        default: true
+      cache-compression:
+        description: 'Enable cache compression'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  setup-cache:
+    runs-on: ubuntu-latest
+    outputs:
+      python-cache-key: ${{ steps.python-cache.outputs.cache-key }}
+      node-cache-key: ${{ steps.node-cache.outputs.cache-key }}
+      mixed-cache-key: ${{ steps.mixed-cache.outputs.cache-key }}
+    
+    steps:
+      # Python Cache Configuration
+      - name: Configure Python Cache
+        if: inputs.cache-type == 'python' || inputs.cache-type == 'mixed'
+        id: python-cache
+        run: |
+          PYTHON_VERSION=$(python3 --version | cut -d' ' -f2)
+          REQUIREMENTS_HASH=$(find . -name "requirements*.txt" -exec sha256sum {} \; | sha256sum | cut -d' ' -f1)
+          CACHE_KEY="${{ inputs.cache-key-prefix }}-python-${PYTHON_VERSION}-${REQUIREMENTS_HASH}"
+          echo "cache-key=${CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "Python cache key: ${CACHE_KEY}"
+
+      # Node.js Cache Configuration  
+      - name: Configure Node.js Cache
+        if: inputs.cache-type == 'node' || inputs.cache-type == 'mixed'
+        id: node-cache
+        run: |
+          NODE_VERSION=$(node --version)
+          PACKAGE_LOCK_HASH=$(find . -name "package-lock.json" -exec sha256sum {} \; | sha256sum | cut -d' ' -f1)
+          CACHE_KEY="${{ inputs.cache-key-prefix }}-node-${NODE_VERSION}-${PACKAGE_LOCK_HASH}"
+          echo "cache-key=${CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "Node.js cache key: ${CACHE_KEY}"
+
+      # Mixed Cache Configuration
+      - name: Configure Mixed Cache
+        if: inputs.cache-type == 'mixed'
+        id: mixed-cache
+        run: |
+          COMBINED_HASH=$(echo "${{ steps.python-cache.outputs.cache-key }}${{ steps.node-cache.outputs.cache-key }}" | sha256sum | cut -d' ' -f1)
+          CACHE_KEY="${{ inputs.cache-key-prefix }}-mixed-${COMBINED_HASH}"
+          echo "cache-key=${CACHE_KEY}" >> $GITHUB_OUTPUT
+          echo "Mixed cache key: ${CACHE_KEY}"

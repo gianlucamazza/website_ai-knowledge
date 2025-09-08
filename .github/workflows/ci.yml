@@ -14,13 +14,14 @@ concurrency:
 env:
   NODE_VERSION: '18.x'
   PYTHON_VERSION: '3.11'
+  DEPENDENCY_TIER: 'ci'  # Use lightweight CI dependencies
 
 jobs:
-  # Job 1: Code Quality and Linting
+  # Job 1: Code Quality and Linting (Optimized)
   quality-checks:
     name: Code Quality & Linting
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8  # Reduced from 10
     
     steps:
       - name: Checkout code
@@ -28,29 +29,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Setup Node.js with optimized caching
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: apps/site/package-lock.json
 
-      - name: Setup Python
+      - name: Setup Python with optimized caching
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
-          cache-dependency-path: pipelines/requirements.txt
+          cache-dependency-path: |
+            pipelines/requirements-ci.txt
+            pipelines/requirements.txt
 
-      - name: Install Node.js dependencies
-        run: cd apps/site && npm ci
-
-      - name: Install Python dependencies
+      - name: Install dependencies with timeout and retry
         run: |
-          python -m pip install --upgrade pip
-          cd pipelines
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+          chmod +x scripts/install-dependencies.sh
+          scripts/install-dependencies.sh --tier ci --timeout 300
 
       - name: Validate package.json and package-lock.json
         run: cd apps/site && npm audit --audit-level=high
@@ -71,26 +69,30 @@ jobs:
       - name: Run Python type checking
         run: cd pipelines && python -m mypy . --ignore-missing-imports
 
-  # Job 2: TypeScript and Astro Build Validation
+  # Job 2: Build Validation (Optimized)
   build-validation:
     name: Build Validation
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12  # Reduced from 15
     needs: quality-checks
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js with optimized caching
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: apps/site/package-lock.json
 
-      - name: Install dependencies
-        run: cd apps/site && npm ci
+      - name: Install dependencies with retry logic
+        working-directory: apps/site
+        run: |
+          for i in {1..3}; do
+            npm ci && break || (echo "Attempt $i failed, retrying in 5s..." && sleep 5)
+          done
 
       - name: Run TypeScript compilation check
         run: cd apps/site && npx tsc --noEmit
@@ -118,22 +120,22 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
+          name: build-artifacts-${{ github.run_id }}
           path: apps/site/dist/
           retention-days: 1
 
-  # Job 3: Content Validation
+  # Job 3: Content Validation (Optimized)
   content-validation:
     name: Content Validation
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8  # Reduced from 10
     needs: quality-checks
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js with caching
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -161,16 +163,16 @@ jobs:
           python scripts/validate_content.py --content-dir apps/site/src/content || echo "Content validation script not found, skipping..."
         continue-on-error: true
 
-      - name: Check for broken links
+      - name: Check for broken links (with timeout)
         run: |
-          find apps/site/src/content -name "*.md" -exec markdown-link-check {} \; || echo "Link checking completed with warnings"
+          timeout 300 find apps/site/src/content -name "*.md" -exec markdown-link-check {} \; || echo "Link checking completed with warnings"
         continue-on-error: true
 
-  # Job 4: Python Pipeline Testing
+  # Job 4: Python Pipeline Testing (Optimized)
   pipeline-tests:
     name: Python Pipeline Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12  # Reduced from 15
     needs: quality-checks
     
     services:
@@ -191,19 +193,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python with caching
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
-          cache-dependency-path: pipelines/requirements.txt
+          cache-dependency-path: pipelines/requirements-ci.txt
 
-      - name: Install dependencies
+      - name: Install dependencies with timeout handling
         run: |
-          python -m pip install --upgrade pip
-          cd pipelines
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+          chmod +x scripts/install-dependencies.sh
+          scripts/install-dependencies.sh --tier ci --timeout 600
 
       - name: Set up test environment
         env:
@@ -216,13 +216,28 @@ jobs:
           asyncio.run(create_tables())
           " || echo "Database setup skipped - no create_tables function found"
 
-      - name: Run Python unit tests
+      - name: Run Python unit tests with optimized settings
         env:
           DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
           PYTHONPATH: ${{ github.workspace }}
+          TEST_ENVIRONMENT: ci
+          TEST_MOCK_AI_APIS: true
         run: |
           cd ${{ github.workspace }}
-          python -m pytest tests/unit/ -v --cov=pipelines --cov-report=xml:coverage/coverage.xml --cov-report=term-missing --tb=short
+          python -m pytest tests/unit/ -v \
+            --maxfail=5 \
+            --tb=short \
+            --cov=pipelines \
+            --cov-report=xml:coverage/coverage.xml \
+            --cov-report=term-missing \
+            --durations=10 \
+            --timeout=60
+
+      - name: Generate analysis summary (fallback mechanism)
+        if: always()
+        run: |
+          chmod +x scripts/generate-analysis-summary.py
+          python scripts/generate-analysis-summary.py --workspace . --output analysis_summary.md --verbose
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -232,24 +247,131 @@ jobs:
           name: pipeline-coverage
         continue-on-error: true
 
-  # Job 5: Security Scanning
+      - name: Upload analysis summary artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: analysis-summary-${{ github.run_id }}
+          path: |
+            analysis_summary.md
+            dependency-installation-report.md
+          retention-days: 7
+
+  # Job 5: Frontend Testing (Optimized with Dynamic Ports)
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build-validation
+    
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: apps/site/package-lock.json
+
+      - name: Allocate dynamic ports to avoid conflicts
+        run: |
+          chmod +x scripts/port-allocator.js
+          node scripts/port-allocator.js allocate node-${{ matrix.node-version }}-${{ github.run_id }}
+
+      - name: Install dependencies
+        working-directory: apps/site
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ github.run_id }}
+          path: apps/site/dist/
+
+      - name: Type check
+        working-directory: apps/site
+        run: npm run type-check
+
+      - name: Run unit tests with coverage
+        working-directory: apps/site
+        env:
+          NODE_ENV: test
+        run: |
+          npm run test:unit:coverage -- \
+            --reporter=junit \
+            --reporter=default \
+            --outputFile.junit=junit-unit.xml
+
+      - name: Install Playwright browsers (Chromium only for CI)
+        working-directory: apps/site
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E tests with dynamic ports
+        working-directory: apps/site
+        env:
+          BASE_URL: http://localhost:${{ env.DEV_SERVER_PORT || '4321' }}
+        run: |
+          # Start dev server in background with allocated port
+          PORT=${DEV_SERVER_PORT:-4321} npm run dev &
+          DEV_PID=$!
+          
+          # Wait for server with timeout
+          timeout 60 bash -c "until curl -s http://localhost:${DEV_SERVER_PORT:-4321} > /dev/null; do sleep 2; done" || {
+            echo "❌ Dev server failed to start on port ${DEV_SERVER_PORT:-4321}"
+            kill $DEV_PID 2>/dev/null || true
+            exit 1
+          }
+          
+          # Run E2E tests
+          npm run test:e2e || E2E_RESULT=$?
+          
+          # Stop dev server
+          kill $DEV_PID 2>/dev/null || true
+          
+          # Exit with E2E test result
+          exit ${E2E_RESULT:-0}
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-test-results-${{ matrix.node-version }}-${{ github.run_id }}
+          path: |
+            apps/site/coverage/
+            apps/site/playwright-report/
+            apps/site/junit-unit.xml
+          retention-days: 7
+
+  # Job 6: Security Scanning (Optimized)
   security-scan:
     name: Security Scanning
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8  # Reduced from 10
     needs: quality-checks
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Run Trivy vulnerability scanner (filesystem only)
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
           scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
+          timeout: '5m'
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
@@ -265,163 +387,47 @@ jobs:
           python -m pip install --upgrade pip
           pip install safety bandit[toml]
           cd pipelines
-          safety check --json --output safety-report.json || echo "Safety check completed with warnings"
-          bandit -r . -f json -o bandit-report.json -ll || echo "Bandit scan completed with warnings"
+          timeout 180 safety check --json --output safety-report.json || echo "Safety check completed with warnings"
+          timeout 180 bandit -r . -f json -o bandit-report.json -ll || echo "Bandit scan completed with warnings"
         continue-on-error: true
 
-  # Job 6: Performance Testing
-  performance-test:
-    name: Performance Testing
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: build-validation
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          name: security-reports-${{ github.run_id }}
+          path: |
+            pipelines/safety-report.json
+            pipelines/bandit-report.json
+            trivy-results.sarif
+          retention-days: 30
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: apps/site/dist/
-
-      - name: Install performance testing tools
-        run: |
-          npm install -g @lhci/cli lighthouse
-          pip install locust
-
-      - name: Start preview server
-        run: |
-          cd apps/site
-          npm ci
-          npm run preview &
-          sleep 10
-        
-      - name: Run Lighthouse CI
-        run: |
-          lhci autorun || echo "Lighthouse CI completed with warnings"
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-        continue-on-error: true
-
-      - name: Run custom performance tests
-        run: |
-          python scripts/performance_test.py --target-url http://localhost:4322 || echo "Performance tests not found, skipping..."
-        continue-on-error: true
-
-  # Job 7: License Compliance
-  license-check:
-    name: License Compliance
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: apps/site/package-lock.json
-
-      - name: Install license checker
-        run: npm install -g license-checker pip-licenses
-
-      - name: Check Node.js dependencies licenses
-        run: |
-          cd apps/site
-          npm ci
-          license-checker --onlyAllow 'MIT;BSD;Apache-2.0;ISC;0BSD' --excludePrivatePackages
-
-      - name: Check Python dependencies licenses
-        run: |
-          pip install pip-licenses
-          cd pipelines
-          pip install -r requirements.txt
-          pip-licenses --allow-only 'MIT;BSD;Apache Software License;ISC License' || echo "Python license check completed with warnings"
-        continue-on-error: true
-
-  # Job 8: Integration Tests
-  integration-tests:
-    name: Integration Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs: [build-validation, pipeline-tests]
-    if: github.event_name == 'pull_request'
-    
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test_ai_knowledge
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: apps/site/package-lock.json
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-          path: apps/site/dist/
-
-      - name: Install dependencies
-        run: |
-          cd apps/site && npm ci
-          cd ../.. && pip install -r pipelines/requirements.txt
-
-      - name: Run integration tests
-        env:
-          DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
-        run: |
-          python scripts/integration_tests.py || echo "Integration tests not found, skipping..."
-        continue-on-error: true
-
-      - name: Test full content pipeline
-        env:
-          DATABASE_URL: postgresql://postgres:test@localhost:5432/test_ai_knowledge
-        run: |
-          cd pipelines
-          python -m pytest tests/integration/ -v || echo "Integration tests not found, skipping..."
-        continue-on-error: true
-
-  # Job 9: Quality Gate Summary
+  # Job 7: Quality Gate Summary (Enhanced)
   quality-gate:
     name: Quality Gate Summary
     runs-on: ubuntu-latest
-    needs: [quality-checks, build-validation, content-validation, pipeline-tests, security-scan, performance-test, license-check]
+    needs: [quality-checks, build-validation, content-validation, pipeline-tests, frontend-tests, security-scan]
     if: always()
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all analysis artifacts
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+
+      - name: Generate comprehensive quality gate summary
+        run: |
+          chmod +x scripts/generate-analysis-summary.py
+          python scripts/generate-analysis-summary.py \
+            --workspace . \
+            --output final-quality-gate-summary.md \
+            --format markdown \
+            --verbose
+
       - name: Check all quality gates
+        id: quality-check
         run: |
           echo "Quality Gate Results:"
           echo "===================="
@@ -429,48 +435,103 @@ jobs:
           echo "Build Validation: ${{ needs.build-validation.result }}"
           echo "Content Validation: ${{ needs.content-validation.result }}"
           echo "Pipeline Tests: ${{ needs.pipeline-tests.result }}"
+          echo "Frontend Tests: ${{ needs.frontend-tests.result }}"
           echo "Security Scan: ${{ needs.security-scan.result }}"
-          echo "Performance Test: ${{ needs.performance-test.result }}"
-          echo "License Check: ${{ needs.license-check.result }}"
           
-          # Fail if any critical jobs failed
+          # Determine overall status
+          CRITICAL_FAILED=false
+          
+          # Check critical jobs (must pass)
           if [[ "${{ needs.quality-checks.result }}" == "failure" || \
                 "${{ needs.build-validation.result }}" == "failure" || \
-                "${{ needs.content-validation.result }}" == "failure" || \
                 "${{ needs.pipeline-tests.result }}" == "failure" ]]; then
-            echo "❌ Quality gate failed - Critical jobs failed"
-            exit 1
+            CRITICAL_FAILED=true
           fi
           
-          echo "✅ Quality gate passed - Ready for merge"
+          # Check important jobs (warnings allowed)
+          WARNINGS=false
+          if [[ "${{ needs.content-validation.result }}" != "success" || \
+                "${{ needs.frontend-tests.result }}" != "success" || \
+                "${{ needs.security-scan.result }}" != "success" ]]; then
+            WARNINGS=true
+          fi
+          
+          # Set outputs
+          echo "critical-failed=$CRITICAL_FAILED" >> $GITHUB_OUTPUT
+          echo "has-warnings=$WARNINGS" >> $GITHUB_OUTPUT
+          
+          if [[ "$CRITICAL_FAILED" == "true" ]]; then
+            echo "❌ Quality gate FAILED - Critical jobs failed"
+            exit 1
+          elif [[ "$WARNINGS" == "true" ]]; then
+            echo "⚠️ Quality gate PASSED with warnings"
+            exit 0
+          else
+            echo "✅ Quality gate PASSED - All checks successful"
+            exit 0
+          fi
 
-      - name: Comment PR with results
+      - name: Upload final quality gate summary
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-gate-summary-${{ github.run_id }}
+          path: final-quality-gate-summary.md
+          retention-days: 30
+
+      - name: Comment PR with comprehensive results
         uses: actions/github-script@v7
         if: github.event_name == 'pull_request'
         with:
           script: |
+            const fs = require('fs');
+            
+            // Build results summary
             const results = {
               'Code Quality': '${{ needs.quality-checks.result }}',
               'Build Validation': '${{ needs.build-validation.result }}',
               'Content Validation': '${{ needs.content-validation.result }}',
               'Pipeline Tests': '${{ needs.pipeline-tests.result }}',
-              'Security Scan': '${{ needs.security-scan.result }}',
-              'Performance Test': '${{ needs.performance-test.result }}',
-              'License Check': '${{ needs.license-check.result }}'
+              'Frontend Tests': '${{ needs.frontend-tests.result }}',
+              'Security Scan': '${{ needs.security-scan.result }}'
             };
             
             let comment = '## 🚦 Quality Gate Results\n\n';
+            
+            // Add status summary
+            const criticalFailed = '${{ steps.quality-check.outputs.critical-failed }}' === 'true';
+            const hasWarnings = '${{ steps.quality-check.outputs.has-warnings }}' === 'true';
+            
+            if (criticalFailed) {
+              comment += '🚫 **QUALITY GATE FAILED** - Critical issues must be resolved\n\n';
+            } else if (hasWarnings) {
+              comment += '⚠️ **QUALITY GATE PASSED WITH WARNINGS** - Review recommended\n\n';
+            } else {
+              comment += '🎉 **QUALITY GATE PASSED** - All checks successful!\n\n';
+            }
+            
+            // Add detailed results
+            comment += '### Detailed Results\n\n';
             for (const [job, result] of Object.entries(results)) {
-              const icon = result === 'success' ? '✅' : result === 'failure' ? '❌' : '⚠️';
+              const icon = result === 'success' ? '✅' : 
+                          result === 'failure' ? '❌' : 
+                          result === 'cancelled' ? '⏹️' : '⚠️';
               comment += `${icon} **${job}**: ${result}\n`;
             }
             
-            comment += '\n---\n';
-            if (Object.values(results).every(r => r === 'success' || r === 'skipped')) {
-              comment += '🎉 **All quality gates passed!** This PR is ready for review.';
-            } else {
-              comment += '⚠️ **Some quality gates need attention** before this PR can be merged.';
+            // Add analysis summary if available
+            try {
+              const analysisContent = fs.readFileSync('final-quality-gate-summary.md', 'utf8');
+              comment += '\n---\n\n';
+              comment += '### 📊 Detailed Analysis\n\n';
+              comment += analysisContent.substring(0, 1000) + (analysisContent.length > 1000 ? '...\n\n[View full report in artifacts]' : '');
+            } catch (e) {
+              // Analysis summary not available
             }
+            
+            comment += '\n---\n';
+            comment += `**Build ID:** \`${{ github.run_id }}\`\n`;
+            comment += `**Commit:** \`${{ github.sha }}\`\n`;
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,

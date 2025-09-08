@@ -1,0 +1,72 @@
+# Lightweight CI/CD Dependencies
+# This file contains only essential dependencies for CI/CD operations
+# to reduce installation time and avoid heavy ML dependencies
+
+# Core dependencies for basic functionality
+asyncio-pool==0.6.0
+asyncpg==0.29.0
+SQLAlchemy==2.0.23
+alembic==1.13.1
+pydantic>=2.5.0
+pydantic-settings==2.1.0
+
+# Web scraping (core only, no heavy parsers)
+aiohttp==3.9.1
+beautifulsoup4==4.12.2
+feedparser==6.0.10
+
+# Content processing (lightweight)
+markdown==3.5.1
+markdownify==0.11.6
+html2text==2024.2.26
+langdetect==1.0.9
+
+# Deduplication (core algorithms only)
+xxhash==3.4.1
+datasketch==1.6.4
+
+# AI/ML - Mock interfaces for CI (no heavy dependencies)
+# Note: Use environment variables to mock AI APIs in CI
+openai==1.6.1  # Light client, no torch/transformers deps
+
+# Workflow orchestration (lightweight core)
+langgraph>=0.2.0
+langchain-core>=0.2.0
+
+# CLI and utilities
+typer==0.9.0
+rich==13.7.0
+tqdm==4.66.1
+click==8.1.7
+
+# Configuration
+python-dotenv==1.0.0
+
+# Logging
+structlog==23.2.0
+
+# Testing framework (essential only)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-mock==3.12.0
+pytest-cov==4.1.0
+pytest-timeout==2.2.0
+
+# Code quality tools
+black==23.11.0
+isort==5.12.0
+mypy==1.7.1
+bandit[toml]==1.7.5
+safety==2.3.5
+
+# Mock/test utilities
+responses==0.24.1
+httpx==0.25.2
+aioresponses==0.7.4
+
+# Coverage reporting
+coverage[toml]==7.3.2
+
+# Development utilities for CI
+flake8==6.1.0
+pylint==3.0.3
