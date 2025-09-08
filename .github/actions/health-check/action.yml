@@ -1,0 +1,240 @@
+name: 'Environment Health Check'
+description: 'Comprehensive health checks for CI/CD environment'
+author: 'AI Knowledge Team'
+
+inputs:
+  check-type:
+    description: 'Type of health check (python, node, database, ports, all)'
+    required: false
+    default: 'all'
+  required-python-packages:
+    description: 'Space-separated list of required Python packages'
+    required: false
+    default: 'pytest sqlalchemy'
+  required-ports:
+    description: 'Space-separated list of ports that should be available'
+    required: false
+    default: '4321 5432'
+  verbose:
+    description: 'Enable verbose output'
+    required: false
+    default: 'false'
+
+outputs:
+  health-status:
+    description: 'Overall health status (healthy/degraded/unhealthy)'
+    value: ${{ steps.final-check.outputs.status }}
+  health-score:
+    description: 'Health score (0-100)'
+    value: ${{ steps.final-check.outputs.score }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: System Information
+      shell: bash
+      run: |
+        echo "📋 System Information"
+        echo "===================="
+        echo "OS: $(uname -a)"
+        echo "CPU: $(nproc) cores"
+        echo "Memory: $(free -h | grep Mem | awk '{print $2}')"
+        echo "Disk: $(df -h / | tail -1 | awk '{print $4}' ) available"
+        echo ""
+
+    - name: Python Environment Check
+      if: contains(inputs.check-type, 'python') || inputs.check-type == 'all'
+      shell: bash
+      run: |
+        echo "🐍 Python Environment Check"
+        echo "=========================="
+        
+        # Check Python version
+        if command -v python3 &> /dev/null; then
+          echo "✅ Python installed: $(python3 --version)"
+        else
+          echo "❌ Python not found"
+          exit 1
+        fi
+        
+        # Check pip
+        if command -v pip &> /dev/null; then
+          echo "✅ pip installed: $(pip --version)"
+        else
+          echo "❌ pip not found"
+          exit 1
+        fi
+        
+        # Check required packages
+        MISSING_PACKAGES=""
+        for package in ${{ inputs.required-python-packages }}; do
+          if python3 -c "import ${package}" 2>/dev/null; then
+            echo "✅ Package '${package}' is installed"
+          else
+            echo "❌ Package '${package}' is NOT installed"
+            MISSING_PACKAGES="${MISSING_PACKAGES} ${package}"
+          fi
+        done
+        
+        if [[ -n "${MISSING_PACKAGES}" ]]; then
+          echo "⚠️ Installing missing packages: ${MISSING_PACKAGES}"
+          pip install ${MISSING_PACKAGES}
+        fi
+        echo ""
+
+    - name: Node.js Environment Check
+      if: contains(inputs.check-type, 'node') || inputs.check-type == 'all'
+      shell: bash
+      run: |
+        echo "📦 Node.js Environment Check"
+        echo "==========================="
+        
+        # Check Node.js
+        if command -v node &> /dev/null; then
+          echo "✅ Node.js installed: $(node --version)"
+        else
+          echo "❌ Node.js not found"
+          exit 1
+        fi
+        
+        # Check npm
+        if command -v npm &> /dev/null; then
+          echo "✅ npm installed: $(npm --version)"
+        else
+          echo "❌ npm not found"
+          exit 1
+        fi
+        
+        # Check package.json exists
+        if [[ -f "apps/site/package.json" ]]; then
+          echo "✅ package.json found"
+        else
+          echo "⚠️ package.json not found in apps/site/"
+        fi
+        echo ""
+
+    - name: Port Availability Check
+      if: contains(inputs.check-type, 'ports') || inputs.check-type == 'all'
+      shell: bash
+      run: |
+        echo "🔌 Port Availability Check"
+        echo "========================="
+        
+        for port in ${{ inputs.required-ports }}; do
+          if ! lsof -i:${port} &> /dev/null; then
+            echo "✅ Port ${port} is available"
+          else
+            echo "❌ Port ${port} is in use"
+            lsof -i:${port}
+          fi
+        done
+        echo ""
+
+    - name: Database Connectivity Check
+      if: contains(inputs.check-type, 'database') || inputs.check-type == 'all'
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo "🗄️ Database Connectivity Check"
+        echo "============================="
+        
+        if [[ -n "${DATABASE_URL}" ]]; then
+          echo "✅ DATABASE_URL is set"
+          
+          # Try to connect with psql if available
+          if command -v psql &> /dev/null; then
+            if psql "${DATABASE_URL}" -c "SELECT 1" &> /dev/null; then
+              echo "✅ Database connection successful"
+            else
+              echo "⚠️ Database connection failed (may be expected in some environments)"
+            fi
+          else
+            echo "ℹ️ psql not available for connection test"
+          fi
+        else
+          echo "ℹ️ DATABASE_URL not set (may be expected)"
+        fi
+        echo ""
+
+    - name: Disk Space Check
+      shell: bash
+      run: |
+        echo "💾 Disk Space Check"
+        echo "=================="
+        
+        AVAILABLE_GB=$(df -BG / | tail -1 | awk '{print $4}' | sed 's/G//')
+        if [[ ${AVAILABLE_GB} -gt 5 ]]; then
+          echo "✅ Sufficient disk space: ${AVAILABLE_GB}GB available"
+        elif [[ ${AVAILABLE_GB} -gt 2 ]]; then
+          echo "⚠️ Low disk space: ${AVAILABLE_GB}GB available"
+        else
+          echo "❌ Critical: Only ${AVAILABLE_GB}GB available"
+          exit 1
+        fi
+        echo ""
+
+    - name: Network Connectivity Check
+      shell: bash
+      continue-on-error: true
+      run: |
+        echo "🌐 Network Connectivity Check"
+        echo "============================"
+        
+        # Check GitHub API
+        if curl -s -o /dev/null -w "%{http_code}" https://api.github.com | grep -q "200"; then
+          echo "✅ GitHub API accessible"
+        else
+          echo "❌ GitHub API not accessible"
+        fi
+        
+        # Check PyPI
+        if curl -s -o /dev/null -w "%{http_code}" https://pypi.org | grep -q "200"; then
+          echo "✅ PyPI accessible"
+        else
+          echo "⚠️ PyPI not accessible"
+        fi
+        
+        # Check npm registry
+        if curl -s -o /dev/null -w "%{http_code}" https://registry.npmjs.org | grep -q "200"; then
+          echo "✅ npm registry accessible"
+        else
+          echo "⚠️ npm registry not accessible"
+        fi
+        echo ""
+
+    - name: Calculate Health Score
+      id: final-check
+      shell: bash
+      run: |
+        echo "📊 Health Score Calculation"
+        echo "=========================="
+        
+        # Simple scoring system (can be enhanced)
+        SCORE=100
+        STATUS="healthy"
+        
+        # Check for critical issues in the logs
+        if grep -q "❌" ${{ github.workspace }}/../*.log 2>/dev/null; then
+          SCORE=$((SCORE - 20))
+          STATUS="degraded"
+        fi
+        
+        if grep -q "⚠️" ${{ github.workspace }}/../*.log 2>/dev/null; then
+          SCORE=$((SCORE - 10))
+          if [[ ${SCORE} -lt 50 ]]; then
+            STATUS="unhealthy"
+          fi
+        fi
+        
+        echo "Health Score: ${SCORE}/100"
+        echo "Health Status: ${STATUS}"
+        
+        echo "score=${SCORE}" >> $GITHUB_OUTPUT
+        echo "status=${STATUS}" >> $GITHUB_OUTPUT
+        
+        # Create summary
+        echo "## 🏥 Environment Health Check Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **Score**: ${SCORE}/100" >> $GITHUB_STEP_SUMMARY
+        echo "- **Status**: ${STATUS}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Timestamp**: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_STEP_SUMMARY

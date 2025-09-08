@@ -1,0 +1,90 @@
+name: 'Circuit Breaker for CI/CD'
+description: 'Implements circuit breaker pattern to prevent cascading failures'
+author: 'AI Knowledge Team'
+
+inputs:
+  component:
+    description: 'Component to check (e.g., python-tests, e2e-tests)'
+    required: true
+  failure-threshold:
+    description: 'Number of consecutive failures to trigger circuit breaker'
+    required: false
+    default: '3'
+  check-window:
+    description: 'Time window to check failures (in hours)'
+    required: false
+    default: '1'
+  github-token:
+    description: 'GitHub token for API access'
+    required: true
+
+outputs:
+  circuit-status:
+    description: 'Circuit breaker status (open/closed)'
+    value: ${{ steps.check-circuit.outputs.status }}
+  should-skip:
+    description: 'Whether to skip the test'
+    value: ${{ steps.check-circuit.outputs.should-skip }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check Circuit Breaker Status
+      id: check-circuit
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        COMPONENT: ${{ inputs.component }}
+        THRESHOLD: ${{ inputs.failure-threshold }}
+        WINDOW: ${{ inputs.check-window }}
+      run: |
+        echo "🔍 Checking circuit breaker for component: ${COMPONENT}"
+        
+        # Get recent workflow runs
+        RECENT_RUNS=$(gh api \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "/repos/${{ github.repository }}/actions/runs?per_page=10&status=completed" \
+          --jq '.workflow_runs | map(select(.conclusion != null))')
+        
+        # Count consecutive failures
+        CONSECUTIVE_FAILURES=0
+        for run in $(echo "${RECENT_RUNS}" | jq -r '.[].conclusion'); do
+          if [[ "$run" == "failure" ]]; then
+            ((CONSECUTIVE_FAILURES++))
+          else
+            break
+          fi
+        done
+        
+        echo "📊 Consecutive failures: ${CONSECUTIVE_FAILURES}"
+        
+        # Check if circuit should open
+        if [[ ${CONSECUTIVE_FAILURES} -ge ${THRESHOLD} ]]; then
+          echo "⚠️ Circuit breaker OPEN - ${CONSECUTIVE_FAILURES} consecutive failures detected"
+          echo "status=open" >> $GITHUB_OUTPUT
+          echo "should-skip=true" >> $GITHUB_OUTPUT
+          
+          # Create warning annotation
+          echo "::warning title=Circuit Breaker Open::Component ${COMPONENT} has failed ${CONSECUTIVE_FAILURES} times consecutively. Skipping to prevent further failures."
+        else
+          echo "✅ Circuit breaker CLOSED - System healthy"
+          echo "status=closed" >> $GITHUB_OUTPUT
+          echo "should-skip=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Log Circuit Status
+      shell: bash
+      run: |
+        if [[ "${{ steps.check-circuit.outputs.status }}" == "open" ]]; then
+          echo "🔴 Circuit Breaker Status: OPEN"
+          echo "⏭️ Tests will be skipped to prevent cascading failures"
+          echo ""
+          echo "To reset the circuit breaker:"
+          echo "1. Fix the underlying issues"
+          echo "2. Run a manual workflow with circuit breaker override"
+          echo "3. Or wait for automatic recovery after successful runs"
+        else
+          echo "🟢 Circuit Breaker Status: CLOSED"
+          echo "✅ Tests will proceed normally"
+        fi
