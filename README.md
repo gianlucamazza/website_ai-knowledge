@@ -102,7 +102,7 @@ website_ai-knowledge/
 - [Code Standards](docs/CODE_STANDARDS.md) - Code quality and style guidelines
 
 ### Operational Documentation
-- [CI/CD Documentation](CI_CD_README.md) - Continuous integration and deployment
+- [CI/CD Documentation](docs/ci-cd/) - Continuous integration and deployment
 - [Monitoring Guide](docs/MONITORING_GUIDE.md) - System monitoring and alerting
 - [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
 - [Maintenance Schedule](docs/MAINTENANCE_SCHEDULE.md) - Regular maintenance tasks

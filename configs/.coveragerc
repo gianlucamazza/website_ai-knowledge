@@ -1,0 +1,121 @@
+[run]
+# Coverage.py configuration for Python code coverage
+
+# Source directories to analyze
+source = pipelines
+
+# Enable branch coverage
+branch = True
+
+# Files to omit from coverage
+omit =
+    # Test files
+    tests/*
+    */test_*.py
+    */*_test.py
+    */tests/*
+    */__tests__/*
+    */conftest.py
+    
+    # Virtual environments
+    venv/*
+    .venv/*
+    env/*
+    .env/*
+    */site-packages/*
+    
+    # Build and cache directories
+    build/*
+    dist/*
+    *.egg-info/*
+    __pycache__/*
+    */__pycache__/*
+    .pytest_cache/*
+    .coverage
+    .tox/*
+    
+    # Configuration and setup files
+    setup.py
+    setup.cfg
+    */migrations/*
+    */settings/*
+    
+    # Documentation
+    docs/*
+    *.md
+
+# Data file for storing coverage information
+data_file = .coverage
+
+# Context support for advanced coverage tracking
+dynamic_context = test_function
+
+[report]
+# Reporting configuration
+
+# Fail if coverage is below this percentage
+fail_under = 95
+
+# Show missing line numbers
+show_missing = True
+
+# Skip files with 100% coverage in the report
+skip_covered = False
+
+# Skip empty files
+skip_empty = False
+
+# Precision for coverage percentages  
+precision = 2
+
+# Sort report by name
+sort = Name
+
+# Exclude these lines from coverage analysis
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+    
+    # Don't complain about missing debug-only code
+    def __repr__
+    if self\.debug
+    
+    # Don't complain if tests don't hit defensive assertion code
+    raise AssertionError
+    raise NotImplementedError
+    
+    # Don't complain if non-runnable code isn't run
+    if 0:
+    if False:
+    if __name__ == .__main__.:
+    
+    # Don't complain about abstract methods
+    @(abc\.)?abstractmethod
+    
+    # Don't complain about protocol methods
+    class .*\(.*Protocol.*\):
+    
+    # Don't complain about type checking imports
+    if TYPE_CHECKING:
+
+[html]
+# HTML report configuration
+directory = coverage/html-report
+title = AI Knowledge Website - Pipeline Coverage Report
+show_contexts = True
+include_all_sources = True
+skip_covered = False
+skip_empty = False
+
+[xml]
+# XML report configuration for CI/CD integration
+output = coverage/coverage.xml
+
+[lcov]
+# LCOV format for integration with various tools
+output = coverage/lcov.info
+
+[json]
+# JSON report for programmatic access
+output = coverage/coverage.json
+show_contexts = True

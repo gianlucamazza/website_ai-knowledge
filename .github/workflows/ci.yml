@@ -323,12 +323,7 @@ jobs:
           echo "PREVIEW_SERVER_PORT: ${PREVIEW_SERVER_PORT:-not set}"
           echo "TEST_SERVER_PORT: ${TEST_SERVER_PORT:-not set}"
           
-          # Read port allocation from file as fallback
-          if [ -z "${DEV_SERVER_PORT}" ] && [ -f "../.port-allocation.json" ]; then
-            echo "📖 Reading port allocation from file..."
-            DEV_SERVER_PORT=$(node -e "console.log(require('../.port-allocation.json').dev)")
-            echo "Port from file: ${DEV_SERVER_PORT}"
-          fi
+          # Use environment variable or default port
           
           # Use allocated port or default
           ACTUAL_PORT=${DEV_SERVER_PORT:-4321}

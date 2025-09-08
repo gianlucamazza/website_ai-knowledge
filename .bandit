@@ -1,14 +1,1 @@
-# .bandit - Bandit security scanner configuration
-[bandit]
-exclude_dirs = /tests/,/scripts/,/data/,/apps/site/node_modules/
-skips = B101,B601,B603,B607
-# B101: assert_used - We use asserts in tests
-# B601: paramiko_calls - Not using paramiko
-# B603: subprocess_without_shell_equals_true - Controlled usage
-# B607: start_process_with_partial_path - Controlled usage
-
-[bandit_plugins]
-# Custom plugin settings
-
-[tests]
-# Test-specific settings
+configs/.bandit

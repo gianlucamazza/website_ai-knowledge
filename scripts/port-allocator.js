@@ -99,7 +99,7 @@ class PortAllocator {
    * Save port allocation to file
    */
   async savePortAllocation(allocation, outputFile = null) {
-    const filePath = outputFile || path.join(process.cwd(), '.port-allocation.json');
+    const filePath = outputFile || path.join(require('os').tmpdir(), '.port-allocation.json');
     
     try {
       fs.writeFileSync(filePath, JSON.stringify(allocation, null, 2));
@@ -115,7 +115,7 @@ class PortAllocator {
    * Load port allocation from file
    */
   loadPortAllocation(inputFile = null) {
-    const filePath = inputFile || path.join(process.cwd(), '.port-allocation.json');
+    const filePath = inputFile || path.join(require('os').tmpdir(), '.port-allocation.json');
     
     try {
       if (fs.existsSync(filePath)) {
