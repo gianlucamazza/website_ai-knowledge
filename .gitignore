@@ -93,6 +93,12 @@ temp/
 *.pfx
 secrets/
 credentials/
+*secret*
+*credential*
+*password*
+*.token
+auth.json
+config.json
 
 # OS files
 .DS_Store
