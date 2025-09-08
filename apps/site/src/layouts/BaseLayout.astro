@@ -15,7 +15,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     
@@ -122,11 +122,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <body>
     <header>
       <nav class="container">
-        <a href="/" class="logo">AI Knowledge</a>
+        <a href={import.meta.env.BASE_URL || '/'} class="logo">AI Knowledge</a>
         <ul class="nav-links">
-          <li><a href="/glossary">Glossary</a></li>
-          <li><a href="/articles">Articles</a></li>
-          <li><a href="/about">About</a></li>
+          <li><a href={`${import.meta.env.BASE_URL || '/'}glossary`}>Glossary</a></li>
+          <li><a href={`${import.meta.env.BASE_URL || '/'}articles`}>Articles</a></li>
+          <li><a href={`${import.meta.env.BASE_URL || '/'}about`}>About</a></li>
         </ul>
       </nav>
     </header>

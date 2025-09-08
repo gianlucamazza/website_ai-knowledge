@@ -4,7 +4,9 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ai-knowledge.com',
+  // For GitHub Pages deployment
+  site: 'https://gianlucamazza.github.io',
+  base: '/website_ai-knowledge',
   integrations: [
     mdx(),
     sitemap()
