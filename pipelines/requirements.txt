@@ -18,6 +18,7 @@ markdownify==0.11.6
 readability-lxml==0.8.1
 html2text==2024.2.26
 langdetect==1.0.9
+python-slugify==8.0.1
 
 # Deduplication and similarity
 simhash==2.1.2
