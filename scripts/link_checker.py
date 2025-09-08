@@ -20,10 +20,11 @@ import time
 
 import aiohttp
 import yaml
+# Use safe loader to prevent arbitrary code execution
 try:
-    from yaml import CLoader as Loader
+    from yaml import CSafeLoader as SafeLoader
 except ImportError:
-    from yaml import Loader
+    from yaml import SafeLoader
 
 
 @dataclass
@@ -85,7 +86,7 @@ class LinkChecker:
             if len(parts) < 3:
                 return None, content
             
-            frontmatter = yaml.load(parts[1], Loader=Loader)
+            frontmatter = yaml.load(parts[1], Loader=SafeLoader)
             body = parts[2].strip()
             
             return frontmatter, body

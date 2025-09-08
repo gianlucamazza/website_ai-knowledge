@@ -24,7 +24,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from pipelines.config import PipelineConfig, DatabaseConfig
 from pipelines.database.connection import DatabaseManager
-from pipelines.database.models import Base, Article, Source, ProcessingJob
+from pipelines.database.models import Base, Article, Source
 
 
 # Test Configuration
