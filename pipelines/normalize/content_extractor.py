@@ -6,7 +6,7 @@ Provides intelligent content extraction with quality scoring and metadata extrac
 
 import logging
 import re
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
 from bs4 import BeautifulSoup
@@ -89,7 +89,7 @@ class ContentExtractor:
                 **quality_metrics,
                 "language": language,
                 "keywords": keywords,
-                "extracted_at": datetime.now(UTC),
+                "extracted_at": datetime.now(timezone.utc),
                 "extraction_method": readability_result.get("method", "unknown"),
             }
 
@@ -529,5 +529,5 @@ class ContentExtractor:
             "language": "en",
             "keywords": [],
             "method": "failed",
-            "extracted_at": datetime.now(UTC),
+            "extracted_at": datetime.now(timezone.utc),
         }
