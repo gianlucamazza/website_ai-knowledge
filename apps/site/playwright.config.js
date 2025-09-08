@@ -29,7 +29,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL || 'http://localhost:4321/website_ai-knowledge',
+    baseURL: process.env.BASE_URL || `http://localhost:${process.env.DEV_SERVER_PORT || 4321}/website_ai-knowledge`,
     
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -92,8 +92,8 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: process.env.CI ? {
     // In CI, use preview mode with dynamic port from environment
-    command: 'npm run preview',
-    url: process.env.BASE_URL || 'http://localhost:4321/website_ai-knowledge',
+    command: `npm run preview -- --port ${process.env.DEV_SERVER_PORT || 4321}`,
+    url: process.env.BASE_URL || `http://localhost:${process.env.DEV_SERVER_PORT || 4321}/website_ai-knowledge`,
     reuseExistingServer: false,  // Never reuse in CI
     timeout: 120000,
     stdout: 'pipe',
