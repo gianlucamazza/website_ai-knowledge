@@ -7,11 +7,11 @@ Provides SQLAlchemy models and connection management for PostgreSQL.
 from .connection import DatabaseManager, get_db_session
 from .models import (
     Article,
+    Base,
     ContentDuplicate,
     EnrichmentTask,
     PipelineRun,
     Source,
-    Base,
 )
 
 __all__ = [

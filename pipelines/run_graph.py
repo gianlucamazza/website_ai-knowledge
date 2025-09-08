@@ -13,14 +13,14 @@ from pathlib import Path
 from typing import List, Optional
 
 import typer
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
-from rich.table import Table
-from rich.panel import Panel
 from rich import print as rprint
+from rich.console import Console
+from rich.panel import Panel
+from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
+from rich.table import Table
 
 from .config import config
-from .database import init_database, close_database, get_db_session
+from .database import close_database, get_db_session, init_database
 from .orchestrators.langgraph import PipelineWorkflow
 
 # Initialize Typer app
@@ -208,9 +208,10 @@ def publish(
         try:
             await init_database()
 
-            from .publish import MarkdownGenerator
-            from .database.models import Article, ContentStatus, PipelineStage
             from sqlalchemy import select
+
+            from .database.models import Article, ContentStatus, PipelineStage
+            from .publish import MarkdownGenerator
 
             markdown_generator = MarkdownGenerator()
 
@@ -294,8 +295,9 @@ def status(
         try:
             await init_database()
 
-            from .database.models import PipelineRun, Article, ContentStatus, PipelineStage
-            from sqlalchemy import select, func, desc
+            from sqlalchemy import desc, func, select
+
+            from .database.models import Article, ContentStatus, PipelineRun, PipelineStage
 
             async with get_db_session() as session:
                 if run_id:
@@ -425,8 +427,9 @@ def sources(
 
                 if list_all or sync:
                     # Display sources
-                    from .database.models import Source
                     from sqlalchemy import select
+
+                    from .database.models import Source
 
                     query = select(Source).order_by(Source.name)
                     result = await session.execute(query)

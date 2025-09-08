@@ -13,13 +13,13 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from prometheus_client import Counter, Histogram, Gauge, generate_latest
+from prometheus_client import Counter, Gauge, Histogram, generate_latest
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
 
 from .config import config
 from .database import get_db_session
-from .database.models import Article, PipelineRun, Source, ContentStatus, PipelineStage
+from .database.models import Article, ContentStatus, PipelineRun, PipelineStage, Source
 
 logger = logging.getLogger(__name__)
 

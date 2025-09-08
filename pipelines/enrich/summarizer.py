@@ -191,9 +191,9 @@ class ContentSummarizer:
     async def _extractive_summarization(self, content: str, title: str) -> Dict:
         """Fallback extractive summarization using TF-IDF."""
         try:
+            import numpy as np
             from sklearn.feature_extraction.text import TfidfVectorizer
             from sklearn.metrics.pairwise import cosine_similarity
-            import numpy as np
 
             # Split into sentences
             sentences = self._split_into_sentences(content)

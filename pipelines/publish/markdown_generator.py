@@ -12,8 +12,8 @@ from typing import Dict, List, Optional
 
 import yaml
 from slugify import slugify
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import config
 from ..database.models import Article, ContentStatus, ContentType

@@ -11,11 +11,11 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import yaml
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import config
-from ..database.models import Article, Source, ContentStatus, PipelineStage
+from ..database.models import Article, ContentStatus, PipelineStage, Source
 from .rss_parser import RSSParser
 from .scraper import EthicalScraper
 

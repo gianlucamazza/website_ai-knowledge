@@ -10,7 +10,7 @@ import pickle
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
-from datasketch import MinHashLSH, MinHash
+from datasketch import MinHash, MinHashLSH
 
 from ..config import config
 

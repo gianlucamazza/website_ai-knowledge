@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
-from langdetect import detect, DetectorFactory
+from langdetect import DetectorFactory, detect
 from readability import Document
 from sklearn.feature_extraction.text import TfidfVectorizer
 
