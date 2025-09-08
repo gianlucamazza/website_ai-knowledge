@@ -135,12 +135,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1173,
+                      "duration": 520,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:57.451Z",
+                      "startTime": "2025-09-07T23:14:50.127Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -169,12 +169,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1276,
+                      "duration": 592,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:57.453Z",
+                      "startTime": "2025-09-07T23:14:50.125Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -203,7 +203,7 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "failed",
-                      "duration": 1188,
+                      "duration": 570,
                       "error": {
                         "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n",
                         "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32",
@@ -227,7 +227,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:57.460Z",
+                      "startTime": "2025-09-07T23:14:50.133Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -277,12 +277,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1281,
+                      "duration": 543,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:57.454Z",
+                      "startTime": "2025-09-07T23:14:50.120Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -311,12 +311,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 1252,
+                      "duration": 618,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:57.451Z",
+                      "startTime": "2025-09-07T23:14:50.123Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -343,14 +343,14 @@
                   "results": [
                     {
                       "workerIndex": 6,
-                      "parallelIndex": 4,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2434,
+                      "duration": 1714,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:02.759Z",
+                      "startTime": "2025-09-07T23:14:53.051Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -377,14 +377,14 @@
                   "results": [
                     {
                       "workerIndex": 7,
-                      "parallelIndex": 0,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2689,
+                      "duration": 1493,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:02.875Z",
+                      "startTime": "2025-09-07T23:14:53.432Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -411,12 +411,12 @@
                   "results": [
                     {
                       "workerIndex": 8,
-                      "parallelIndex": 1,
+                      "parallelIndex": 3,
                       "status": "failed",
-                      "duration": 2669,
+                      "duration": 1756,
                       "error": {
-                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n",
-                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32",
+                        "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n",
+                        "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32",
                         "location": {
                           "file": "/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js",
                           "column": 32,
@@ -431,13 +431,13 @@
                             "column": 32,
                             "line": 74
                           },
-                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n\n  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     \n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32"
+                          "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n\n  72 |     // Test Articles link\n  73 |     const articlesLink = page.getByRole('link', { name: /articles/i })\n> 74 |     await expect(articlesLink).toBeVisible()\n     |                                ^\n  75 |     await articlesLink.click()\n  76 |     await expect(page).toHaveURL(/\\/articles/i)\n  77 |     \n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:03.414Z",
+                      "startTime": "2025-09-07T23:14:53.453Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -485,14 +485,14 @@
                   "results": [
                     {
                       "workerIndex": 9,
-                      "parallelIndex": 3,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 2579,
+                      "duration": 1721,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:03.558Z",
+                      "startTime": "2025-09-07T23:14:53.551Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -518,15 +518,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 6,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1519,
+                      "duration": 1169,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:06.588Z",
+                      "startTime": "2025-09-07T23:14:55.696Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -552,15 +552,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 4,
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1887,
+                      "duration": 1117,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:14.015Z",
+                      "startTime": "2025-09-07T23:15:01.194Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -586,15 +586,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 13,
-                      "parallelIndex": 3,
+                      "workerIndex": 12,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1253,
+                      "duration": 798,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:15.491Z",
+                      "startTime": "2025-09-07T23:15:01.982Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -620,10 +620,10 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 14,
-                      "parallelIndex": 1,
+                      "workerIndex": 13,
+                      "parallelIndex": 3,
                       "status": "failed",
-                      "duration": 1276,
+                      "duration": 811,
                       "error": {
                         "message": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n",
                         "stack": "Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:\n    1) <a href=\"/articles\" data-astro-cid-37fxchfa=\"\" data-astro-source-loc=\"128:35\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro\">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })\n    2) <a href=\"/articles\" class=\"cta-secondary\" data-astro-cid-j7pv25f6=\"\" data-astro-source-loc=\"26:49\" data-astro-source-file=\"/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro\">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /articles/i })\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:74:32",
@@ -647,7 +647,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:15.506Z",
+                      "startTime": "2025-09-07T23:15:02.354Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -694,15 +694,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 15,
-                      "parallelIndex": 2,
+                      "workerIndex": 14,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 1036,
+                      "duration": 749,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:17.067Z",
+                      "startTime": "2025-09-07T23:15:03.280Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -728,15 +728,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 4,
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1022,
+                      "duration": 578,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:16.626Z",
+                      "startTime": "2025-09-07T23:15:02.927Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -770,15 +770,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 934,
+                      "duration": 341,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:58.880Z",
+                      "startTime": "2025-09-07T23:14:50.889Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -804,15 +804,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 2,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1038,
+                      "duration": 338,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:59.300Z",
+                      "startTime": "2025-09-07T23:14:50.899Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -838,15 +838,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 934,
+                      "duration": 302,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:58.952Z",
+                      "startTime": "2025-09-07T23:14:50.942Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -872,15 +872,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 939,
+                      "duration": 310,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:58.962Z",
+                      "startTime": "2025-09-07T23:14:50.941Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -906,15 +906,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 9,
-                      "parallelIndex": 3,
+                      "workerIndex": 7,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1268,
+                      "duration": 855,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:06.876Z",
+                      "startTime": "2025-09-07T23:14:55.885Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -940,15 +940,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 4,
+                      "workerIndex": 9,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1302,
+                      "duration": 755,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:07.696Z",
+                      "startTime": "2025-09-07T23:14:56.585Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -974,15 +974,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 7,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2410,
+                      "duration": 642,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:08.155Z",
+                      "startTime": "2025-09-07T23:14:56.760Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1008,15 +1008,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 6,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1234,
+                      "duration": 587,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:08.115Z",
+                      "startTime": "2025-09-07T23:14:56.879Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1042,15 +1042,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 13,
-                      "parallelIndex": 3,
+                      "workerIndex": 12,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 828,
+                      "duration": 448,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:17.055Z",
+                      "startTime": "2025-09-07T23:15:03.002Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1076,15 +1076,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 16,
-                      "parallelIndex": 1,
+                      "workerIndex": 15,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1017,
+                      "duration": 575,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:17.599Z",
+                      "startTime": "2025-09-07T23:15:03.963Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1111,14 +1111,14 @@
                   "results": [
                     {
                       "workerIndex": 12,
-                      "parallelIndex": 4,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 831,
+                      "duration": 452,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:17.664Z",
+                      "startTime": "2025-09-07T23:15:03.461Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1144,15 +1144,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 13,
-                      "parallelIndex": 3,
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 791,
+                      "duration": 420,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:17.897Z",
+                      "startTime": "2025-09-07T23:15:03.514Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1186,15 +1186,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 5,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 624,
+                      "duration": 649,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:58.962Z",
+                      "startTime": "2025-09-07T23:14:51.547Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1223,12 +1223,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 597,
+                      "duration": 624,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:59.594Z",
+                      "startTime": "2025-09-07T23:14:51.238Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1257,12 +1257,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 633,
+                      "duration": 609,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:59.823Z",
+                      "startTime": "2025-09-07T23:14:51.250Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1289,14 +1289,14 @@
                   "results": [
                     {
                       "workerIndex": 9,
-                      "parallelIndex": 3,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 801,
+                      "duration": 822,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:08.152Z",
+                      "startTime": "2025-09-07T23:14:57.351Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1322,15 +1322,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 9,
-                      "parallelIndex": 3,
+                      "workerIndex": 7,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 789,
+                      "duration": 835,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:08.961Z",
+                      "startTime": "2025-09-07T23:14:57.415Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1357,14 +1357,14 @@
                   "results": [
                     {
                       "workerIndex": 6,
-                      "parallelIndex": 4,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 783,
+                      "duration": 840,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:09.007Z",
+                      "startTime": "2025-09-07T23:14:57.477Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1390,15 +1390,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 15,
-                      "parallelIndex": 2,
+                      "workerIndex": 12,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 757,
+                      "duration": 725,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:18.320Z",
+                      "startTime": "2025-09-07T23:15:03.920Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1424,15 +1424,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 4,
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 728,
+                      "duration": 736,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:18.508Z",
+                      "startTime": "2025-09-07T23:15:03.943Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1458,15 +1458,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 13,
-                      "parallelIndex": 3,
+                      "workerIndex": 14,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 713,
+                      "duration": 748,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:18.697Z",
+                      "startTime": "2025-09-07T23:15:04.291Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1500,15 +1500,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 999,
+                      "duration": 295,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:59.897Z",
+                      "startTime": "2025-09-07T23:14:51.253Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1534,15 +1534,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 971,
+                      "duration": 288,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:27:59.907Z",
+                      "startTime": "2025-09-07T23:14:51.260Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1568,15 +1568,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1502,
+                      "duration": 927,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:00.196Z",
+                      "startTime": "2025-09-07T23:14:51.556Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1602,15 +1602,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 0,
+                      "workerIndex": 10,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1170,
+                      "duration": 1260,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:09.359Z",
+                      "startTime": "2025-09-07T23:14:58.316Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1637,14 +1637,14 @@
                   "results": [
                     {
                       "workerIndex": 9,
-                      "parallelIndex": 3,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1473,
+                      "duration": 508,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:09.756Z",
+                      "startTime": "2025-09-07T23:14:58.180Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1670,15 +1670,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 4,
+                      "workerIndex": 7,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1777,
+                      "duration": 1067,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:09.797Z",
+                      "startTime": "2025-09-07T23:14:58.257Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1704,15 +1704,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 16,
+                      "workerIndex": 12,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 767,
+                      "duration": 432,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:18.873Z",
+                      "startTime": "2025-09-07T23:15:04.660Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1738,15 +1738,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 15,
+                      "workerIndex": 11,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 788,
+                      "duration": 432,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:19.083Z",
+                      "startTime": "2025-09-07T23:15:04.691Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1772,15 +1772,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 4,
+                      "workerIndex": 15,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1329,
+                      "duration": 1022,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:19.242Z",
+                      "startTime": "2025-09-07T23:15:04.762Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1814,10 +1814,10 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 2,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "failed",
-                      "duration": 11034,
+                      "duration": 11052,
                       "error": {
                         "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n",
                         "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32",
@@ -1841,7 +1841,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:00.459Z",
+                      "startTime": "2025-09-07T23:14:51.556Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1888,10 +1888,10 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 6,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 10885,
+                      "duration": 10845,
                       "error": {
                         "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n",
                         "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32",
@@ -1915,7 +1915,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:10.535Z",
+                      "startTime": "2025-09-07T23:14:58.326Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1962,10 +1962,10 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 13,
-                      "parallelIndex": 3,
+                      "workerIndex": 14,
+                      "parallelIndex": 4,
                       "status": "failed",
-                      "duration": 10746,
+                      "duration": 10744,
                       "error": {
                         "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n",
                         "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  getByTestId('definition').or(locator('[data-definition], .definition'))\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('definition').or(locator('[data-definition], .definition'))\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:397:32",
@@ -1989,7 +1989,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:19.416Z",
+                      "startTime": "2025-09-07T23:15:05.049Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -2047,12 +2047,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 999,
+                      "duration": 389,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:00.465Z",
+                      "startTime": "2025-09-07T23:14:51.866Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2078,15 +2078,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 997,
+                      "duration": 352,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:00.885Z",
+                      "startTime": "2025-09-07T23:14:51.870Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2112,15 +2112,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 10,
-                      "parallelIndex": 1,
+                      "workerIndex": 9,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1369,
+                      "duration": 474,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:11.175Z",
+                      "startTime": "2025-09-07T23:14:58.699Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2147,14 +2147,14 @@
                   "results": [
                     {
                       "workerIndex": 9,
-                      "parallelIndex": 3,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1265,
+                      "duration": 503,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:11.237Z",
+                      "startTime": "2025-09-07T23:14:59.180Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2180,15 +2180,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 16,
+                      "workerIndex": 12,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 881,
+                      "duration": 507,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:19.646Z",
+                      "startTime": "2025-09-07T23:15:05.102Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2214,15 +2214,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 15,
+                      "workerIndex": 11,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1222,
+                      "duration": 483,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:19.880Z",
+                      "startTime": "2025-09-07T23:15:05.133Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2256,15 +2256,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1466,
+                      "duration": 843,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:00.905Z",
+                      "startTime": "2025-09-07T23:14:52.228Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2293,12 +2293,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 990,
+                      "duration": 367,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:01.472Z",
+                      "startTime": "2025-09-07T23:14:52.262Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2324,15 +2324,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 5,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1491,
+                      "duration": 863,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:01.704Z",
+                      "startTime": "2025-09-07T23:14:52.308Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2361,12 +2361,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1156,
+                      "duration": 542,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:01.887Z",
+                      "startTime": "2025-09-07T23:14:52.491Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2392,15 +2392,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 11,
-                      "parallelIndex": 2,
+                      "workerIndex": 7,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3154,
+                      "duration": 970,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:11.905Z",
+                      "startTime": "2025-09-07T23:14:59.333Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2426,15 +2426,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 4,
+                      "workerIndex": 9,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1567,
+                      "duration": 714,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:11.582Z",
+                      "startTime": "2025-09-07T23:14:59.689Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2460,15 +2460,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 10,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2018,
+                      "duration": 1221,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:12.509Z",
+                      "startTime": "2025-09-07T23:15:00.253Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2494,15 +2494,15 @@
                   "projectName": "firefox",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 7,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2013,
+                      "duration": 900,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:12.552Z",
+                      "startTime": "2025-09-07T23:15:00.312Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2528,15 +2528,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 16,
+                      "workerIndex": 12,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1322,
+                      "duration": 985,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:20.534Z",
+                      "startTime": "2025-09-07T23:15:05.617Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2562,15 +2562,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 4,
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 853,
+                      "duration": 511,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:20.578Z",
+                      "startTime": "2025-09-07T23:15:05.624Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2597,9 +2597,9 @@
                   "results": [
                     {
                       "workerIndex": 15,
-                      "parallelIndex": 2,
+                      "parallelIndex": 3,
                       "status": "failed",
-                      "duration": 10875,
+                      "duration": 10485,
                       "error": {
                         "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator(':focus')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator(':focus')\u001b[22m\n",
                         "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator(':focus')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator(':focus')\u001b[22m\n\n    at /Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/tests/e2e/site-functionality.spec.js:531:34",
@@ -2623,7 +2623,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:21.108Z",
+                      "startTime": "2025-09-07T23:15:05.791Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -2670,15 +2670,15 @@
                   "projectName": "webkit",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 4,
+                      "workerIndex": 11,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1052,
+                      "duration": 707,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-09-07T14:28:21.437Z",
+                      "startTime": "2025-09-07T23:15:06.141Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -2698,8 +2698,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-09-07T14:27:49.264Z",
-    "duration": 42782.301999999996,
+    "startTime": "2025-09-07T23:14:43.961Z",
+    "duration": 32367.113999999998,
     "expected": 59,
     "skipped": 0,
     "unexpected": 7,

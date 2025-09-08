@@ -1,10 +1,10 @@
-<testsuites id="" name="" tests="66" failures="7" skipped="0" errors="0" time="42.782301999999994">
-<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T14:27:57.008Z" hostname="chromium" tests="22" failures="2" skipped="0" time="33.474" errors="0">
-<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="1.173">
+<testsuites id="" name="" tests="66" failures="7" skipped="0" errors="0" time="32.367114">
+<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T23:14:49.729Z" hostname="chromium" tests="22" failures="2" skipped="0" time="21.934" errors="0">
+<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="0.52">
 </testcase>
-<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="1.276">
+<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="0.592">
 </testcase>
-<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="1.188">
+<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="0.57">
 <failure message="site-functionality.spec.js:71:3 navigation menu works correctly" type="FAILURE">
 <![CDATA[  [chromium] › site-functionality.spec.js:71:3 › Homepage Functionality › navigation menu works correctly 
 
@@ -47,31 +47,31 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="1.281">
+<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="0.543">
 </testcase>
-<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="1.252">
+<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="0.618">
 </testcase>
-<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="0.934">
+<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="0.341">
 </testcase>
-<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="1.038">
+<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="0.338">
 </testcase>
-<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="0.934">
+<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="0.302">
 </testcase>
-<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="0.939">
+<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="0.31">
 </testcase>
-<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.624">
+<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.649">
 </testcase>
-<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.597">
+<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.624">
 </testcase>
-<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.633">
+<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.609">
 </testcase>
-<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="0.999">
+<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="0.295">
 </testcase>
-<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="0.971">
+<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="0.288">
 </testcase>
-<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.502">
+<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="0.927">
 </testcase>
-<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="11.034">
+<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="11.052">
 <failure message="site-functionality.spec.js:380:3 glossary term page renders correctly" type="FAILURE">
 <![CDATA[  [chromium] › site-functionality.spec.js:380:3 › Glossary Term Detail › glossary term page renders correctly 
 
@@ -117,31 +117,31 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="0.999">
+<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="0.389">
 </testcase>
-<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="0.997">
+<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="0.352">
 </testcase>
-<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="1.466">
+<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="0.843">
 </testcase>
-<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="0.99">
+<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="0.367">
 </testcase>
-<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="1.491">
+<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="0.863">
 </testcase>
-<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="1.156">
+<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="0.542">
 </testcase>
 </testsuite>
-<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T14:27:57.008Z" hostname="firefox" tests="22" failures="2" skipped="0" time="47.168" errors="0">
-<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="2.434">
+<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T23:14:49.729Z" hostname="firefox" tests="22" failures="2" skipped="0" time="31.651" errors="0">
+<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="1.714">
 </testcase>
-<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="2.689">
+<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="1.493">
 </testcase>
-<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="2.669">
+<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="1.756">
 <failure message="site-functionality.spec.js:71:3 navigation menu works correctly" type="FAILURE">
 <![CDATA[  [firefox] › site-functionality.spec.js:71:3 › Homepage Functionality › navigation menu works correctly 
 
     Error: expect.toBeVisible: Error: strict mode violation: getByRole('link', { name: /articles/i }) resolved to 2 elements:
-        1) <a href="/articles" data-astro-cid-37fxchfa="" data-astro-source-loc="128:35" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/layouts/BaseLayout.astro">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })
-        2) <a href="/articles" class="cta-secondary" data-astro-cid-j7pv25f6="" data-astro-source-loc="26:49" data-astro-source-file="/Users/gianlucamazza/Workspace/website_ai-knowledge/apps/site/src/pages/index.astro">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })
+        1) <a href="/articles" data-astro-cid-37fxchfa="">Articles</a> aka getByRole('link', { name: 'Articles', exact: true })
+        2) <a href="/articles" class="cta-secondary" data-astro-cid-j7pv25f6="">Read Articles</a> aka getByRole('link', { name: 'Read Articles' })
 
     Call log:
       - Expect "toBeVisible" with timeout 10000ms
@@ -178,31 +178,31 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="2.579">
+<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="1.721">
 </testcase>
-<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="1.519">
+<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="1.169">
 </testcase>
-<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="1.268">
+<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="0.855">
 </testcase>
-<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="1.302">
+<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="0.755">
 </testcase>
-<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="2.41">
+<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="0.642">
 </testcase>
-<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="1.234">
+<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="0.587">
 </testcase>
-<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.801">
+<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.822">
 </testcase>
-<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.789">
+<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.835">
 </testcase>
-<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.783">
+<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.84">
 </testcase>
-<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="1.17">
+<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="1.26">
 </testcase>
-<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="1.473">
+<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="0.508">
 </testcase>
-<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.777">
+<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.067">
 </testcase>
-<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="10.885">
+<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="10.845">
 <failure message="site-functionality.spec.js:380:3 glossary term page renders correctly" type="FAILURE">
 <![CDATA[  [firefox] › site-functionality.spec.js:380:3 › Glossary Term Detail › glossary term page renders correctly 
 
@@ -248,25 +248,25 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="1.369">
+<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="0.474">
 </testcase>
-<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="1.265">
+<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="0.503">
 </testcase>
-<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="3.154">
+<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="0.97">
 </testcase>
-<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="1.567">
+<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="0.714">
 </testcase>
-<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="2.018">
+<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="1.221">
 </testcase>
-<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="2.013">
+<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="0.9">
 </testcase>
 </testsuite>
-<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T14:27:57.008Z" hostname="webkit" tests="22" failures="3" skipped="0" time="41.974" errors="0">
-<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="1.887">
+<testsuite name="site-functionality.spec.js" timestamp="2025-09-07T23:14:49.729Z" hostname="webkit" tests="22" failures="3" skipped="0" time="34.465" errors="0">
+<testcase name="Homepage Functionality › loads homepage successfully" classname="site-functionality.spec.js" time="1.117">
 </testcase>
-<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="1.253">
+<testcase name="Homepage Functionality › has correct meta tags for SEO" classname="site-functionality.spec.js" time="0.798">
 </testcase>
-<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="1.276">
+<testcase name="Homepage Functionality › navigation menu works correctly" classname="site-functionality.spec.js" time="0.811">
 <failure message="site-functionality.spec.js:71:3 navigation menu works correctly" type="FAILURE">
 <![CDATA[  [webkit] › site-functionality.spec.js:71:3 › Homepage Functionality › navigation menu works correctly 
 
@@ -309,31 +309,31 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="1.036">
+<testcase name="Homepage Functionality › search functionality is accessible" classname="site-functionality.spec.js" time="0.749">
 </testcase>
-<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="1.022">
+<testcase name="Homepage Functionality › responsive design works on mobile" classname="site-functionality.spec.js" time="0.578">
 </testcase>
-<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="0.828">
+<testcase name="Articles Page › articles page loads and displays content" classname="site-functionality.spec.js" time="0.448">
 </testcase>
-<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="1.017">
+<testcase name="Articles Page › article filtering and sorting works" classname="site-functionality.spec.js" time="0.575">
 </testcase>
-<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="0.831">
+<testcase name="Articles Page › pagination works if present" classname="site-functionality.spec.js" time="0.452">
 </testcase>
-<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="0.791">
+<testcase name="Articles Page › article card interaction" classname="site-functionality.spec.js" time="0.42">
 </testcase>
-<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.757">
+<testcase name="Article Detail Page › article detail page renders correctly" classname="site-functionality.spec.js" time="0.725">
 </testcase>
-<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.728">
+<testcase name="Article Detail Page › article navigation and related content" classname="site-functionality.spec.js" time="0.736">
 </testcase>
-<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.713">
+<testcase name="Article Detail Page › social sharing functionality" classname="site-functionality.spec.js" time="0.748">
 </testcase>
-<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="0.767">
+<testcase name="Glossary Functionality › glossary page loads and displays terms" classname="site-functionality.spec.js" time="0.432">
 </testcase>
-<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="0.788">
+<testcase name="Glossary Functionality › glossary search and filtering" classname="site-functionality.spec.js" time="0.432">
 </testcase>
-<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.329">
+<testcase name="Glossary Functionality › alphabetical navigation works" classname="site-functionality.spec.js" time="1.022">
 </testcase>
-<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="10.746">
+<testcase name="Glossary Term Detail › glossary term page renders correctly" classname="site-functionality.spec.js" time="10.744">
 <failure message="site-functionality.spec.js:380:3 glossary term page renders correctly" type="FAILURE">
 <![CDATA[  [webkit] › site-functionality.spec.js:380:3 › Glossary Term Detail › glossary term page renders correctly 
 
@@ -379,15 +379,15 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="0.881">
+<testcase name="Search Functionality › global search works across content types" classname="site-functionality.spec.js" time="0.507">
 </testcase>
-<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="1.222">
+<testcase name="Search Functionality › search result interaction" classname="site-functionality.spec.js" time="0.483">
 </testcase>
-<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="1.322">
+<testcase name="Performance and Accessibility › page loads within acceptable time" classname="site-functionality.spec.js" time="0.985">
 </testcase>
-<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="0.853">
+<testcase name="Performance and Accessibility › has no accessibility violations on key pages" classname="site-functionality.spec.js" time="0.511">
 </testcase>
-<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="10.875">
+<testcase name="Performance and Accessibility › works with keyboard navigation" classname="site-functionality.spec.js" time="10.485">
 <failure message="site-functionality.spec.js:523:3 works with keyboard navigation" type="FAILURE">
 <![CDATA[  [webkit] › site-functionality.spec.js:523:3 › Performance and Accessibility › works with keyboard navigation 
 
@@ -433,7 +433,7 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="1.052">
+<testcase name="Performance and Accessibility › responsive design works across viewports" classname="site-functionality.spec.js" time="0.707">
 </testcase>
 </testsuite>
 </testsuites>
