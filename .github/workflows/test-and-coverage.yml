@@ -50,6 +50,12 @@ jobs:
       run: |
         chmod +x scripts/install-dependencies.sh
         scripts/install-dependencies.sh --tier ${{ env.DEPENDENCY_TIER }} --timeout 600
+        
+        # Ensure pytest is installed (fallback)
+        if ! command -v pytest &> /dev/null; then
+          echo "pytest not found, installing directly..."
+          pip install pytest pytest-cov pytest-mock pytest-asyncio
+        fi
 
     - name: Set up test environment
       env:
