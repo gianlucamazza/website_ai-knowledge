@@ -18,7 +18,7 @@ __all__ = [
     "DatabaseManager",
     "get_db_session",
     "Article",
-    "ContentDuplicate", 
+    "ContentDuplicate",
     "EnrichmentTask",
     "PipelineRun",
     "Source",

@@ -95,16 +95,14 @@ website_ai-knowledge/
 ### Getting Started
 - [Development Guide](docs/DEVELOPMENT_GUIDE.md) - Local development setup and workflow
 - [Deployment Guide](docs/DEPLOYMENT_GUIDE.md) - Production deployment procedures
-- [User Guide](docs/USER_GUIDE.md) - Content creation and management
 
 ### Technical Documentation
 - [Architecture Overview](ARCHITECTURE.md) - Comprehensive system architecture
 - [API Documentation](docs/API_DOCUMENTATION.md) - Pipeline API reference
-- [Testing Guide](docs/TESTING_GUIDE.md) - Testing procedures and best practices
 - [Code Standards](docs/CODE_STANDARDS.md) - Code quality and style guidelines
 
 ### Operational Documentation
-- [Operations Manual](docs/OPERATIONS_MANUAL.md) - Day-to-day operations
+- [CI/CD Documentation](CI_CD_README.md) - Continuous integration and deployment
 - [Monitoring Guide](docs/MONITORING_GUIDE.md) - System monitoring and alerting
 - [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
 - [Maintenance Schedule](docs/MAINTENANCE_SCHEDULE.md) - Regular maintenance tasks

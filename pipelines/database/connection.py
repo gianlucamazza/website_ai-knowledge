@@ -27,33 +27,41 @@ logger = logging.getLogger(__name__)
 
 class DatabaseManager:
     """Manages database connections and session lifecycle."""
-    
+
     def __init__(self):
         self._engine: Optional[AsyncEngine] = None
         self._session_factory: Optional[async_sessionmaker] = None
-    
+
     @property
     def database_url(self) -> str:
         """Construct async PostgreSQL database URL."""
         db_config = config.database
         # Get the actual password value from SecretStr
-        password = db_config.password.get_secret_value() if hasattr(db_config.password, 'get_secret_value') else str(db_config.password)
+        password = (
+            db_config.password.get_secret_value()
+            if hasattr(db_config.password, "get_secret_value")
+            else str(db_config.password)
+        )
         return (
             f"postgresql+asyncpg://{db_config.username}:{password}"
             f"@{db_config.host}:{db_config.port}/{db_config.database}"
         )
-    
+
     @property
     def sync_database_url(self) -> str:
         """Construct sync PostgreSQL database URL for migrations."""
         db_config = config.database
         # Get the actual password value from SecretStr
-        password = db_config.password.get_secret_value() if hasattr(db_config.password, 'get_secret_value') else str(db_config.password)
+        password = (
+            db_config.password.get_secret_value()
+            if hasattr(db_config.password, "get_secret_value")
+            else str(db_config.password)
+        )
         return (
             f"postgresql://{db_config.username}:{password}"
             f"@{db_config.host}:{db_config.port}/{db_config.database}"
         )
-    
+
     async def initialize(self) -> None:
         """Initialize database connection and create tables if needed."""
         try:
@@ -74,40 +82,37 @@ class DatabaseManager:
                     "prepared_statement_cache_size": 100,
                 },
                 # Enable statement caching
-                execution_options={
-                    "compiled_cache": {},
-                    "isolation_level": "READ_COMMITTED"
-                }
+                execution_options={"compiled_cache": {}, "isolation_level": "READ_COMMITTED"},
             )
-            
+
             self._session_factory = async_sessionmaker(
                 bind=self._engine,
                 class_=AsyncSession,
                 expire_on_commit=False,
             )
-            
+
             # Test connection
             async with self._engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
-            
+
             logger.info("Database connection initialized successfully")
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize database: {e}")
             raise
-    
+
     async def close(self) -> None:
         """Close database connections."""
         if self._engine:
             await self._engine.dispose()
             logger.info("Database connections closed")
-    
+
     def get_session(self) -> AsyncSession:
         """Get a new database session."""
         if not self._session_factory:
             raise RuntimeError("Database not initialized. Call initialize() first.")
         return self._session_factory()
-    
+
     @asynccontextmanager
     async def session_scope(self) -> AsyncGenerator[AsyncSession, None]:
         """Provide a transactional scope around database operations."""
@@ -120,7 +125,7 @@ class DatabaseManager:
             raise
         finally:
             await session.close()
-    
+
     async def health_check(self) -> bool:
         """Check database connectivity."""
         try:
@@ -130,7 +135,7 @@ class DatabaseManager:
         except Exception as e:
             logger.error(f"Database health check failed: {e}")
             return False
-    
+
     def create_sync_engine(self):
         """Create synchronous engine for migrations."""
         return create_engine(
@@ -138,34 +143,40 @@ class DatabaseManager:
             echo=config.database.echo,
             poolclass=NullPool,
         )
-    
+
     async def create_database_if_not_exists(self) -> None:
         """Create database if it doesn't exist."""
         db_config = config.database
-        
+
         # Validate database name to prevent injection
         import re
-        if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', db_config.database):
-            raise ValueError(f"Invalid database name: {db_config.database}. Must contain only alphanumeric characters and underscores, starting with a letter.")
-        
+
+        if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*$", db_config.database):
+            raise ValueError(
+                f"Invalid database name: {db_config.database}. Must contain only alphanumeric characters and underscores, starting with a letter."
+            )
+
         # Get the actual password value from SecretStr
-        password = db_config.password.get_secret_value() if hasattr(db_config.password, 'get_secret_value') else str(db_config.password)
-        
+        password = (
+            db_config.password.get_secret_value()
+            if hasattr(db_config.password, "get_secret_value")
+            else str(db_config.password)
+        )
+
         # Connect to postgres database to create our target database
         admin_url = (
             f"postgresql://{db_config.username}:{password}"
             f"@{db_config.host}:{db_config.port}/postgres"
         )
-        
+
         try:
             conn = await asyncpg.connect(admin_url)
-            
+
             # Check if database exists
             exists = await conn.fetchval(
-                "SELECT 1 FROM pg_database WHERE datname = $1",
-                db_config.database
+                "SELECT 1 FROM pg_database WHERE datname = $1", db_config.database
             )
-            
+
             if not exists:
                 # Use safe database identifier escaping - PostgreSQL doesn't support parameterized DDL
                 # but we validate the name above to ensure it's safe
@@ -174,9 +185,9 @@ class DatabaseManager:
                 logger.info(f"Created database: {db_config.database}")
             else:
                 logger.info(f"Database already exists: {db_config.database}")
-            
+
             await conn.close()
-            
+
         except Exception as e:
             logger.error(f"Failed to create database: {e}")
             raise
@@ -208,12 +219,12 @@ def run_migrations() -> None:
     """Run database migrations using Alembic."""
     from alembic import command
     from alembic.config import Config
-    
+
     # Configure Alembic
     alembic_cfg = Config()
     alembic_cfg.set_main_option("script_location", "alembic")
     alembic_cfg.set_main_option("sqlalchemy.url", db_manager.sync_database_url)
-    
+
     try:
         command.upgrade(alembic_cfg, "head")
         logger.info("Database migrations completed successfully")
@@ -226,11 +237,11 @@ def create_migration(message: str) -> None:
     """Create a new database migration."""
     from alembic import command
     from alembic.config import Config
-    
+
     alembic_cfg = Config()
     alembic_cfg.set_main_option("script_location", "alembic")
     alembic_cfg.set_main_option("sqlalchemy.url", db_manager.sync_database_url)
-    
+
     try:
         command.revision(alembic_cfg, message=message, autogenerate=True)
         logger.info(f"Created migration: {message}")

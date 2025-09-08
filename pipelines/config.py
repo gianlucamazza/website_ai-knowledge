@@ -15,7 +15,7 @@ from pydantic_settings import BaseSettings
 
 class DatabaseConfig(BaseModel):
     """Database connection configuration."""
-    
+
     host: str = "localhost"
     port: int = 5432
     database: str = "ai_knowledge"
@@ -32,13 +32,13 @@ class DatabaseConfig(BaseModel):
     # Cache settings
     enable_query_cache: bool = True
     query_cache_size: int = 1000
-    
+
     @validator("password")
     def validate_password(cls, v):
         if not v:
             raise ValueError("Database password is required and cannot be empty")
         # Ensure password is strong enough
-        password_str = v.get_secret_value() if hasattr(v, 'get_secret_value') else str(v)
+        password_str = v.get_secret_value() if hasattr(v, "get_secret_value") else str(v)
         if len(password_str) < 12:
             raise ValueError("Database password must be at least 12 characters long")
         return v
@@ -46,7 +46,7 @@ class DatabaseConfig(BaseModel):
 
 class ScrapingConfig(BaseModel):
     """Web scraping configuration."""
-    
+
     respect_robots_txt: bool = True
     user_agent: str = "AI-Knowledge-Bot/1.0 (+https://ai-knowledge.org/bot)"
     request_delay: float = 1.0  # Ethical delay between requests
@@ -66,7 +66,7 @@ class ScrapingConfig(BaseModel):
 
 class DeduplicationConfig(BaseModel):
     """Deduplication algorithm configuration."""
-    
+
     simhash_k: int = 3  # Number of differences allowed in SimHash
     minhash_threshold: float = 0.85  # Similarity threshold for MinHash
     lsh_num_perm: int = 256  # Number of permutations for LSH
@@ -76,7 +76,7 @@ class DeduplicationConfig(BaseModel):
 
 class EnrichmentConfig(BaseModel):
     """Content enrichment configuration."""
-    
+
     openai_api_key: Optional[str] = None
     anthropic_api_key: Optional[str] = None
     max_summary_length: int = 500
@@ -87,7 +87,7 @@ class EnrichmentConfig(BaseModel):
 
 class PublishConfig(BaseModel):
     """Publishing configuration."""
-    
+
     output_directory: str = "apps/site/src/content"
     articles_subdir: str = "articles"
     glossary_subdir: str = "glossary"
@@ -97,7 +97,7 @@ class PublishConfig(BaseModel):
 
 class LoggingConfig(BaseModel):
     """Logging configuration."""
-    
+
     level: str = "INFO"
     format: str = "json"
     file_path: Optional[str] = None
@@ -107,16 +107,16 @@ class LoggingConfig(BaseModel):
 
 class PipelineConfig(BaseSettings):
     """Main pipeline configuration."""
-    
+
     # Environment
     environment: str = Field(default="development", env="ENVIRONMENT")
     debug: bool = Field(default=False, env="DEBUG")
-    
+
     # Core settings
     project_root: str = Field(default_factory=lambda: str(Path(__file__).parent.parent))
     data_directory: str = "data"
     temp_directory: str = "tmp"
-    
+
     # Component configurations
     database: DatabaseConfig = Field(default_factory=DatabaseConfig)
     scraping: ScrapingConfig = Field(default_factory=ScrapingConfig)
@@ -124,34 +124,34 @@ class PipelineConfig(BaseSettings):
     enrichment: EnrichmentConfig = Field(default_factory=EnrichmentConfig)
     publishing: PublishConfig = Field(default_factory=PublishConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
-    
+
     # Sources configuration
     sources_config_path: str = "ingest/sources.yaml"
-    
+
     class Config:
         env_file = ".env"
         env_nested_delimiter = "__"
         case_sensitive = False
-    
+
     @validator("project_root")
     def validate_project_root(cls, v):
         path = Path(v)
         if not path.exists():
             raise ValueError(f"Project root directory does not exist: {v}")
         return str(path.resolve())
-    
+
     def get_data_path(self, *parts: str) -> Path:
         """Get path within the data directory."""
         return Path(self.project_root) / self.data_directory / Path(*parts)
-    
+
     def get_temp_path(self, *parts: str) -> Path:
         """Get path within the temp directory."""
         return Path(self.project_root) / self.temp_directory / Path(*parts)
-    
+
     def get_output_path(self, *parts: str) -> Path:
         """Get path within the output directory."""
         return Path(self.project_root) / self.publishing.output_directory / Path(*parts)
-    
+
     def ensure_directories(self) -> None:
         """Ensure all required directories exist."""
         directories = [
@@ -162,7 +162,7 @@ class PipelineConfig(BaseSettings):
             self.get_output_path(self.publishing.glossary_subdir),
             self.get_output_path(self.publishing.taxonomies_subdir),
         ]
-        
+
         for directory in directories:
             directory.mkdir(parents=True, exist_ok=True)
 
