@@ -356,21 +356,21 @@ import ArticleCard from '../../../src/components/ArticleCard.astro';
 describe('ArticleCard', () => {
   const mockArticle = {
     data: {
-      title: 'Test Article',
-      description: 'Test description',
+      title: 'Neural Network Fundamentals',
+      description: 'Introduction to neural networks and deep learning',
       publishDate: new Date('2024-01-01'),
-      author: 'Test Author',
+      author: 'AI Expert',
       category: 'machine-learning',
       tags: ['ai', 'ml']
     },
-    slug: 'test-article'
+    slug: 'neural-network-fundamentals'
   };
 
   it('renders article title and description', () => {
     render(<ArticleCard article={mockArticle} />);
     
-    expect(screen.getByText('Test Article')).toBeInTheDocument();
-    expect(screen.getByText('Test description')).toBeInTheDocument();
+    expect(screen.getByText('Neural Network Fundamentals')).toBeInTheDocument();
+    expect(screen.getByText('Introduction to neural networks and deep learning')).toBeInTheDocument();
   });
 
   it('displays formatted publish date', () => {
@@ -389,7 +389,7 @@ describe('ArticleCard', () => {
     render(<ArticleCard article={mockArticle} />);
     
     const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', '/articles/test-article');
+    expect(link).toHaveAttribute('href', '/articles/neural-network-fundamentals');
   });
 
   it('applies featured styling when featured prop is true', () => {

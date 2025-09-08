@@ -420,8 +420,8 @@ python -m pipelines.database.migrate --downgrade -1
 @pytest.fixture
 def sample_content_item(db_session):
     item = ContentItem(
-        title="Test Article",
-        content="Test content",
+        title="Sample AI Article",
+        content="Sample content about artificial intelligence",
         source_url="https://example.com"
     )
     db_session.add(item)
@@ -429,7 +429,7 @@ def sample_content_item(db_session):
     return item
 
 def test_content_item_creation(sample_content_item):
-    assert sample_content_item.title == "Test Article"
+    assert sample_content_item.title == "Sample AI Article"
 ```
 
 ### Frontend Development
@@ -493,14 +493,14 @@ import ArticleCard from '../../../src/components/ArticleCard.astro';
 describe('ArticleCard', () => {
   it('renders article title and description', () => {
     const article = {
-      title: 'Test Article',
-      description: 'Test description',
-      slug: 'test-article'
+      title: 'Understanding Neural Networks',
+      description: 'Introduction to neural network fundamentals',
+      slug: 'understanding-neural-networks'
     };
     
     const { getByText } = render(<ArticleCard article={article} />);
-    expect(getByText('Test Article')).toBeDefined();
-    expect(getByText('Test description')).toBeDefined();
+    expect(getByText('Understanding Neural Networks')).toBeDefined();
+    expect(getByText('Introduction to neural network fundamentals')).toBeDefined();
   });
 });
 ```
